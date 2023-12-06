@@ -20,7 +20,7 @@ Given a link to a JSON file of links and labels, [The Hub](https://github.com/al
 
 ## This Site
 
-This site, https://alexledger.net, is built with Hugo with some custom theming on top of [Hugo blog awesome](https://github.com/hugo-sid/hugo-blog-awesome). ([code](https://github.com/aled1027/notes.alexledger.net), [site](https://alexledger.net))
+This site, https://alexledger.net, is built with [astro](https://astro.build). ([code](https://github.com/aled1027/alexledger.net), [site](https://alexledger.net))
 
 ## catnesh.net
 
