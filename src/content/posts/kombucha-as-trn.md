@@ -10,7 +10,7 @@ toc: true
 
 Before getting to Kombucha I want to describe my favorite recipe design: tabular recipe notation or TRN. TRN is from [Cooking for Engineers](https://www.cookingforengineers.com/) and is a layout of a recipe in HTML that, in my opinion, makes the recipe incredibly easy to follow.
 
-<img src="/src/images/trn_pancakes.png" alt="Tabular Recipe Notation of Pancakes" style="max-width:300px;margin-inline:auto;"/>
+<img src="/images/trn_pancakes.png" alt="Tabular Recipe Notation of Pancakes" style="max-width:300px;margin-inline:auto;width:100%;"/>
 
 You can imagine that there's a directed acyclic graph underlying the recipe, and that HTML table is derived from it. At some point I'd love to write a converter from YAML directions, or something of the like, into a tabular recipe notation HTML table. I have a basic version that works on very simple recipes, but it doesn't work on anything complex.
 

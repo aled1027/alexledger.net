@@ -46,4 +46,4 @@ order by
 
 If you're running datasette locally with the steps above, you can visit this [link](http://127.0.0.1:8001/data?sql=with+og+as+%28%0D%0A++select%0D%0A++++rowid%2C%0D%0A++++Date%2C%0D%0A++++Host%2C%0D%0A++++Service%2C%0D%0A++++%5B%40log.level%5D%2C%0D%0A++++%5B%40code%5D%2C%0D%0A++++%5B%40event%5D%2C%0D%0A++++Message%2C%0D%0A++++json_extract%28Message%2C+%27%24.request_id%27%29+as+request_id%2C%0D%0A++++json_extract%28Message%2C+%27%24.request%27%29+as+request%0D%0A++from%0D%0A++++data%0D%0A%29%0D%0Aselect%0D%0A++request_id%2C%0D%0A++count%28*%29+as+c%2C%0D%0A++group_concat%28%5B%40event%5D%2C+%27+%7C+%27%29+as+m%2C%0D%0A++group_concat%28request%2C+%27+%7C+%27%29+as+request%0D%0Afrom%0D%0A++og%0D%0A%0D%0Agroup+by%0D%0A++request_id%0D%0Aorder+by%0D%0A++c).
 
-![Screenshot of query and query results](/src/images/2023-08-31-logs.png#center)
+![Screenshot of query and query results](/images/2023-08-31-logs.png#center)
