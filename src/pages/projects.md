@@ -4,7 +4,7 @@ layout: ../layouts/default.astro
 
 # Projects
 
-Below is a list of the some of the projects I've worked on over the years. If you're interested in learning more about a project or collaborating, please [reach out](/resources/contact/); I'd love to chat!
+Below is a list of the some of the projects I've worked on over the years. If you're interested in learning more about a project or collaborating, please reach out; I'd love to chat!
 
 ## The Hub
 
