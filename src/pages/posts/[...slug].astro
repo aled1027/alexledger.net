@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/default.astro";
+import { getCollection } from "astro:content";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const postsCollection = await getCollection("posts");
+
+  return postsCollection.map((post) => {
+    return {
+      params: { slug: post.slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout>
+  <h1>{post.data.title}</h1>
+  <span>Date: </span>
+  <sl-format-date
+    month="long"
+    day="numeric"
+    year="numeric"
+    date={post.data.date}
+  >
+  </sl-format-date>
+  <div class="tags">
+    <span>Tags:</span>
+    {
+      post.data.tags.map((tag) => {
+        return (
+          <>
+            <span>
+              <a href={`/tags/${tag}`}>{tag}</a>
+            </span>
+          </>
+        );
+      })
+    }
+  </div>
+  <Content />
+</Layout>
+
+<style>
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>

@@ -1,0 +1,17 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/default.astro";
+import BlogList from "../components/blog-list.astro";
+
+export const prerender = true;
+
+const postsCollection = await getCollection("posts");
+const posts = postsCollection
+  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
+  .reverse();
+---
+
+<Layout>
+  <h1>Posts</h1>
+  <BlogList blogs={posts} />
+</Layout>

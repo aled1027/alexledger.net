@@ -1,0 +1,33 @@
+---
+import Layout from "../../layouts/default.astro";
+import { getCollection } from "astro:content";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const guidePosts = await getCollection("guides");
+
+  return guidePosts.map((post) => {
+    return {
+      params: { slug: post.slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout>
+  <h1>{post.data.title}</h1>
+  <span>Date:</span>
+  <sl-format-date
+    month="long"
+    day="numeric"
+    year="numeric"
+    date={post.data.date}
+  >
+  </sl-format-date>
+  <Content />
+</Layout>

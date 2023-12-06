@@ -1,0 +1,46 @@
+---
+interface Props {
+  blogs: any[];
+}
+const { blogs } = Astro.props;
+---
+
+<div class="posts-container">
+  {
+    blogs.map((post) => {
+      return (
+        <div class="post-card">
+          <a class="post-name" href={`/${post.collection}/${post.slug}`}>
+            {post.data.title}
+          </a>
+          <sl-format-date
+            month="short"
+            day="numeric"
+            year="numeric"
+            date={post.data.date}
+          />
+        </div>
+      );
+    })
+  }
+</div>
+
+<style>
+  a.post-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-block: 0.65rem;
+    text-decoration: none;
+  }
+
+  .post-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    border-block-start: 1px solid rgba(128, 128, 128, 0.375);
+    padding: 0rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
+</style>

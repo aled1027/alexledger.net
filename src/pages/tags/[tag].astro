@@ -1,0 +1,47 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/default.astro";
+import BlogList from "../../components/blog-list.astro";
+
+export async function getStaticPaths() {
+  const allPostsCollection = await getCollection("posts");
+
+  const allPosts = allPostsCollection.map((post) => {
+    if (post.data?.tags === undefined) {
+      post.data.tags = [];
+    }
+    return post;
+  });
+
+  const uniqueTags = [
+    ...new Set(allPosts.map((post) => post.data.tags).flat()),
+  ];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts
+      .filter((post) => post.data.tags.includes(tag))
+      .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
+      .reverse();
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<Layout>
+  <h1>Tag: {tag}</h1>
+  <main class="content">
+    <BlogList blogs={posts} />
+  </main>
+  <style>
+    .content {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</Layout>

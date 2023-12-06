@@ -1,0 +1,239 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/light.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/shoelace-autoloader.js"
+    ></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/" rel="home">Home</a>
+        <a href="/posts">Posts</a>
+        <a href="/guides">Guides</a>
+        <a href="/projects">Projects</a>
+        <a href="/spotlight">Spotlight</a>
+        <a href="/tags">Tags</a>
+        <a href="/rss.xml">RSS</a>
+        <a href="/search">Search</a>
+      </nav>
+    </header>
+
+    <div class="content">
+      <slot />
+    </div>
+
+    <footer></footer>
+  </body>
+  <style is:global>
+    /* Global Styles */
+    /* Inspired by https://chriscoyier.net/2023/10/03/being-picky-about-a-css-reset-for-fun-pleasure/ */
+
+    /* Box sizing rules */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    /* Remove default margin */
+    h2,
+    h3,
+    h4,
+    p,
+    figure,
+    dl,
+    dd {
+      margin-block: 1.4rem 1rem;
+    }
+
+    h1 {
+      margin-block: 1.4rem 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    ul[role="list"],
+    ol[role="list"] {
+      list-style: none;
+    }
+
+    /* Set core root defaults */
+    html:focus-within {
+      scroll-behavior: smooth;
+    }
+
+    html {
+      line-height: 1.5;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    button,
+    input,
+    label {
+      line-height: 1.1;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-wrap: balance;
+    }
+
+    /* Set core body defaults */
+    body {
+      margin-block: 0;
+      min-height: 100dvh;
+      margin: 0 auto;
+
+      /* See https://css-tricks.com/snippets/css/system-font-stack/ */
+      font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+      @media only screen and (max-width: 600px) {
+        margin: 0 1rem;
+      }
+    }
+
+    /* A elements that don't have a class get default styles */
+    a:not([class]) {
+      text-decoration-skip-ink: auto;
+    }
+
+    /* Make images easier to work with */
+    img,
+    picture {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* Inherit fonts for inputs and buttons */
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+    @media (prefers-reduced-motion: reduce) {
+      html:focus-within {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Tables */
+    table {
+      margin: 0 auto;
+      background: white;
+      border: 1px solid grey;
+      font-size: 12pt;
+      border-collapse: collapse;
+    }
+    table thead th,
+    table tfoot th {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    table caption {
+      padding: 0.5em;
+    }
+    table th,
+    table td {
+      padding: 0.5em;
+      border: 1px solid lightgrey;
+    }
+
+    pre {
+      padding: 1rem;
+    }
+
+    /* Inspired by https://codepen.io/radoslavdurac/pen/VwqVvgL */
+    blockquote {
+      max-width: 600px;
+      padding: 0.1rem 1rem;
+      border-left: 5px solid #333;
+      background-color: #fff;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    blockquote p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin-bottom: 1.3rem;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #0073cf;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+      text-decoration-skip-ink: skip;
+    }
+
+    a:hover {
+      text-decoration-color: #73cf00;
+    }
+  </style>
+  <style>
+    /* Styles specific to this page */
+    header {
+      padding-block: 0.75rem;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem 1.5rem;
+      width: 100%;
+    }
+
+    nav a {
+      color: inherit;
+      font-size: 1.25rem;
+      font-weight: 400;
+      text-decoration: none;
+    }
+
+    .content {
+      max-inline-size: 1000px;
+      padding: 1rem;
+      margin-inline: auto;
+    }
+
+    footer {
+      min-height: 10dvh;
+    }
+  </style>
+</html>
