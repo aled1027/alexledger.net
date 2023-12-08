@@ -2,7 +2,7 @@
 import fs from "fs";
 import https from "https";
 
-const DOMAIN = "alexledger.net"; // Change this!
+const DOMAIN = "alexledger.net";
 
 console.log(process.env.WEBMENTION_API_KEY);
 console.log("that was the key");
