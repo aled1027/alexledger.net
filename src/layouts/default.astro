@@ -18,7 +18,10 @@
       data-domain="alexledger.net"
       src="https://plausible.io/js/script.js"></script>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="webmention" href="https://webmention.io/www.alexledger.net/webmention" />
+    <link
+      rel="webmention"
+      href="https://webmention.io/www.alexledger.net/webmention"
+    />
 
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
@@ -47,6 +50,32 @@
   <style is:global>
     /* Global Styles */
     /* Inspired by https://chriscoyier.net/2023/10/03/being-picky-about-a-css-reset-for-fun-pleasure/ */
+
+    @import "https://unpkg.com/open-props";
+
+    :root {
+      /* See Creating adaptive color schemes at https://open-props.style/#getting-started  */
+      --text-1: var(--gray-9);
+      --surface-1: var(white);
+      --fun-1: #0073cf;
+      --fun-2: #73cf00;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-1: var(--gray-3);
+        --surface-1: var(--gray-9);
+        --fun-1: #0073cf;
+        --fun-2: #73cf00;
+
+        /* For search with pagefind */
+        --pagefind-ui-primary: #eeeeee;
+        --pagefind-ui-text: #eeeeee;
+        --pagefind-ui-background: #152028;
+        --pagefind-ui-border: #152028;
+        --pagefind-ui-tag: #152028;
+      }
+    }
 
     /* Box sizing rules */
     *,
@@ -84,6 +113,7 @@
 
     html {
       line-height: 1.5;
+      color: var(--text-1);
     }
 
     h1,
@@ -96,6 +126,7 @@
     input,
     label {
       line-height: 1.1;
+      color: inherit;
     }
 
     h1,
@@ -112,6 +143,8 @@
       margin-block: 0;
       min-height: 100dvh;
       margin: 0 auto;
+      background: var(--surface-1);
+      color: var(--text-1);
 
       /* See https://css-tricks.com/snippets/css/system-font-stack/ */
       font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
@@ -161,9 +194,9 @@
     /* Tables */
     table {
       margin: 0 auto;
-      background: white;
+      background: inherit;
       border: 1px solid grey;
-      font-size: 12pt;
+      font-size: var(--font-size-1);
       border-collapse: collapse;
     }
     table thead th,
@@ -176,7 +209,7 @@
     table th,
     table td {
       padding: 0.5em;
-      border: 1px solid lightgrey;
+      border: 1px solid var(--gray-4);
     }
 
     pre {
@@ -187,34 +220,40 @@
     blockquote {
       max-width: 600px;
       padding: 0.1rem 1rem;
-      border-left: 5px solid #333;
-      background-color: #fff;
+      border-left: 5px solid var(--text-1);
+      background-color: inherit;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+
+      @media (prefers-color-scheme: dark) {
+        border-left: 5px solid var(--indigo-7);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      }
     }
 
     blockquote p {
-      font-size: 1.1rem;
+      font-size: var(--font-size-2);
       line-height: 1.5;
       margin-bottom: 1.3rem;
     }
 
     a {
-      color: #000000;
+      color: inherit;
       text-decoration: underline;
-      text-decoration-color: #0073cf;
+      text-decoration-color: var(--fun-1);
       text-decoration-thickness: 2px;
       text-underline-offset: 3px;
       text-decoration-skip-ink: skip;
     }
 
     a:hover {
-      text-decoration-color: #73cf00;
+      text-decoration-color: var(--fun-2);
     }
   </style>
   <style>
     /* Styles specific to this page */
     header {
       padding-block: 0.75rem;
+      padding-inline: 0.35rem;
     }
 
     nav {
