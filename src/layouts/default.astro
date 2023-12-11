@@ -7,6 +7,12 @@
     <meta charset="utf-8" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS"
+      href="/rss.xml"
+    />
+    <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/light.css"
     />
@@ -37,7 +43,11 @@
         <a href="/projects">Projects</a>
         <a href="/spotlight">Spotlight</a>
         <a href="/tags">Tags</a>
-        <a href="/rss.xml">RSS</a>
+        <!-- TODO: make orange like an rss button -->
+        <!-- TODO: https://kevincox.ca/2022/05/06/rss-feed-best-practices/ -->
+        <!-- https://indieweb.org/RSS -->
+        <!-- https://rknight.me/please-expose-your-rss/ -->
+        <a type="application/rss+xml" title="RSS" href="/rss.xml">RSS</a>
         <a href="/search">Search</a>
       </nav>
     </header>
