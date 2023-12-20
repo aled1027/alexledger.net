@@ -54,8 +54,11 @@
         curTheme = (curTheme + 1) % Object.keys(themeMapping).length;
         console.log(curTheme);
 
-        document.querySelector(":root").dataset.theme = themeMapping[curTheme];
-        console.log("Now on theme: ", themeMapping[curTheme]);
+        const element = document.querySelector(":root");
+        if (element instanceof HTMLElement) {
+          element.dataset.theme = themeMapping[curTheme];
+          console.log("Now on theme: ", themeMapping[curTheme]);
+        }
       });
     </script>
 
@@ -340,7 +343,7 @@
 
     #theme-cycler {
       /* TODO: commenting out until i figure out how to show this */
-      /* display: none; */
+      display: none;
       position: absolute;
       right: 0;
     }
