@@ -33,6 +33,10 @@ const { blogs } = Astro.props;
 </div>
 
 <style>
+  .posts-container {
+    container-type: inline-size;
+  }
+
   a.post-name {
     font-size: 1rem;
     font-weight: 500;
@@ -69,16 +73,13 @@ const { blogs } = Astro.props;
   .post-date {
   }
 
-
-
   .post-card {
     display: grid;
-    grid-template-columns: 6fr 4fr 2fr;
-    // flex-wrap: wrap;
+    grid-template-columns: 1fr;
     align-items: center;
-    // justify-content: space-between;
+    gap: 0;
     border-block-start: 1px solid rgba(128, 128, 128, 0.375);
-    padding: 0rem 0.5rem;
+    padding: 0.5rem 0.5rem;
     font-size: 0.9rem;
     font-weight: 300;
     width: 100%;
@@ -86,9 +87,13 @@ const { blogs } = Astro.props;
     &:hover {
       background: var(--stone-3);
     }
+  }
 
-    @media only screen and (max-width: 600px) {
-      grid-template-columns: 1fr;
+  @container (min-width: 600px) {
+    .post-card {
+      grid-template-columns: 6fr 4fr 2fr;
+      gap: 2rem;
+      padding: 0rem 0.5rem;
     }
   }
 </style>
