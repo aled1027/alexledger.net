@@ -13,12 +13,19 @@ const { blogs } = Astro.props;
           <a class="post-name" href={`/${post.collection}/${post.slug}`}>
             {post.data.title}
           </a>
-          <sl-format-date
-            month="short"
-            day="numeric"
-            year="numeric"
-            date={post.data.date}
-          />
+          <div class="post-tags">
+            {post.data.tags && post.data.tags.sort().map((tag) => {
+              return <a class="post-tags-a" href=`/tags/${tag}`>{tag}</a>
+            })}
+          </div>
+          <div class="post-date">
+            <sl-format-date
+              month="short"
+              day="numeric"
+              year="numeric"
+              date={post.data.date}
+            />
+          </div>
         </div>
       );
     })
@@ -31,16 +38,57 @@ const { blogs } = Astro.props;
     font-weight: 500;
     margin-block: 0.65rem;
     text-decoration: none;
+    width: fit-content;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
-  .post-card {
+  .post-tags {
     display: flex;
     flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block: 1rem;
+  }
+
+  .post-tags a {
+    background: var(--indigo-5);
+    color: white;
+    font-weight: var(--font-weight-3);
+    padding: 0.3rem 0.3rem;
+    border-radius: var(--radius-2);
+    text-decoration: none;
+
+    &:hover {
+      background: var(--blue-5)
+    }
+  }
+
+
+  .post-date {
+  }
+
+
+
+  .post-card {
+    display: grid;
+    grid-template-columns: 6fr 4fr 2fr;
+    // flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    // justify-content: space-between;
     border-block-start: 1px solid rgba(128, 128, 128, 0.375);
     padding: 0rem 0.5rem;
     font-size: 0.9rem;
     font-weight: 300;
+    width: 100%;
+
+    &:hover {
+      background: var(--stone-3);
+    }
+
+    @media only screen and (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
