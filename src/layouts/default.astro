@@ -17,6 +17,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/light.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/dark.css"
+    />
     <script
       type="module"
       src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/shoelace-autoloader.js"
@@ -90,6 +94,7 @@
     :root {
       /* See Creating adaptive color schemes at https://open-props.style/#getting-started  */
       --text-1: var(--gray-9);
+      --text-2: var(--gray-5);
       --surface-1: var(white);
       --surface-2: var(--stone-2);
       /* --surface-1: var(--gradient-28); */
@@ -100,6 +105,7 @@
     /* Purple theme */
     :root[data-theme="purple"] {
       --text-1: var(--purple-9);
+      --text-2: var(--purple-9);
       --surface-1: var(--purple-0);
       --surface-2: var(--purple-0);
       --fun-1: var(--purple-3);
@@ -109,6 +115,7 @@
     /* Blue theme */
     :root[data-theme="blue"] {
       --text-1: var(--blue-9);
+      --text-2: var(--blue-9);
       --surface-1: var(--blue-0);
       --surface-2: var(--blue-0);
       --fun-1: var(--blue-3);
@@ -118,6 +125,7 @@
     @media (prefers-color-scheme: dark) {
       :root {
         --text-1: var(--gray-3);
+        --text-1: var(--gray-5);
         --surface-1: var(--gray-9);
         --surface-2: var(--stone-10);
         --fun-1: #0073cf;
@@ -352,4 +360,28 @@
       right: 0;
     }
   </style>
+
+  <script>
+    // Handle the shoelace theme
+    const updateShoelaceTheme = () => {
+      if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        document.body.classList.add("sl-theme-dark");
+      } else {
+        document.body.classList.remove("sl-theme-dark");
+      }
+    };
+
+    // Initial check
+    updateShoelaceTheme();
+
+    // Listen for changes to prefers-color-scheme
+    if (window.matchMedia) {
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", updateShoelaceTheme);
+    }
+  </script>
 </html>

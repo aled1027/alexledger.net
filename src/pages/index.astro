@@ -21,15 +21,33 @@ const recentGuides = guides
 <Layout>
   <h1>Alex Ledger</h1>
 
-  <p>
-    I build small projects and big projects, work on big problems and small
-    problems, and love experimenting with old and new technologies.
-  </p>
-  <p>
-    I’m currently CTO at Playground Labs, where we’re building community-first
-    projects around games and gaming technologies.
-  </p>
+  <div class="intro-card">
+    <sl-tab-group placement="end">
+      <sl-tab slot="nav" panel="default">Default</sl-tab>
+      <sl-tab slot="nav" panel="boring">Boring</sl-tab>
+      <sl-tab slot="nav" panel="advanced">Advanced</sl-tab>
 
+      <sl-tab-panel name="default">
+        <p>
+          I hope you enjoy browsing this website. I enjoy making and maintaining
+          it.
+        </p>
+        <p>Welcome and have a great day :)</p>
+      </sl-tab-panel>
+      <sl-tab-panel name="boring">
+        <p>
+          I build small projects and big projects, work on big problems and
+          small problems, and love experimenting with old and new technologies.
+        </p>
+        <p>
+          I’m currently CTO at Playground Labs, where we’re building
+          community-first projects around games and gaming technologies.
+        </p>
+      </sl-tab-panel>
+
+      <sl-tab-panel name="advanced"><p>???</p></sl-tab-panel>
+    </sl-tab-group>
+  </div>
   <p>
     You can find me at:
     <ul>
@@ -76,6 +94,15 @@ const recentGuides = guides
         gap: 0.2rem;
         font-size: 1rem;
         font-weight: 500;
+        margin-top: 0.7rem;
+      }
+
+      .intro-card {
+        /* border: 1px solid var(--fun-1); */
+        border: 1px solid var(--text-2); /* 0.5 is the opacity value, you can adjust it as needed */
+
+        padding: 1rem;
+        border-radius: var(--radius-2);
       }
     </style>
   </p>
