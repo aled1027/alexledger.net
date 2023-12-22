@@ -8,7 +8,7 @@ Below is a list of the some of the projects I've worked on over the years. If yo
 
 ## The Hub
 
-Given a link to a JSON file of links and labels, [The Hub](https://github.com/aled1027/the-hub) will populate an easy to navigate and use hub of the links. An alternative, shareable page of bookmarks inspired by LinkTree. ([code](https://github.com/aled1027/the-hub))
+Given a link to a JSON file of links and labels, [The Hub](https://github.com/aled1027/the-hub) will populate an easy to navigate hub of the links. It's a shareable page of bookmarks, inspired by LinkTree. ([code](https://github.com/aled1027/the-hub))
 
 ## Barter
 

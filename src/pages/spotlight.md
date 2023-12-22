@@ -26,6 +26,7 @@ To add:
 - [Curio Spice](https://curiospice.com/)
 - [Taza Chocolate](https://tazachocolate.com/)
 - [Expatriate](http://expatriatepdx.com/)
+- [Nationale](https://www.nationale.us/info)
 - [Wajan](https://www.wajanpdx.com/)
 - [Mirisata](https://mirisata.com/)
   - A vegan, worker-owned cooperative in SE portland serving delicious Sri Lankan food.
