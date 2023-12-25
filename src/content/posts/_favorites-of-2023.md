@@ -71,7 +71,3 @@ This paper got me started down this journey of trying to learn how to use the in
 ### 10. [Responsive Web Design](https://alistapart.com/article/responsive-web-design/) by Ethan Marcotte
 
 This is the classic post introducing the concepts of responsive web design. I love how big Ethan Marcotte is thinking in this, considering websites as so much more than things we read on our current devices
-
-
-
-
