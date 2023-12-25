@@ -1,5 +1,5 @@
 import { defineConfig } from "astro/config";
-import pagefind from "astro-pagefind";
+// import pagefind from "astro-pagefind";
 import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
@@ -12,7 +12,7 @@ export default defineConfig({
   },
   site: "https://alexledger.net",
   integrations: [
-    pagefind(),
+    // pagefind(),
     sitemap({
       // filter: (page) => page !== 'https://stargazers.club/secret-vip-lounge/',
     }),
