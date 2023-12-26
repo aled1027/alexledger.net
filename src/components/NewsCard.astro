@@ -1,0 +1,13 @@
+---
+interface Props {
+  title: string;
+  titleLink: string;
+}
+const { title, titleLink } = Astro.props;
+---
+
+<blockquote>
+  <h3><a href={titleLink}>{title}</a></h3>
+
+  <slot />
+</blockquote>
