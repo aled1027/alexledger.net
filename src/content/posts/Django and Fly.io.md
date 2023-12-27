@@ -1,9 +1,9 @@
 ---
 date: 2023-03-05
 tags:
-    - python
-    - fly.io
-    - django
+  - python
+  - fly.io
+  - django
 title: Django and Fly
 ---
 
@@ -16,6 +16,7 @@ This post has four sections: Troubleshooting, Branches, Extensions, and Referenc
 ## Troubleshooting
 
 Some common errors encountered when setting up django.
+
 ### Troubleshoot 1: Make sure the port of the server matches the fly port
 
 In your fly.toml file, make sure that the internal port matches what the Django process is listening to in the dockerfile.
@@ -58,6 +59,7 @@ Like any tutorial, there are some pieces that may not apply to your use case. Th
 
 There are a few approaches to this. The one I've used the most is installing dependencies with poetry instead of pip. So inside of `Dockerfile`,
 change the line:
+
 ```
 # OLD:
 RUN pip install requirements.txt
@@ -70,7 +72,7 @@ RUN poetry config virtualenvs.create false \
 
 ## Extending the Starter Guide
 
-In addition to adjusting the starter guide, you may need to extend it to support more sophisticated behavior. 
+In addition to adjusting the starter guide, you may need to extend it to support more sophisticated behavior.
 
 ### Extension 1: Migrations
 
@@ -83,7 +85,7 @@ Migrations can be done with the fly deploy configuration ([docs](https://fly.io/
 
 ### Extension 2: Structured Logging
 
-I like [structlog](https://www.structlog.org/en/stable/index.html), so for Django, check out [django-structlog](https://django-structlog.readthedocs.io/en/latest/). 
+I like [structlog](https://www.structlog.org/en/stable/index.html), so for Django, check out [django-structlog](https://django-structlog.readthedocs.io/en/latest/).
 
 I have notes on setting it up for fastapi [here](https://notes.alexledger.net/site/posts/16).
 

@@ -1,7 +1,7 @@
 ---
 date: 2023-01-06
 tags:
-    - python
+  - python
 title: Flattening JSON
 ---
 

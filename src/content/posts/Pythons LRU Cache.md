@@ -1,7 +1,7 @@
 ---
 date: 2023-01-12
 tags:
-    - python
+  - python
 title: Python's LRU Cache
 ---
 

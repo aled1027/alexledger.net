@@ -19,10 +19,10 @@ I've been thinking about how to browser the internet effectively, and I found a 
 
 - https://hapgood.us/2019/06/19/sift-the-four-moves/
 - https://webliteracy.pressbooks.com/
-- [https://human.libretexts.org/Bookshelves/...](https://human.libretexts.org/Bookshelves/Research_and_Information_Literacy/Web_Literacy_for_Student_Fact-Checkers_(Caulfield))
+- [https://human.libretexts.org/Bookshelves/...](<https://human.libretexts.org/Bookshelves/Research_and_Information_Literacy/Web_Literacy_for_Student_Fact-Checkers_(Caulfield)>)
 
 I've skimmed these, but haven't had a chance to deep-dive yet.
- 
+
 ## PageFind
 
 I added search to this site!
@@ -34,7 +34,6 @@ Check it out at [/search](/search). It was made with [PageFind](https://pagefind
 My understanding is this post by Ethan Marcette in 2010 coined the term Responsive Web Design: https://alistapart.com/article/responsive-web-design/.
 
 It's a great read on thinking about design for technical interfaces and building things that last, not just things that are cool for a week.
-
 
 ## Career Maps
 

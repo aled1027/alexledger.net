@@ -62,7 +62,7 @@ It's not the prettiest, but it works.
 
 Now when I navigate to a model in the Django admin UI, there's an import button for importing a file. I used the CSV import but saw options for json, yaml, xls, xlsx, and tsv.
 
-One strange thing I found was that I needed every field in the CSV. I was hoping that if a field was missing, then it'd use the default value the model. This wasn't a show-stopper, but it was annoying for the system-managed fields like created_at and updated_at (but as it turned out, those fields were overwritten at  import time.)
+One strange thing I found was that I needed every field in the CSV. I was hoping that if a field was missing, then it'd use the default value the model. This wasn't a show-stopper, but it was annoying for the system-managed fields like created_at and updated_at (but as it turned out, those fields were overwritten at import time.)
 
 I also found that leaving `id` blank meant it was auto-incremented as expected, but it was interesting that it was needed as a header in the file.
 

@@ -8,7 +8,7 @@ toc: false
 
 This post rereads Mike Arrington's 2010 article [Are You a Pirate?](https://techcrunch.com/2010/10/31/are-you-a-pirate/).
 
-I've read this post before and had the pleasure of revisiting it when a friend sent it over. 
+I've read this post before and had the pleasure of revisiting it when a friend sent it over.
 
 I've been thinking more about similar ideas: deviancy, variability, and risks, especially actions that are perceived as risky by the general population but are perhaps not that risky at all - there's an inevitability, a necessity to them.
 
@@ -20,11 +20,11 @@ On risk
 
 On payouts
 
-> The payouts for starting a business are just terrible when you account for risk. 
+> The payouts for starting a business are just terrible when you account for risk.
 
 On adventure
 
-> But I left the law after just three years to join a startup. And the reason I did it was adventure. I wanted to be in the game, not just watching it. 
+> But I left the law after just three years to join a startup. And the reason I did it was adventure. I wanted to be in the game, not just watching it.
 
 Referencing the man in the arena
 

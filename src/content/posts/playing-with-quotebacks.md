@@ -16,7 +16,6 @@ Here's a quote from a piece by Sam Peurifoy on NFT game economics. To make this,
 <footer>Sam Peurifoy<cite> <a href="https://medium.com/@sampeurifoy/fixing-nft-game-economics-gladiators-lumberjacks-d3d832acb3a6">https://medium.com/@sampeurifoy/fixing-nft-game-economics-gladiators-lumberjacks-d3d832acb3a6</a></cite></footer>
 </blockquote><script note="" src="https://cdn.jsdelivr.net/gh/Blogger-Peer-Review/quotebacks@1/quoteback.js"></script>
 
-
 Toby Shorin on his [blog](https://subpixel.space/) has a more context-oriented version of this for quoting yourself: https://subpixel.space/entries/open-transclude/. [^1]
 
 [^1]: As far as I can tell, one can only quote their own material with this tool because it relies on using `id` in the html of the quoted page.

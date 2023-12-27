@@ -1,9 +1,9 @@
 ---
 date: 2023-04-02
 tags:
-    - til
-    - python
-    - django
+  - til
+  - python
+  - django
 title: TIL How to customize the Django admin UI
 ---
 

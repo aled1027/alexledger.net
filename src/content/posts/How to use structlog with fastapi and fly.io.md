@@ -1,14 +1,14 @@
 ---
 date: 2023-01-08
 tags:
-    - python
-    - fastapi
-    - fly.io
+  - python
+  - fastapi
+  - fly.io
 title: How to use structlog with fastapi and fly.io
 ---
+
 I've started using `structlog` everywhere instead of the built-in python logging module.
 Here's a quick run-down of how I've been setting it up. I'm sure there are better ways to do a number of these things. Link to [docs](https://www.structlog.org/en/stable/index.html).
-
 
 ```sh
 poetry add structlog

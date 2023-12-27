@@ -11,7 +11,7 @@ I've been interested in HTML presentations of work whose main version isn't HTML
 
 Simon Willison wrote up his approach for annotated presentations [here](https://simonwillison.net/2023/Aug/6/annotated-presentations/).
 
-David MacKay's book Without Hot Air was written as a standard book, but is also hosted online as html  [here](https://www.withouthotair.com/).
+David MacKay's book Without Hot Air was written as a standard book, but is also hosted online as html [here](https://www.withouthotair.com/).
 
 There are many more examples beyond these two; these are just a few that came to mind.
 

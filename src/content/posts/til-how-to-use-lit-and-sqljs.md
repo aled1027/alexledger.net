@@ -271,7 +271,7 @@ export class SearchElement extends LitElement {
                 <td>${row.score}</td>
                 <td>${unsafeHTML(row.snippet)}</td>
                 <td>${unsafeHTML(row.html)}</td>
-              </tr>`
+              </tr>`,
           )}
         </tbody>
       </table>
@@ -292,7 +292,7 @@ export class SearchElement extends LitElement {
     initSqlJs(config)
       .then(async function (SQL) {
         const buf = await fetch("/database.db").then((res) =>
-          res.arrayBuffer()
+          res.arrayBuffer(),
         );
         const db = new SQL.Database(new Uint8Array(buf));
 
@@ -347,5 +347,4 @@ customElements.define("search-element", SearchElement);
 ```
 
 [^1]: Since this was a quick project, I didn't worry about performance or blocking, and I ran into a few funny things with Lit that I didn't resolve.
-
 [^2]: Note that the entire database is readable to the client, so I didn't worry about SQL injection or anything like that.

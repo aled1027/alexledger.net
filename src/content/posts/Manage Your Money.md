@@ -1,20 +1,20 @@
 ---
 date: 2023-05-06
 tags:
-    - finance
-    - python
-    - software
+  - finance
+  - python
+  - software
 title: Manage Your Money
 ---
 
 Manage Your Money is my 10th? 15th? attempt at writing a system for managing my personal finances.
 
-Each time, I fall back to the convenience of a SaaS tool; but inevitably, a few days, weeks, or months later, I get frustrated with the SaaS tool for one reason or another: 
+Each time, I fall back to the convenience of a SaaS tool; but inevitably, a few days, weeks, or months later, I get frustrated with the SaaS tool for one reason or another:
 
 - Unreliable syncing: Mint and Personal Capital frequently get disconnected from Venmo.
 - Unreliable transaction processing: Personal Capital classified my rent as income, and to make it worse, I had to email their support to change it - there was no way for me to revise in their app.
 - Dubious ethics: Intuit has a record of shady practices
-- Poor transaction process tooling: Personal Capital didn't have features for applying human-informed rules about categorizing transactions. 
+- Poor transaction process tooling: Personal Capital didn't have features for applying human-informed rules about categorizing transactions.
 
 To be fair, I didn't try YNAB or other paid providers.
 
@@ -113,5 +113,4 @@ I set up a roll-up table where I use a series of SUMIFs to aggregate the data fo
 =SUMIFS(Transactions!$D$1:D, Transactions!$F$1:F, "expense", Transactions!A:A, ">="&A64, Transactions!A:A, "<"&EOMONTH(A64, 0)+1)
 ```
 
-This formula isn't that useful out of context, but it: (a) sums up the amount column, which is Column D, (b) filters to only transactions with the type expense in column F, (d) filters to only transactions that came after the date in A64 and (d) filters to transactions that came before one month. 
-
+This formula isn't that useful out of context, but it: (a) sums up the amount column, which is Column D, (b) filters to only transactions with the type expense in column F, (d) filters to only transactions that came after the date in A64 and (d) filters to transactions that came before one month.

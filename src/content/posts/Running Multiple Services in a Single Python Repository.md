@@ -1,7 +1,7 @@
 ---
 date: 2023-01-13
 tags:
-    - python
+  - python
 title: Running Multiple Services in a Single Python Repository
 ---
 
@@ -10,7 +10,6 @@ I ran into another issue yesterday setting up a python library with basically tw
 After exploration and testing, I landed on the following structure that works pretty well.
 
 This also uses python's click library for the command line entrypoint.
-
 
 ```
 $ tree
@@ -28,6 +27,7 @@ $ tree
 ```
 
 ## start.py
+
 ```python
 import click
 
@@ -47,7 +47,9 @@ def run(service: str):
 if __name__ == '__main__':
     run()
 ```
+
 ## src/service1/main.py
+
 ```python
 from ..utils.utils import say_hello
 
@@ -55,7 +57,9 @@ def go():
     print("Starting service1")
     say_hello()
 ```
+
 ## src/service2/main.py
+
 ```python
 from ..utils.utils import say_hello
 
@@ -63,6 +67,7 @@ def go():
     print("Starting service2")
     say_hello()
 ```
+
 ## src/utils/utils.py
 
 ```python
