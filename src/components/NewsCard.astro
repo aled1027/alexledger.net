@@ -6,8 +6,26 @@ interface Props {
 const { title, titleLink } = Astro.props;
 ---
 
-<blockquote>
+<div class="news-card">
   <h3><a href={titleLink}>{title}</a></h3>
-
   <slot />
-</blockquote>
+</div>
+
+<style>
+  .news-card {
+    padding: 0.1rem 1rem 1rem 1rem;
+    background-color: inherit;
+    border-radius: var(--radius-3);
+
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    margin: 16px 40px;
+
+    @media only screen and (max-width: 600px) {
+      margin: 16px 0px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+  }
+</style>
