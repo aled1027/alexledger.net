@@ -2,7 +2,7 @@
 title: "I'm Embarrassed by Everything I Don't Understand"
 date: 2023-12-02T12:53:56-08:00
 draft: false
-tags: [poem]
+tags: [poem, autism, neurodiversity]
 ---
 
 <!-- Style informed by ideas in https://codepen.io/supersarap/pen/kYNLKo -->
