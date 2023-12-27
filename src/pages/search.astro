@@ -11,5 +11,24 @@ import Layout from "../layouts/default.astro";
     className="pagefind-ui"
     uiOptions={{ showImages: false }}
   /> -->
-  <p>Coming soon</p>
+  <!-- <p>Coming soon</p> -->
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <div id="search"></div>
+  <script is:inline>
+    window.addEventListener("DOMContentLoaded", (event) => {
+      new PagefindUI({ element: "#search", showSubResults: true });
+    });
+  </script>
+  <style>
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --pagefind-ui-primary: var(--text-1);
+        --pagefind-ui-text: var(--text-1);
+        --pagefind-ui-background: var(--slate-9);
+        --pagefind-ui-border: var(--gray-7);
+        --pagefind-ui-tag: var(--gray-3);
+      }
+    }
+  </style>
 </Layout>
