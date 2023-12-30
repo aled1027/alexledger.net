@@ -64,3 +64,4 @@ These are the python tools that I use on almost every project.
 | Tool   | Description                                                                                                                                          |
 | ------ | --- |
 | [Muse](https://museapp.com/) | Infinite canvas, whiteboard app designed for deep work ideation, especially on tablets. |
+
