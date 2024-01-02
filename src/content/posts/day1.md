@@ -1,6 +1,6 @@
 ---
 date: 2024-01-01
-title: Day One
+title: Day 1
 tags:
   - sabbatical
   - mutual-aid
