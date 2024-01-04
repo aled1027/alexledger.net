@@ -25,7 +25,7 @@
       function (d) {
         return {
           date: d3.timeParse("%Y-%m-%d")(d.date),
-          value: parseFloat(d.value),
+          value: parseFloat(d.value) + Math.random() * 4000,
         };
       }
     ).then(
