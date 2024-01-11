@@ -1,0 +1,75 @@
+---
+import Layout from "../../layouts/default.astro";
+import PlaytimeComponent from "../../components/PlaytimeComponent.svelte";
+
+let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+let questions = [
+  "Pressure Level",
+  "Energy Level",
+  "Did Exercise",
+  "Did work",
+  "Took painkiller",
+  "If yes, did it work",
+]
+---
+
+<!-- <Layout> -->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script is:inline src="/tailwind.js"></script>
+  </head>
+
+  <!-- <PlaytimeComponent client:only /> -->
+  <main class="prose">
+  <h2 class="trailing-answer-line w-full">Week of: </h2>
+  <div class="column-me">
+    {
+      days.map((day) => {
+        return (
+          <div>
+            <h3>{day}</h3>
+            <ul>
+              {questions.map((question) => <li>{question}:</li>)}
+            </ul>
+          </div>
+        );
+      })
+    }
+  </div>
+</main>
+
+<style>
+main {
+  margin: 4rem 2rem;
+  /* max-height: 100dvh; */
+}
+
+.trailing-answer-line::after {
+    padding-left: 0.5rem;
+    content:"_____________";
+}
+
+ul {
+  list-style-type: none;
+}
+
+li::after {
+    padding-left: 0.5rem;
+    content:"____";
+}
+
+header {
+  display: none;
+  background: red;
+}
+
+.column-me {
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, 1fr);
+  gap: 0 10rem;
+
+}
+<style>
