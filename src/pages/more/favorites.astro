@@ -19,6 +19,7 @@ const books = [
   buttons.forEach((button) => {
     let bookId = -1;
     button.addEventListener("click", (e) => {
+      // @ts-ignore
       bookId = e.target.dataset.bookId;
         if (bookId == -1) {
             console.log("Returning early")
@@ -26,7 +27,9 @@ const books = [
         }
 
         // close all other dialogs
+        // @ts-ignore
         document.querySelectorAll(".book-dialog").forEach((b) => b.close());
+        // @ts-ignore
         document.querySelector(`#book${bookId}`).show()
     });
   });
