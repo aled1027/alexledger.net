@@ -1,0 +1,105 @@
+---
+import Layout from "../../layouts/default.astro";
+
+const books = [
+  { id: 1, title: "On Freedom", author: "Maggie Nelson" },
+  { id: 2, title: "Bluets", author: "Maggie Nelson" },
+  { id: 3, title: "Argonauts", author: "Maggie Nelson" },
+  { id: 4, title: "Scholomance trilogy", author: "Naomi Novik" },
+  { id: 5, title: "Ender's Game", author: "Orson Scott Card" },
+  { id: 6, title: "Gift (trilogy)", author: "Ursula K. Le Guin" },
+  { id: 6, title: "Disability Visibility", author: "Alice Wong" },
+];
+
+---
+
+<script>
+  const buttons = document.querySelectorAll("button");
+  console.log(buttons);
+  buttons.forEach((button) => {
+    let bookId = -1;
+    button.addEventListener("click", (e) => {
+      bookId = e.target.dataset.bookId;
+        if (bookId == -1) {
+            console.log("Returning early")
+            return
+        }
+
+        // close all other dialogs
+        document.querySelectorAll(".book-dialog").forEach((b) => b.close());
+        document.querySelector(`#book${bookId}`).show()
+    });
+  });
+</script>
+
+<Layout>
+  <h1>Favorites</h1>
+
+  <h2>Favorite Books</h2>
+
+  <ul>
+    {
+      books.map((book) => {
+        // Include data-book-id on small because we were getting an error if the small was clicked directly
+        return (
+          <li>
+            <button data-book-id={book.id}>{book.title} <small data-book-id={book.id}>{book.author}</small></button>
+          </li>
+        );
+      })
+    }
+  </ul>
+  {
+    books.map((book) => {
+      return (
+        <dialog id=`book${book.id}` class="book-dialog">
+            <div class="dialog-contents">
+                <div>{book.title}</div>
+                <small>{book.author}</small>
+            </div>
+        </dialog>
+        );
+    })
+  }
+
+
+</Layout>
+
+<style>
+  ul {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    width: fit-content;
+    align-items: end;
+    margin-left: auto;
+    margin-right: auto;
+    gap: .02rem;
+    padding: 0;
+  }
+
+  li {
+    writing-mode: vertical-lr;
+  }
+
+  small {
+    color: rgb(50, 50, 50);
+    padding-top: 0.5rem;
+  }
+
+  dialog {
+    width: 30rem;
+    height: 15rem;
+    border-radius: 4px;
+    margin: 2rem auto;
+  }
+
+  .dialog-contents {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.375rem;
+  }
+</style>
