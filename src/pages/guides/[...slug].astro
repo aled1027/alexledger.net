@@ -22,12 +22,6 @@ const { Content } = await post.render();
 <Layout>
   <h1>{post.data.title}</h1>
   <span>Date:</span>
-  <sl-format-date
-    month="long"
-    day="numeric"
-    year="numeric"
-    date={post.data.date}
-  >
-  </sl-format-date>
+  <span>{post.data.date.toLocaleDateString()}</span>
   <Content />
 </Layout>

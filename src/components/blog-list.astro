@@ -19,13 +19,8 @@ const { blogs } = Astro.props;
             })}
           </div>
           <div class="post-date">
-            <sl-format-date
-              month="short"
-              day="numeric"
-              year="numeric"
-              time-zone="utc"
-              date={post.data.date}
-            />
+
+              <span>{post.data.date.toLocaleDateString()}</span>
           </div>
         </div>
       );
