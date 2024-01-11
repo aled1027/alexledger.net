@@ -1,7 +1,4 @@
 ---
-import Layout from "../../layouts/default.astro";
-import PlaytimeComponent from "../../components/PlaytimeComponent.svelte";
-
 let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 let questions = [
   "Pressure Level",
@@ -13,14 +10,12 @@ let questions = [
 ]
 ---
 
-<!-- <Layout> -->
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script is:inline src="/tailwind.js"></script>
   </head>
 
-  <!-- <PlaytimeComponent client:only /> -->
   <main class="prose">
   <h2 class="trailing-answer-line w-full">Week of: </h2>
   <div class="column-me">
@@ -42,7 +37,6 @@ let questions = [
 <style>
 main {
   margin: 4rem 2rem;
-  /* max-height: 100dvh; */
 }
 
 .trailing-answer-line::after {
