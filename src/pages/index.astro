@@ -20,39 +20,54 @@ const recentGuides = guides
 
 <Layout>
   <h1>Alex Ledger</h1>
+  <section class="top">
+    <p>
+      Welcome to Alex Ledger's website! Here, you can find <a href="
+    posts">
+        blog posts
+      </a>, <a href="/guides">guides</a>, <a href="/projects">my projects</a>, a
 
-  <p>
-    I build small projects and big projects, work on big problems and small
-    problems, and love experimenting with old and new technologies.
-  </p>
-  <p>
-    You can find me at:
-    <ul>
-      <li>
-        My website: <a href="https://alexledger.net">alexledger.net</a>
-      </li>
-      <li>
-        GitHub:
-        <a href="https://github.com/aled1027">https://github.com/aled1027</a>
-      </li>
-      <li>
-        LinkedIn: <a href="https://www.linkedin.com/in/alex-ledger-75aab461"
-          >https://www.linkedin.com/in/alex-ledger-75aab461</a
-        >
-      </li>
-    </ul>
-    <p>The best way to reach me is by email at “contact at alexledger.net”.</p>
 
+      <a href="/spotlight">spotlight</a> of things I think are cool and more.
+    </p>
+    <p>Please take a look around and I hope you enjoy!</p>
+    <p>
+      You can find me at:
+      <ul>
+        <li>
+          My website: <a href="https://alexledger.net">alexledger.net</a>
+        </li>
+        <li>
+          GitHub:
+          <a href="https://github.com/aled1027">https://github.com/aled1027</a>
+        </li>
+        <li>
+          LinkedIn: <a href="https://www.linkedin.com/in/alex-ledger-75aab461"
+            >https://www.linkedin.com/in/alex-ledger-75aab461</a
+          >
+        </li>
+        <li>
+          The best way to contact me is by email at “contact at alexledger.net”.
+        </li>
+      </ul>
+    </p>
+  </section>
+
+  <section class="recent-posts">
     <h2>Recent Posts</h2>
     <BlogList blogs={recentPosts} />
     <a class="see-all-posts-a" href="/posts">
       <span>See all posts</span><sl-icon name="arrow-right"></sl-icon>
     </a>
-    <h2>Recent Guides</h2>
+  </section>
+
+  <section class="guides">
+    <h2>Guides</h2>
     <BlogList blogs={recentGuides} />
-    <a class="see-all-posts-a" href="/guides">
-      <span>See all guides</span><sl-icon name="arrow-right"></sl-icon>
-    </a>
+    <a class="see-all-posts-a" href="/guides"> </a>
+  </section>
+
+  <section class="about">
     <h2>About This Site</h2>
     <p>
       This site was made with <a href="https://astro.build">astro</a>. The
@@ -60,18 +75,51 @@ const recentGuides = guides
         href="https://github.com/aled1027/alexledger.net">GitHub</a
       >.
     </p>
-    <!-- For signing into indieauth -->
-    <!-- <h2>Contact</h2> -->
-    <!-- <a href="mailto:contact@alexledger.net" rel="me">contact@alexledger.net</a> -->
-    <style>
-      .see-all-posts-a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.2rem;
-        font-size: 1rem;
-        font-weight: 500;
+  </section>
+  <!-- For signing into indieauth -->
+  <!-- <h2>Contact</h2> -->
+  <!-- <a href="mailto:contact@alexledger.net" rel="me">contact@alexledger.net</a> -->
+  <style>
+    .see-all-posts-a {
+      margin: 0.5rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    section {
+      /* Use --section-color to color the background and border with a nice hover transition. */
+      background: var(--section-color);
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 2rem auto;
+      transition: border-color 0.4s linear;
+      border: 3px solid white;
+
+      &:hover {
+        border: 3px solid var(--section-color);
       }
-    </style>
-  </p>
+    }
+
+    section.top {
+      --section-color: rgba(49, 113, 200, 0.2);
+      max-width: 70ch;
+    }
+
+    section.recent-posts {
+      --section-color: rgba(49, 200, 49, 0.2);
+    }
+
+    section.guides {
+      --section-color: rgba(132, 49, 200, 0.2);
+    }
+
+    section.about {
+      --section-color: rgba(200, 137, 49, 0.2);
+      max-width: 60ch;
+    }
+  </style>
 </Layout>
