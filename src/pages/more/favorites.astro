@@ -80,16 +80,6 @@ const numBooks = books.length;
         document.querySelectorAll(".book-dialog").forEach((b) => b.close());
         document.querySelector(`#book${bookId}`).show()
 
-        async function f() {
-          const pagefind = await import ("/pagefind/pagefind.js")
-          // get the book to search
-          const bookTitle = e.target.dataset.bookTitle;
-          const search = await pagefind.search(bookTitle);
-          console.log(search.results)
-        }
-        f();
-
-        // Now, search for stuff and add that!
     });
   });
 </script>
