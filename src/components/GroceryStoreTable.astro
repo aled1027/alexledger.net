@@ -1,6 +1,13 @@
 ---
-import {remark} from 'remark'
-
+import { remark } from "remark";
+// import rehypeDocument from "rehype-document";
+// import rehypeFormat from "rehype-format";
+import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+// import { read } from "to-vfile";
+import { unified } from "unified";
+// import { reporter } from "vfile-reporter";
 
 const headers = [
   "Name",
@@ -12,11 +19,11 @@ const headers = [
   "Starting Wage",
   "The bad",
   "Owner",
-  "Website",
-  "Wikipedia Page",
+  // "Website",
+  // "Wikipedia Page",
 ];
 
-const groceries = [
+let groceries = [
   [
     "Safeway & Albertsons",
     "For-profit",
@@ -27,8 +34,8 @@ const groceries = [
     "$15.84",
     "2019 lawsuit lost where Safeway denied a worker the right to sit: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
     "Private Equity - Cerebrus Capital",
-    "https://safeway.com",
-    "https://en.wikipedia.org/wiki/Safeway",
+    // "https://safeway.com",
+    // "https://en.wikipedia.org/wiki/Safeway",
   ],
   [
     "Whole Foods Market",
@@ -40,8 +47,8 @@ const groceries = [
     "",
     "Tracked employees to identify potential unions and union members: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
     "Amazon",
-    "https://www.wholefoodsmarket.com/",
-    "https://en.wikipedia.org/wiki/Whole_Foods_Market",
+    // "https://www.wholefoodsmarket.com/",
+    // "https://en.wikipedia.org/wiki/Whole_Foods_Market",
   ],
   [
     "Trader Joe's",
@@ -53,8 +60,8 @@ const groceries = [
     "",
     "Accused of union busting in Hadley MA - [Link](https://web.archive.org/web/20220729235231/https://www.theguardian.com/us-news/2022/may/23/trader-joes-workers-massachusetts-push-for-union)",
     "Aldi, Family of Theo Albrecht",
-    "https://www.traderjoes.com/home",
-    "https://en.wikipedia.org/wiki/Trader_Joe's",
+    // "https://www.traderjoes.com/home",
+    // "https://en.wikipedia.org/wiki/Trader_Joe's",
   ],
   [
     "Winco",
@@ -66,8 +73,8 @@ const groceries = [
     "$16.43",
     "",
     "Employee Owned",
-    "https://www.wincofoods.com/",
-    "https://en.wikipedia.org/wiki/WinCo_Foods",
+    // "https://www.wincofoods.com/",
+    // "https://en.wikipedia.org/wiki/WinCo_Foods",
   ],
   [
     "New Seasons Market",
@@ -79,8 +86,8 @@ const groceries = [
     "$21.85",
     "Accusations of accelerating, intentionally, gentrification - [Link](https://www.oregonlive.com/window-shop/2015/10/new_seasons_expansion.html)\nFederal unfair labor charges against New Seasons could result in a new union election after failed vote - [Link](https://www.opb.org/article/2023/01/13/federal-unfair-labor-charges-against-new-seasons-could-result-in-a-new-union-election-after-failed-vote/)",
     "Multinational Conglomerate - Good Food Holdings / E-Mart (South Korea)",
-    "https://newseasonsmarket.com/",
-    "https://en.wikipedia.org/wiki/New_Seasons_Market",
+    // "https://newseasonsmarket.com/",
+    // "https://en.wikipedia.org/wiki/New_Seasons_Market",
   ],
   [
     "People's Food Coop",
@@ -92,8 +99,8 @@ const groceries = [
     "$17.68",
     "",
     "Worker-owned",
-    "https://www.peoples.coop/",
-    "https://en.wikipedia.org/wiki/People's_Food_Co-op",
+    // "https://www.peoples.coop/",
+    // "https://en.wikipedia.org/wiki/People's_Food_Co-op",
   ],
   [
     "Alberta Food Coop",
@@ -105,13 +112,25 @@ const groceries = [
     "",
     "",
     "Worker-owned",
-    "https://alberta.coop/",
-    "https://en.wikipedia.org/wiki/Alberta_Cooperative_Grocery",
+    // "https://alberta.coop/",
+    // "https://en.wikipedia.org/wiki/Alberta_Cooperative_Grocery",
   ],
 ];
----
 
-<h2>Table</h2>
+groceries = groceries.map((grocery) => {
+  return grocery.map(async (datum) => {
+    const file = await unified()
+      .use(remarkParse)
+      .use(remarkRehype)
+      // .use(rehypeDocument)
+      // .use(rehypeFormat)
+      .use(rehypeStringify)
+      .process(datum);
+
+    return String(file);
+  });
+});
+---
 
 <table>
   <thead><tr>{headers.map((header) => <th>{header}</th>)}</tr></thead>
@@ -121,7 +140,9 @@ const groceries = [
         return (
           <tr>
             {grocery.map((datum) => (
-              <td>{datum}</td>
+              <td>
+                <div set:html={datum} />
+              </td>
             ))}
           </tr>
         );
@@ -129,25 +150,5 @@ const groceries = [
     }
   </tbody>
 </table>
-<div class="container"></div>
 
-<style>
-  .container {
-    background-color: inherit;
-  }
-
-  h2 {
-    margin-bottom: 0.125rem;
-  }
-
-  h2 a {
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .subtitle {
-    color: var(--fun-1);
-  }
-</style>
+<style></style>
