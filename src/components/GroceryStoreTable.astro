@@ -1,0 +1,153 @@
+---
+import {remark} from 'remark'
+
+
+const headers = [
+  "Name",
+  "Corporate Structure",
+  "Classification",
+  "Number of Employees",
+  "Unionized?",
+  "Number of Stores",
+  "Starting Wage",
+  "The bad",
+  "Owner",
+  "Website",
+  "Wikipedia Page",
+];
+
+const groceries = [
+  [
+    "Safeway & Albertsons",
+    "For-profit",
+    "Big Chain",
+    "250,000",
+    "",
+    "",
+    "$15.84",
+    "2019 lawsuit lost where Safeway denied a worker the right to sit: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
+    "Private Equity - Cerebrus Capital",
+    "https://safeway.com",
+    "https://en.wikipedia.org/wiki/Safeway",
+  ],
+  [
+    "Whole Foods Market",
+    "For-profit",
+    "Big Chain",
+    "91,000",
+    "",
+    "",
+    "",
+    "Tracked employees to identify potential unions and union members: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
+    "Amazon",
+    "https://www.wholefoodsmarket.com/",
+    "https://en.wikipedia.org/wiki/Whole_Foods_Market",
+  ],
+  [
+    "Trader Joe's",
+    "For-profit",
+    "Big Chain",
+    "50,000",
+    "",
+    "",
+    "",
+    "Accused of union busting in Hadley MA - [Link](https://web.archive.org/web/20220729235231/https://www.theguardian.com/us-news/2022/may/23/trader-joes-workers-massachusetts-push-for-union)",
+    "Aldi, Family of Theo Albrecht",
+    "https://www.traderjoes.com/home",
+    "https://en.wikipedia.org/wiki/Trader_Joe's",
+  ],
+  [
+    "Winco",
+    "For-profit",
+    "Regional chain, employee-owned",
+    "22,000",
+    "",
+    "140",
+    "$16.43",
+    "",
+    "Employee Owned",
+    "https://www.wincofoods.com/",
+    "https://en.wikipedia.org/wiki/WinCo_Foods",
+  ],
+  [
+    "New Seasons Market",
+    "For-profit B Corp",
+    "Small chain, owned by multinational",
+    "2,700",
+    "Yes",
+    "",
+    "$21.85",
+    "Accusations of accelerating, intentionally, gentrification - [Link](https://www.oregonlive.com/window-shop/2015/10/new_seasons_expansion.html)\nFederal unfair labor charges against New Seasons could result in a new union election after failed vote - [Link](https://www.opb.org/article/2023/01/13/federal-unfair-labor-charges-against-new-seasons-could-result-in-a-new-union-election-after-failed-vote/)",
+    "Multinational Conglomerate - Good Food Holdings / E-Mart (South Korea)",
+    "https://newseasonsmarket.com/",
+    "https://en.wikipedia.org/wiki/New_Seasons_Market",
+  ],
+  [
+    "People's Food Coop",
+    "Worker-owned Cooperative",
+    "Food Coop",
+    "35",
+    "",
+    "1",
+    "$17.68",
+    "",
+    "Worker-owned",
+    "https://www.peoples.coop/",
+    "https://en.wikipedia.org/wiki/People's_Food_Co-op",
+  ],
+  [
+    "Alberta Food Coop",
+    "Worker-owned Cooperative",
+    "Food Coop",
+    "35",
+    "",
+    "1",
+    "",
+    "",
+    "Worker-owned",
+    "https://alberta.coop/",
+    "https://en.wikipedia.org/wiki/Alberta_Cooperative_Grocery",
+  ],
+];
+---
+
+<h2>Table</h2>
+
+<table>
+  <thead><tr>{headers.map((header) => <th>{header}</th>)}</tr></thead>
+  <tbody>
+    {
+      groceries.map((grocery) => {
+        return (
+          <tr>
+            {grocery.map((datum) => (
+              <td>{datum}</td>
+            ))}
+          </tr>
+        );
+      })
+    }
+  </tbody>
+</table>
+<div class="container"></div>
+
+<style>
+  .container {
+    background-color: inherit;
+  }
+
+  h2 {
+    margin-bottom: 0.125rem;
+  }
+
+  h2 a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .subtitle {
+    color: var(--fun-1);
+  }
+</style>
