@@ -123,19 +123,25 @@ let groceries = [
   },
 ];
 
+// Augment groceries with Id, IssuesAsHtml, and NumIssues.
+// This modified the grocery objects in place.
 groceries.map(async (grocery) => {
-  grocery.IssuesAsHtml = markdownToHtml(grocery.Issues);
-  // grocery.IssuesScore = parseInt(grocery.Issues.length / 30); // TODO: move into data
-  if (grocery.Issues.length > 0) {
-    grocery.IssuesScore = grocery.Issues.split("\n").length;
-  } else {
-    grocery.IssuesScore = 0;
-  }
-
+  // A human readable id for each grocery object. Used for element ids and events.
   grocery.Id = grocery.Name.toLowerCase().replace(/ /g, "-").replace(/'/g, "").replace(/&/g, '');
+
+  // Convert the markdown issues to HTMl for rendering
+  grocery.IssuesAsHtml = markdownToHtml(grocery.Issues);
+
+  // TODO: move into data
+  if (grocery.Issues.length > 0) {
+    grocery.NumIssues = grocery.Issues.split("\n").length;
+  } else {
+    grocery.NumIssues = 0;
+  }
 });
 
-groceries.sort((g1, g2) => g1.IssuesScore - g2.IssuesScore);
+// Sort the groceries for rendering by their NumIssues, ascending.
+groceries.sort((g1, g2) => g1.NumIssues - g2.NumIssues);
 ---
 
 <div class="container">
@@ -161,10 +167,10 @@ groceries.sort((g1, g2) => g1.IssuesScore - g2.IssuesScore);
           <div class="cell">
             <dialog id=`dialog${grocery.Id}`>
               <h4>{grocery.Name} Issues</h4>
-              {grocery.IssuesScore > 0 ? <div set:html={grocery.IssuesAsHtml} /> : <p>No Issues</p>}
+              {grocery.NumIssues > 0 ? <div set:html={grocery.IssuesAsHtml} /> : <p>No Issues</p>}
               <button data-target=`#dialog${grocery.Id}` class="register-close-modal">Close</button>
             </dialog>
-            <button id=`button${grocery.Id}` data-target=`#dialog${grocery.Id}` class="text-button register-open-modal">{grocery.IssuesScore} Issues</button>
+            <button id=`button${grocery.Id}` data-target=`#dialog${grocery.Id}` class="text-button register-open-modal">{grocery.NumIssues} Issues</button>
           </div>
         </div>
       );
