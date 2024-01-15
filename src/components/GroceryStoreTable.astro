@@ -172,6 +172,15 @@ groceries.sort((g1, g2) => g1.NumIssues - g2.NumIssues);
             </dialog>
             <button id=`button${grocery.Id}` data-target=`#dialog${grocery.Id}` class="text-button register-open-modal">{grocery.NumIssues} Issues</button>
           </div>
+          <div class="cell">
+            <ul>
+              <li>Number of Stores (worldwide): {grocery['Number of Stores']}</li>
+              <li>Number of Employees: {grocery['Number of Employees']}</li>
+              <li>Starting Wage (guessed): {grocery['Starting Wage?'] ? grocery['Starting Wage?'] : 'Unknown' }</li>
+              <li>Unionized: {grocery['Unionized?'] ? grocery['Unionized?'] : 'No' }</li>
+              <li><a href={grocery['Wikipedia Page']} target="_blank" rel="noreferrer">Link to Wikpedia</a></li>
+            </ul>
+          </div>
         </div>
       );
     })
@@ -222,6 +231,7 @@ groceries.sort((g1, g2) => g1.NumIssues - g2.NumIssues);
 
   .row {
     display: grid;
+    align-items: center;
     grid-template-columns: repeat(1, 1fr);
     align-items: center;
     background: rgba(128, 128, 128, 0.3);
@@ -236,7 +246,7 @@ groceries.sort((g1, g2) => g1.NumIssues - g2.NumIssues);
     }
 
     @container (min-width: 600px) {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 2fr 1fr 2fr 1fr 4fr;
       gap: 1rem;
     }
   }
@@ -264,13 +274,6 @@ groceries.sort((g1, g2) => g1.NumIssues - g2.NumIssues);
     }
   }
 
-  .text-button {
-    /* Component for a button that looks like text */
-    padding: 0;
-    width: fit-content;
-    border: none;
-  }
-
   .cell h3 a {
     text-decoration: none;
     &:hover {
@@ -284,6 +287,22 @@ groceries.sort((g1, g2) => g1.NumIssues - g2.NumIssues);
     border: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 5px;
   }
+
+
+
+  /* COMPONENTS */
+  .text-button {
+    /* Component for a button that looks like text */
+    padding: 0;
+    width: fit-content;
+    border: none;
+  }
+
+  /* UTILITIES */
+  .self-justify-center {
+    justify-self: center;
+  }
+
 
 </style>
 
