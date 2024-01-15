@@ -9,146 +9,145 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 // import { reporter } from "vfile-reporter";
 
-const headers = [
-  "Name",
-  "Corporate Structure",
-  "Classification",
-  "Number of Employees",
-  "Unionized?",
-  "Number of Stores",
-  "Starting Wage",
-  "The bad",
-  "Owner",
-  // "Website",
-  // "Wikipedia Page",
-];
-
 let groceries = [
-  [
-    "Safeway & Albertsons",
-    "For-profit",
-    "Big Chain",
-    "250,000",
-    "",
-    "",
-    "$15.84",
-    "2019 lawsuit lost where Safeway denied a worker the right to sit: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
-    "Private Equity - Cerebrus Capital",
-    // "https://safeway.com",
-    // "https://en.wikipedia.org/wiki/Safeway",
-  ],
-  [
-    "Whole Foods Market",
-    "For-profit",
-    "Big Chain",
-    "91,000",
-    "",
-    "",
-    "",
-    "Tracked employees to identify potential unions and union members: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
-    "Amazon",
-    // "https://www.wholefoodsmarket.com/",
-    // "https://en.wikipedia.org/wiki/Whole_Foods_Market",
-  ],
-  [
-    "Trader Joe's",
-    "For-profit",
-    "Big Chain",
-    "50,000",
-    "",
-    "",
-    "",
-    "Accused of union busting in Hadley MA - [Link](https://web.archive.org/web/20220729235231/https://www.theguardian.com/us-news/2022/may/23/trader-joes-workers-massachusetts-push-for-union)",
-    "Aldi, Family of Theo Albrecht",
-    // "https://www.traderjoes.com/home",
-    // "https://en.wikipedia.org/wiki/Trader_Joe's",
-  ],
-  [
-    "Winco",
-    "For-profit",
-    "Regional chain, employee-owned",
-    "22,000",
-    "",
-    "140",
-    "$16.43",
-    "",
-    "Employee Owned",
-    // "https://www.wincofoods.com/",
-    // "https://en.wikipedia.org/wiki/WinCo_Foods",
-  ],
-  [
-    "New Seasons Market",
-    "For-profit B Corp",
-    "Small chain, owned by multinational",
-    "2,700",
-    "Yes",
-    "",
-    "$21.85",
-    "Accusations of accelerating, intentionally, gentrification - [Link](https://www.oregonlive.com/window-shop/2015/10/new_seasons_expansion.html)\nFederal unfair labor charges against New Seasons could result in a new union election after failed vote - [Link](https://www.opb.org/article/2023/01/13/federal-unfair-labor-charges-against-new-seasons-could-result-in-a-new-union-election-after-failed-vote/)",
-    "Multinational Conglomerate - Good Food Holdings / E-Mart (South Korea)",
-    // "https://newseasonsmarket.com/",
-    // "https://en.wikipedia.org/wiki/New_Seasons_Market",
-  ],
-  [
-    "People's Food Coop",
-    "Worker-owned Cooperative",
-    "Food Coop",
-    "35",
-    "",
-    "1",
-    "$17.68",
-    "",
-    "Worker-owned",
-    // "https://www.peoples.coop/",
-    // "https://en.wikipedia.org/wiki/People's_Food_Co-op",
-  ],
-  [
-    "Alberta Food Coop",
-    "Worker-owned Cooperative",
-    "Food Coop",
-    "35",
-    "",
-    "1",
-    "",
-    "",
-    "Worker-owned",
-    // "https://alberta.coop/",
-    // "https://en.wikipedia.org/wiki/Alberta_Cooperative_Grocery",
-  ],
+  {
+    Name: "Safeway & Albertsons",
+    "Corporate Structure": "For-profit",
+    Classification: "Big Chain",
+    "Number of Employees": "250,000",
+    "Unionized?": "",
+    "Number of Stores": "",
+    "Starting Wage": "$15.84",
+    "The bad":
+      "2019 lawsuit lost where Safeway denied a worker the right to sit: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
+    Owner: "Private Equity - Cerebrus Capital",
+    Website: "https://safeway.com",
+    "Wikipedia Page": "https://en.wikipedia.org/wiki/Safeway",
+  },
+  {
+    Name: "Whole Foods Market",
+    "Corporate Structure": "For-profit",
+    Classification: "Big Chain",
+    "Number of Employees": "91,000",
+    "Unionized?": "",
+    "Number of Stores": "",
+    "Starting Wage": "",
+    "The bad":
+      "Tracked employees to identify potential unions and union members: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
+    Owner: "Amazon",
+    Website: "https://www.wholefoodsmarket.com/",
+    "Wikipedia Page": "https://en.wikipedia.org/wiki/Whole_Foods_Market",
+  },
+  {
+    Name: "Trader Joe's",
+    "Corporate Structure": "For-profit",
+    Classification: "Big Chain",
+    "Number of Employees": "50,000",
+    "Unionized?": "",
+    "Number of Stores": "",
+    "Starting Wage": "",
+    "The bad":
+      "Accused of union busting in Hadley MA - [Link](https://web.archive.org/web/20220729235231/https://www.theguardian.com/us-news/2022/may/23/trader-joes-workers-massachusetts-push-for-union)",
+    Owner: "Aldi, Family of Theo Albrecht",
+    Website: "https://www.traderjoes.com/home",
+    "Wikipedia Page": "https://en.wikipedia.org/wiki/Trader_Joe's",
+  },
+  {
+    Name: "Winco",
+    "Corporate Structure": "For-profit",
+    Classification: "Regional chain, employee-owned",
+    "Number of Employees": "22,000",
+    "Unionized?": "",
+    "Number of Stores": "140",
+    "Starting Wage": "$16.43",
+    "The bad": "",
+    Owner: "Employee Owned",
+    Website: "https://www.wincofoods.com/",
+    "Wikipedia Page": "https://en.wikipedia.org/wiki/WinCo_Foods",
+  },
+  {
+    Name: "New Seasons Market",
+    "Corporate Structure": "For-profit B Corp",
+    Classification: "Small chain, owned by multinational",
+    "Number of Employees": "2,700",
+    "Unionized?": "Yes",
+    "Number of Stores": "",
+    "Starting Wage": "$21.85",
+    "The bad":
+      "Accusations of accelerating, intentionally, gentrification - [Link](https://www.oregonlive.com/window-shop/2015/10/new_seasons_expansion.html)\nFederal unfair labor charges against New Seasons could result in a new union election after failed vote - [Link](https://www.opb.org/article/2023/01/13/federal-unfair-labor-charges-against-new-seasons-could-result-in-a-new-union-election-after-failed-vote/)",
+    Owner:
+      "Multinational Conglomerate - Good Food Holdings / E-Mart (South Korea)",
+    Website: "https://newseasonsmarket.com/",
+    "Wikipedia Page": "https://en.wikipedia.org/wiki/New_Seasons_Market",
+  },
+  {
+    Name: "People's Food Coop",
+    "Corporate Structure": "Worker-owned Cooperative",
+    Classification: "Food Coop",
+    "Number of Employees": "35",
+    "Unionized?": "",
+    "Number of Stores": "1",
+    "Starting Wage": "$17.68",
+    "The bad": "",
+    Owner: "Worker-owned",
+    Website: "https://www.peoples.coop/",
+    "Wikipedia Page": "https://en.wikipedia.org/wiki/People's_Food_Co-op",
+  },
+  {
+    Name: "Alberta Food Coop",
+    "Corporate Structure": "Worker-owned Cooperative",
+    Classification: "Food Coop",
+    "Number of Employees": "35",
+    "Unionized?": "",
+    "Number of Stores": "1",
+    "Starting Wage": "",
+    "The bad": "",
+    Owner: "Worker-owned",
+    Website: "https://alberta.coop/",
+    "Wikipedia Page":
+      "https://en.wikipedia.org/wiki/Alberta_Cooperative_Grocery",
+  },
 ];
-
-groceries = groceries.map((grocery) => {
-  return grocery.map(async (datum) => {
-    const file = await unified()
-      .use(remarkParse)
-      .use(remarkRehype)
-      // .use(rehypeDocument)
-      // .use(rehypeFormat)
-      .use(rehypeStringify)
-      .process(datum);
-
-    return String(file);
-  });
-});
 ---
 
-<table>
-  <thead><tr>{headers.map((header) => <th>{header}</th>)}</tr></thead>
-  <tbody>
-    {
-      groceries.map((grocery) => {
-        return (
-          <tr>
-            {grocery.map((datum) => (
-              <td>
-                <div set:html={datum} />
-              </td>
-            ))}
-          </tr>
-        );
-      })
-    }
-  </tbody>
-</table>
+<div class="container">
+  {
+    groceries.map((grocery) => {
+      return (
+        <div class="row" id={grocery.Name.replace(" ", "-")}>
+          <div>
+            <div>{grocery.Name}</div>
+          </div>
+          <div>
+            <div>{grocery.Owner}</div>
+            <small>owner</small>
+          </div>
+          <div>
+            <div>{grocery.Classification}</div>
+            <small>classification</small>
+          </div>
+        </div>
+      );
+    })
+  }
+</div>
 
-<style></style>
+<style>
+  .container {
+    display: grid;
+    grid-template-rows: repeat(8, 1fr);
+    gap: 0;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    &:hover {
+      background-color: bisque;
+    }
+  }
+
+  .cell {
+  }
+</style>
