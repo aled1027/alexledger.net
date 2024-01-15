@@ -1,13 +1,23 @@
 ---
-import { remark } from "remark";
-// import rehypeDocument from "rehype-document";
-// import rehypeFormat from "rehype-format";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
-// import { read } from "to-vfile";
 import { unified } from "unified";
-// import { reporter } from "vfile-reporter";
+
+async function markdownToHtml(s) {
+  // Given a string as markdown, return as an HTML string.
+ // This string can be used astro with: <div set:html={htmlString} />
+  const html = await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeStringify)
+    .process(s);
+  return html;
+}
+
+// Things to do:
+// Add OwnerSubtext to spreadsheet
+// Format issues in spreadsheet as markdown
 
 let groceries = [
   {
@@ -18,9 +28,10 @@ let groceries = [
     "Unionized?": "",
     "Number of Stores": "",
     "Starting Wage": "$15.84",
-    "The bad":
-      "2019 lawsuit lost where Safeway denied a worker the right to sit: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
-    Owner: "Private Equity - Cerebrus Capital",
+    Issues:
+      "- 2019 lawsuit lost where Safeway denied a worker the right to sit ([Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/))",
+    Owner: "Cerebrus Capital",
+    OwnerSubtext: "Private Equity",
     Website: "https://safeway.com",
     "Wikipedia Page": "https://en.wikipedia.org/wiki/Safeway",
   },
@@ -32,9 +43,10 @@ let groceries = [
     "Unionized?": "",
     "Number of Stores": "",
     "Starting Wage": "",
-    "The bad":
-      "Tracked employees to identify potential unions and union members: [Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/)",
+    Issues:
+      "- Tracked employees to identify potential unions and union members ([Link](https://www.cbsnews.com/sanfrancisco/news/safeway-clerks-sit-down-on-job-santa-clara-court-ruling/))",
     Owner: "Amazon",
+    OwnerSubtext: "Publicly Traded Company",
     Website: "https://www.wholefoodsmarket.com/",
     "Wikipedia Page": "https://en.wikipedia.org/wiki/Whole_Foods_Market",
   },
@@ -46,9 +58,10 @@ let groceries = [
     "Unionized?": "",
     "Number of Stores": "",
     "Starting Wage": "",
-    "The bad":
-      "Accused of union busting in Hadley MA - [Link](https://web.archive.org/web/20220729235231/https://www.theguardian.com/us-news/2022/may/23/trader-joes-workers-massachusetts-push-for-union)",
-    Owner: "Aldi, Family of Theo Albrecht",
+    Issues:
+      "- Accused of union busting in Hadley MA ([Link](https://web.archive.org/web/20220729235231/https://www.theguardian.com/us-news/2022/may/23/trader-joes-workers-massachusetts-push-for-union))",
+    Owner: "Family of Theo Albrecht",
+    OwnerSubtext: "Owns Aldi",
     Website: "https://www.traderjoes.com/home",
     "Wikipedia Page": "https://en.wikipedia.org/wiki/Trader_Joe's",
   },
@@ -60,8 +73,9 @@ let groceries = [
     "Unionized?": "",
     "Number of Stores": "140",
     "Starting Wage": "$16.43",
-    "The bad": "",
+    Issues: "",
     Owner: "Employee Owned",
+    OwnerSubtext: "",
     Website: "https://www.wincofoods.com/",
     "Wikipedia Page": "https://en.wikipedia.org/wiki/WinCo_Foods",
   },
@@ -73,10 +87,10 @@ let groceries = [
     "Unionized?": "Yes",
     "Number of Stores": "",
     "Starting Wage": "$21.85",
-    "The bad":
-      "Accusations of accelerating, intentionally, gentrification - [Link](https://www.oregonlive.com/window-shop/2015/10/new_seasons_expansion.html)\nFederal unfair labor charges against New Seasons could result in a new union election after failed vote - [Link](https://www.opb.org/article/2023/01/13/federal-unfair-labor-charges-against-new-seasons-could-result-in-a-new-union-election-after-failed-vote/)",
-    Owner:
-      "Multinational Conglomerate - Good Food Holdings / E-Mart (South Korea)",
+    Issues:
+      "- Accusations of accelerating, intentionally, gentrification ([Link](https://www.oregonlive.com/window-shop/2015/10/new_seasons_expansion.html))\n- Federal unfair labor charges against New Seasons could result in a new union election after failed vote ([Link](https://www.opb.org/article/2023/01/13/federal-unfair-labor-charges-against-new-seasons-could-result-in-a-new-union-election-after-failed-vote/))",
+    Owner: "Good Food Holdings / E-Mart",
+    OwnerSubtext: "Multinational Conglomerate, South Korea",
     Website: "https://newseasonsmarket.com/",
     "Wikipedia Page": "https://en.wikipedia.org/wiki/New_Seasons_Market",
   },
@@ -88,7 +102,7 @@ let groceries = [
     "Unionized?": "",
     "Number of Stores": "1",
     "Starting Wage": "$17.68",
-    "The bad": "",
+    Issues: "",
     Owner: "Worker-owned",
     Website: "https://www.peoples.coop/",
     "Wikipedia Page": "https://en.wikipedia.org/wiki/People's_Food_Co-op",
@@ -101,13 +115,27 @@ let groceries = [
     "Unionized?": "",
     "Number of Stores": "1",
     "Starting Wage": "",
-    "The bad": "",
+    Issues: "",
     Owner: "Worker-owned",
     Website: "https://alberta.coop/",
     "Wikipedia Page":
       "https://en.wikipedia.org/wiki/Alberta_Cooperative_Grocery",
   },
 ];
+
+groceries.map(async (grocery) => {
+  grocery.IssuesAsHtml = markdownToHtml(grocery.Issues);
+  // grocery.IssuesScore = parseInt(grocery.Issues.length / 30); // TODO: move into data
+  if (grocery.Issues.length > 0) {
+    grocery.IssuesScore = grocery.Issues.split("\n").length;
+  } else {
+    grocery.IssuesScore = 0;
+  }
+
+  grocery.Id = grocery.Name.toLowerCase().replace(/ /g, "-").replace(/'/g, "").replace(/&/g, '');
+});
+
+groceries.sort((g1, g2) => g1.IssuesScore - g2.IssuesScore);
 ---
 
 <div class="container">
@@ -115,39 +143,141 @@ let groceries = [
     groceries.map((grocery) => {
       return (
         <div class="row" id={grocery.Name.replace(" ", "-")}>
-          <div>
-            <div>{grocery.Name}</div>
+          <div class="cell">
+            <h3>
+              <a href={grocery.Website} target="_blank" rel="noreferrer">
+                {grocery.Name}
+              </a>
+            </h3>
           </div>
-          <div>
+          <div class="cell">
             <div>{grocery.Owner}</div>
-            <small>owner</small>
+            {grocery?.OwnerSubtext && <small>{grocery.OwnerSubtext}</small>}
           </div>
-          <div>
+          <div class="cell">
             <div>{grocery.Classification}</div>
             <small>classification</small>
+          </div>
+          <div class="cell">
+            <dialog id=`dialog${grocery.Id}`>
+              <h4>{grocery.Name} Issues</h4>
+              {grocery.IssuesScore > 0 ? <div set:html={grocery.IssuesAsHtml} /> : <p>No Issues</p>}
+              <button data-target=`#dialog${grocery.Id}` class="register-close-modal">Close</button>
+            </dialog>
+            <button id=`button${grocery.Id}` data-target=`#dialog${grocery.Id}` class="text-button register-open-modal">{grocery.IssuesScore} Issues</button>
           </div>
         </div>
       );
     })
   }
 </div>
+<script is:inline>
+  // Add event handlers for the opening of the modals
+  const openButtons = document.querySelectorAll(".register-open-modal");
+  openButtons.forEach((button) => {
+    const targetId = button.dataset.target;
+    const target = document.querySelector(targetId);
+    button.addEventListener('click', () => {
+      target.showModal();
+    })
+  })
+
+  // Add event handlers for the closing of the modals
+  const closeButtons = document.querySelectorAll(".register-close-modal");
+  closeButtons.forEach((button) => {
+    const targetId = button.dataset.target;
+    const target = document.querySelector(targetId);
+    button.addEventListener('click', () => {
+      target.close();
+    })
+  })
+
+  // Close dialogs if they are open and the background is selected
+  const dialogs = document.querySelectorAll("dialog");
+  dialogs.forEach((dialog) => {
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInDialog = (rect.top <= e.clientY) && (e.clientY < rect.top + rect.height) && (rect.left <= e.clientX) && (e.clientX <= rect.left + rect.width);
+      if (!isInDialog) {
+        dialog.close();
+      }
+    })
+  })
+
+</script>
 
 <style>
   .container {
-    display: grid;
-    grid-template-rows: repeat(8, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 0;
+    container-type: inline-size;
   }
 
   .row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+    background: rgba(128, 128, 128, 0.3);
+    margin: 0.125rem 0;
+    gap: 0.375rem;
+    padding: 0.125rem 0.625rem;
+    border-radius: 5px;
+    min-height: 6rem;
 
     &:hover {
       background-color: bisque;
     }
+
+    @container (min-width: 600px) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
   }
 
   .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0.125rem 0;
+
+    @container (min-width: 600px) {
+      grid-template-columns: repeat(4, 1fr);
+      margin: 1rem 0;
+    }
   }
+
+  .cell h3 {
+    font-weight: 500;
+  }
+
+  button {
+    text-decoration: underline;
+    &:hover {
+      font-weight: 400;
+    }
+  }
+
+  .text-button {
+    /* Component for a button that looks like text */
+    padding: 0;
+    width: fit-content;
+    border: none;
+  }
+
+  .cell h3 a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  dialog {
+    min-width: 33vw;
+    max-width: 95vw;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+  }
+
 </style>
+
