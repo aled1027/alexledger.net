@@ -26,8 +26,9 @@ const { grocery } = Astro.props;
   <div class="card">
     <div class="left">
       <button
-        class=`dot align-self-center bg-${grocery.GreenYellowRed.toLowerCase()}`
-      ></button>
+        class=`tooltip dot align-self-center bg-${grocery.GreenYellowRed.toLowerCase()}`>
+        <span class="tooltiptext">Rated: {grocery.GreenYellowRed}</span>
+      </button>
       <div class="left-content">
         <h3><a href={grocery.Website}>{grocery.Name}</a></h3>
         <span>{grocery.Owner}</span>
@@ -69,7 +70,6 @@ const { grocery } = Astro.props;
     </div>
   </div>
 </div>
-
 <style>
   .container {
     container-type: inline-size;
@@ -77,13 +77,13 @@ const { grocery } = Astro.props;
   .card {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 3fr;
     margin: 1rem 0;
 
     @container (min-width: 600px) {
       grid-template-columns: 2fr 3fr;
       grid-template-rows: 1fr;
-      margin: 0;
+      margin: 0.375rem 0;
     }
 
     &:hover {
@@ -97,6 +97,15 @@ const { grocery } = Astro.props;
     gap: 1.5rem;
     align-items: center;
     border: 1px solid var(--stone-5);
+
+    /* Do a bit of work to prevent double borders with the right side */
+    border-right: 1px solid var(--stone-5);
+    border-bottom: none;
+
+    @container (min-width: 600px) {
+      border-right: none;
+      border-bottom: 1px solid var(--stone-5);
+    }
   }
 
   h3 {
@@ -122,12 +131,17 @@ const { grocery } = Astro.props;
 
   .right {
     display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-auto-flow: column;
     gap: 0.5rem;
     padding: 1rem;
     border: 1px solid var(--stone-5);
+
+    @container (min-width: 600px) {
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
   }
 
   .right-entry {
@@ -190,22 +204,27 @@ const { grocery } = Astro.props;
     background-color: var(--red-5);
   }
 
+  /* Tooltip from https://www.w3schools.com/css/css_tooltip.asp */
   .tooltip {
-    /* position: relative; */
+    position: relative;
   }
 
-  /* Tooltip text */
   .tooltip .tooltiptext {
     visibility: hidden;
-    /* width: 120px;
+    width: 120px;
     background-color: black;
     color: #fff;
     text-align: center;
-    padding: 5px 0; */
-    /* border-radius: 6px; */
+    padding: 5px 0;
+    border-radius: 6px;
 
     /* Position the tooltip text - see examples below! */
-    /* position: absolute; */
-    /* z-index: 1; */
+    position: absolute;
+    z-index: 1;
+  }
+
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
   }
 </style>
