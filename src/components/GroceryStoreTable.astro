@@ -152,7 +152,6 @@ groceries.sort((g1, g2) => sortMap[g1.GreenYellowRed] - sortMap[g2.GreenYellowRe
   .container {
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
     container-type: inline-size;
   }
 
@@ -161,16 +160,15 @@ groceries.sort((g1, g2) => sortMap[g1.GreenYellowRed] - sortMap[g2.GreenYellowRe
     align-items: center;
     grid-template-columns: repeat(1, 1fr);
     align-items: center;
-    background: var(--surface-2);
-    margin: 0.125rem 0;
+    background: var(--surface-1);
+    margin: 0;
     gap: 0.375rem;
     padding: 0.125rem 0.625rem;
-    border: 1px solid var(--text-1);
-    border-radius: 10px;
     min-height: 6rem;
+    border: 1px solid var(--text-1);
 
     &:hover {
-      background-color: var(--surface-1);
+      background-color: var(--surface-2);
     }
 
     @container (min-width: 600px) {
