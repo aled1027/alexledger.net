@@ -1,7 +1,7 @@
 ---
 title: A Brief Look at TinaCMS
 date: 2024-01-16
-tags: [websites, writing]
+tags: [websites, writing, obsidian]
 ---
 
 ## Introduction
