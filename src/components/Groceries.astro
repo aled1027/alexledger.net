@@ -1,0 +1,81 @@
+---
+import GroceryStoreCard from "./GroceryStoreCard.astro";
+import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
+import Papa from "papaparse";
+
+// This is a wrapper around the GroceryStoreCard that
+// (a) fetches the data from google sheets and then
+// (b) cleans the data
+// (c) renders the grocery data with the grocery store card
+
+async function markdownToHtml(s) {
+  // Given a string as markdown, return as an HTML string.
+  // This string can be used astro with: <div set:html={htmlString} />
+  const html = await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeStringify)
+    .process(s);
+  return html;
+}
+
+const url =
+  "https://docs.google.com/spreadsheets/d/1Q31kIPVKB0yXY3kREschVt_ezv8blleyCWa10wW4vfs/gviz/tq?tqx=out:csv&sheet=Sheet1";
+const response = await fetch(url);
+const csvData = await response.text();
+const data = Papa.parse(csvData, { header: true });
+const groceries = data.data;
+
+// Link to sheet:
+// TODOs:
+// - Add a green/yellow/red rating
+//    - This would be opinionated and could pop up a summary with the issues listed
+//    --> this would be really cool in general for something like this
+//    --> Not sure exactly on the design here. Like what's the green/yellow/red icon. Maybe just a little svg circle with a mouse-over
+// - If I were to do again:
+//    - Try pulling data directly from a public spreadsheet or gist
+//    - Include table filters
+//    --> But would be key to support some html and dialogs from the table
+//    --> I bet there's a good table component/library to play with.
+// Not going to do but would do if going for perfect
+// - Add links to owners
+// - Add more sources and footnotes
+
+// I kind of like this
+// https://cars.usnews.com/cars-trucks/rankings/small-cars
+
+// Augment groceries with Id, IssuesAsHtml, and NumIssues.
+// This modified the grocery objects in place.
+groceries.map(async (grocery) => {
+  // A human readable id for each grocery object. Used for element ids and events.
+  grocery.Id = grocery.Name.toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/'/g, "")
+    .replace(/&/g, "");
+
+  // Convert the markdown issues to HTMl for rendering
+  grocery.IssuesAsHtml = markdownToHtml(grocery.Issues);
+
+  // TODO: move into google sheet
+  if (grocery.Issues.length > 0) {
+    grocery.NumIssues = grocery.Issues.split("\n").length;
+  } else {
+    grocery.NumIssues = 0;
+  }
+});
+
+// Sort the groceries for rendering by green then yellow then red
+const sortMap = { Green: 0, Yellow: 1, Red: 2 };
+groceries.sort(
+  (g1, g2) => sortMap[g1.GreenYellowRed] - sortMap[g2.GreenYellowRed]
+);
+---
+
+{
+  groceries.map((grocery) => {
+    return <GroceryStoreCard grocery={grocery} />;
+  })
+}
