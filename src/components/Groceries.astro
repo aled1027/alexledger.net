@@ -30,25 +30,13 @@ const data = Papa.parse(csvData, { header: true });
 const groceries = data.data;
 
 // Link to sheet:
-// TODOs:
-// - Add a green/yellow/red rating
-//    - This would be opinionated and could pop up a summary with the issues listed
-//    --> this would be really cool in general for something like this
-//    --> Not sure exactly on the design here. Like what's the green/yellow/red icon. Maybe just a little svg circle with a mouse-over
 // - If I were to do again:
 //    - Try pulling data directly from a public spreadsheet or gist
 //    - Include table filters
 //    --> But would be key to support some html and dialogs from the table
 //    --> I bet there's a good table component/library to play with.
-// Not going to do but would do if going for perfect
-// - Add links to owners
-// - Add more sources and footnotes
 
-// I kind of like this
-// https://cars.usnews.com/cars-trucks/rankings/small-cars
-
-// Augment groceries with Id, IssuesAsHtml, and NumIssues.
-// This modified the grocery objects in place.
+// Augment grocery objects in place.
 groceries.map(async (grocery) => {
   // A human readable id for each grocery object. Used for element ids and events.
   grocery.Id = grocery.Name.toLowerCase()
@@ -56,15 +44,8 @@ groceries.map(async (grocery) => {
     .replace(/'/g, "")
     .replace(/&/g, "");
 
-  // Convert the markdown issues to HTMl for rendering
-  grocery.IssuesAsHtml = markdownToHtml(grocery.Issues);
-
-  // TODO: move into google sheet
-  if (grocery.Issues.length > 0) {
-    grocery.NumIssues = grocery.Issues.split("\n").length;
-  } else {
-    grocery.NumIssues = 0;
-  }
+  // Convert the markdown read more to HTMl for rendering
+  grocery.ReadMoreAsHtml = markdownToHtml(grocery.ReadMore);
 });
 
 // Sort the groceries for rendering by green then yellow then red
