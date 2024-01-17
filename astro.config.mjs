@@ -7,13 +7,17 @@ import svelte from "@astrojs/svelte";
 // https://astro.build/config
 export default defineConfig({
   markdown: {
-    smartypants: false
+    smartypants: false,
   },
   build: {
-    format: "file"
+    format: "file",
   },
   site: "https://alexledger.net",
-  integrations: [sitemap({
-    // filter: (page) => page !== 'https://stargazers.club/secret-vip-lounge/',
-  }), mdx(), svelte()]
+  integrations: [
+    sitemap({
+      // filter: (page) => page !== 'https://stargazers.club/secret-vip-lounge/',
+    }),
+    mdx(),
+    svelte(),
+  ],
 });
