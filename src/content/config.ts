@@ -4,7 +4,7 @@ export const collections = {
   posts: defineCollection({
     schema: z.object({
       title: z.string(),
-      date: z.date(),
+      date: z.coerce.date(),
       tags: z.array(z.string()).default([]),
       // description: z.string().max(200),
     }),
@@ -12,7 +12,7 @@ export const collections = {
   guides: defineCollection({
     schema: z.object({
       title: z.string(),
-      date: z.date(),
+      date: z.coerce.date(),
       // description: z.string().max(200),
     }),
   }),
