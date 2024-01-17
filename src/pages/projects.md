@@ -12,7 +12,7 @@ Given a link to a JSON file of links and labels, [The Hub](https://github.com/al
 
 ## Barter
 
-[Barter](https://github.com/aled1027/barter) is a trading system for setting up generic, automated (but not real-time), trades. Currently, this system is built for dydx. ([code](https://github.com/aled1027/barter))
+[Barter](https://github.com/aled1027/barter) is a trading system for setting up generic, automated (but not real-time) trades. Currently, this system is built for dydx. ([code](https://github.com/aled1027/barter))
 
 ## Flattener
 
