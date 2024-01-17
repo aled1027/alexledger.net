@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "tinacms dev -c \"astro dev\"",
     "start": "astro dev",
     "build": "npm run check && astro check && astro build && pagefind --site dist",
     "preview": "astro preview",
@@ -27,9 +27,12 @@
     "remark-rehype": "^11.1.0",
     "sanitize-html": "^2.11.0",
     "scrollama": "^3.2.0",
-    "svelte": "^4.2.8"
+    "svelte": "^4.2.8",
+    "tinacms": "^1.5.28"
   },
   "devDependencies": {
+    "@tinacms/cli": "^1.5.39",
+    "@types/node": "^20.11.5",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "eslint": "^8.56.0",
     "eslint-config-standard-with-typescript": "^43.0.0",

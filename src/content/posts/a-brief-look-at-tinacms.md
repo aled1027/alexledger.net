@@ -18,7 +18,7 @@ I've also tried Obsidian as a CMS in the past, but I didn't like how some of the
 
 ## Today I Tried TinaCMS
 
-Today I tried [TinaCMS](https://tina.io/) with [Astro](https://astro.build/) (which this website is written in!). I made a little demo [repo](https://github.com/aled1027/tina-astro-demo) super fast following Astro's [documentation](https://docs.astro.build/en/getting-started/). I really liked it! I like the git-based workflow approach where files are stored in git.
+Today I tried [TinaCMS](https://tina.io/) with [Astro](https://astro.build/) (which this website is written in!). I made a little demo [repo](https://github.com/aled1027/tina-astro-demo) super fast following Astro's [documentation](https://docs.astro.build/en/guides/cms/tina-cms/). I really liked it! I like the git-based workflow approach where files are stored in git.
 
 I don't totally understand how a non-technical, non-git user would use TinaCMS, but it looks like Smashing Magazine has some approach that they outline [here](https://www.smashingmagazine.com/2023/09/smashing-magazine-tinacms-manage-editorial-workflow/). Maybe it's more obvious with the cloud version.
 
