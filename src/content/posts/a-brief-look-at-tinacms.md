@@ -33,4 +33,52 @@ A few additional resources on TinaCMS:
 - Astro documentation: https://docs.astro.build/en/getting-started/
 - Smashing magazine: https://www.smashingmagazine.com/2023/09/smashing-magazine-tinacms-manage-editorial-workflow/
 
+## Update After Adding to alexledger.net
+
+Everything basically worked out of the box except datetime fields, which were put into the markdown files as strings, like so
+
+```yaml
+date: "2024-01-17T08:00:00.000Z"
+```
+
+And my config.ts for the collection had:
+
+```javascript
+export const collections = {
+  posts: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      date: z.date(),
+      tags: z.array(z.string()).default([]),
+    }),
+  }),
+  ...
+};
+
+```
+
+When the date would be processed, astro wouldn't be able to convert the date in a string to a date. This was the error:
+
+```text
+posts → notes-2024-01-17.md.md frontmatter does not match collection schema.
+date: Expected type "date", received "string"
+```
+
+A solution after some research was to coerce the date in zod:
+
+```javascript
+export const collections = {
+  posts: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      date: z.coerce.date(),
+      tags: z.array(z.string()).default([]),
+    }),
+  }),
+  ...
+};
+```
+
+Zod docs: https://zod.dev/?id=you-can-use-pipe-to-fix-common-issues-with-zcoerce. A better solution looks like it'd use pipe instead of coerce, but I'm happy that I got this to work with relative ease.
+
 [^1]: If you haven't used Obsidian, it has a cool note linking feature, but it references notes regardless of file path with `[[Name of Note]]` syntax, which isn't supported by most markdown processors.
