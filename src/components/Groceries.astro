@@ -1,10 +1,16 @@
 ---
 import GroceryStoreCard from "./GroceryStoreCard.astro";
+import GroceryStoreCardWithFlags from "./GroceryStoreCardWithFlags.astro";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import Papa from "papaparse";
+
+interface Props {
+  useFlags?: boolean;
+}
+const { useFlags = false } = Astro.props;
 
 // This is a wrapper around the GroceryStoreCard that
 // (a) fetches the data from google sheets and then
@@ -56,7 +62,11 @@ groceries.sort(
 ---
 
 {
-  groceries.map((grocery) => {
-    return <GroceryStoreCard grocery={grocery} />;
-  })
+  groceries.map((grocery) =>
+    useFlags ? (
+      <GroceryStoreCardWithFlags grocery={grocery} />
+    ) : (
+      <GroceryStoreCard grocery={grocery} />
+    )
+  )
 }
