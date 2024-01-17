@@ -1,11 +1,11 @@
 // webmentions.js
+/* eslint-disable no-undef */
 import fs from "fs";
 import https from "https";
 
 const DOMAIN = "alexledger.net";
 
 console.log(process.env.WEBMENTION_API_KEY);
-console.log("that was the key");
 
 const webmentions = await fetchWebmentions();
 webmentions.forEach(writeWebMention);
@@ -58,3 +58,4 @@ function writeWebMention(webmention) {
   entries.sort((a, b) => a["wm-id"] - b["wm-id"]);
   fs.writeFileSync(filename, JSON.stringify(entries, null, 2));
 }
+/* eslint-enable no-undef */

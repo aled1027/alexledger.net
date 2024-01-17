@@ -8,6 +8,7 @@ const parser = new MarkdownIt();
 
 const postsCollection = await getCollection("posts");
 
+/* eslint-disable no-unused-vars */
 export function GET(context) {
   return rss({
     title: "Alex Ledger's Website",
@@ -24,3 +25,4 @@ export function GET(context) {
     customData: `<language>en-us</language>`,
   });
 }
+/* eslint-enable no-unused-vars */
