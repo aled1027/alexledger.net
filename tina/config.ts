@@ -1,32 +1,5 @@
 import { defineConfig } from "tinacms";
 
-type ObjectField = {
-  label: string
-  name: string
-  type: 'object'
-  list?: boolean
-  /** `fields OR `templates` may be provided, not both **/
-  fields?: Field[]
-  templates?: Template[]
-  /** Customize the default "_template" key that gets set
-     in a document to identify a block-type.
-     Only applicable when list: true **/
-  templatesKey?: string
-  list?: boolean
-  /** See https://tina.io/docs/extending-tina/overview/ for customizing the UI **/
-  ui?: {
-     /** Weather or not the Visual Selector  is enabled. See https://tina.io/docs/editing/blocks/#adding-a-visual-block-selector-experimental **/
-    visualSelector?: boolean,
-    // Note: defaultItem can only can be used when {list: true}
-    defaultItem?: Record<string, any> | () => Record<string, any>,
-    itemProps?(
-      item: Record<string, any>
-    ): {
-      label?: string
-    }
-  }
-}
-
 // Your hosting provider likely exposes this as an environment variable
 const branch =
   process.env.GITHUB_BRANCH ||
@@ -151,14 +124,14 @@ export default defineConfig({
             list: true,
             ui: {
               itemProps: (item) => {
-                return { label: `${item?.label}  (${item?.greenyellowred}) `}
+                return { label: `${item?.label}  (${item?.greenyellowred}) ` };
               },
             },
             fields: [
               {
                 label: "Label",
                 name: "label",
-                type: "string"
+                type: "string",
               },
               {
                 label: "GreenYellowRed",
@@ -167,25 +140,25 @@ export default defineConfig({
                 options: [
                   {
                     value: "green",
-                    label:"Green",
+                    label: "Green",
                   },
                   {
                     value: "yellow",
-                    label:"Yellow",
+                    label: "Yellow",
                   },
                   {
                     value: "red",
-                    label:"Red",
-                  }
-                ]
+                    label: "Red",
+                  },
+                ],
               },
               {
                 label: "Description",
                 name: "description",
                 type: "rich-text",
-              }
-            ]
-          }
+              },
+            ],
+          },
         ],
       },
     ],
