@@ -1,9 +1,22 @@
 ---
 import Layout from "../../layouts/default.astro";
 import PlaytimeComponent from "../../components/PlaytimeComponent.svelte";
+import D3Dag from "../../components/D3Dag.astro";
 ---
 
 <Layout>
   <h1>Playing with D3.js</h1>
-  <PlaytimeComponent client:only />
+  <!-- <PlaytimeComponent client:only /> -->
+  <D3Dag />
 </Layout>
+
+<style is:global>
+  .link {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: 0.2;
+  }
+  .link:hover {
+    stroke-opacity: 0.5;
+  }
+</style>
