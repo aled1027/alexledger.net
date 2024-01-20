@@ -9,30 +9,23 @@
 <script is:inline>
   document.addEventListener("DOMContentLoaded", function () {
     var ToC =
-      "<nav role='navigation' class='table-of-contents'>" +
-      "<h2>Table of Contents</h2>" +
-      "<ol>";
+      "<nav role='navigation' class='table-of-contents'><h2>Table of Contents</h2><ol>";
 
-    var isFirstH2 = true;
+    let isFirstH2 = true;
     document.querySelectorAll("h2, h3").forEach(function (el) {
-      // var el = this;
-      var isH2 = el.tagName === "H2";
-      var isH3 = el.tagName === "H3";
+      const title = el.textContent;
+      const link = "#" + el.id;
 
-      var title = el.textContent;
-      var link = "#" + el.id;
-
-      var newLine = "<li><a href='" + link + "'>" + title + "</a>" + "</li>";
+      let newLine = "<li><a href='" + link + "'>" + title + "</a>" + "</li>";
 
       // Don't close the outer ol on the first h2 by checking if it's the first h2
+      const isH2 = el.tagName === "H2";
       if (isH2 && isFirstH2) {
         newLine = newLine + "<ol class='table-of-contents-inner'>";
         isFirstH2 = false;
       } else if (isH2) {
         newLine = "</ol>" + newLine + "<ol class='table-of-contents-inner'>";
       }
-
-      // if it's an H2, open it up
       ToC += newLine;
     });
 
@@ -42,7 +35,7 @@
 </script>
 
 <style is:global>
-  /* NOTE THIS IS ARE GLOBAL */
+  /* NOTE THIS IS UNSCOPED, GLOBAL CSS */
 
   .table-of-contents {
     margin: 0 auto;
