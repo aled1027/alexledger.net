@@ -1,14 +1,10 @@
 ---
-// This is client-side table of contents that reads h2 and h3 elements on the page
-// to populate itself. This version uses jquery
+// This component infers and renders a client-side table of contents by reading h2 and h3 elements
+// on the page to populate itself. This does make a few assumptions about the h1/h2/h3 structure
+// being well formed, following an appropriate hierarchical structure.
 ---
 
 <div class="toc-target"></div>
-
-<script
-  src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-  integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
-  crossorigin="anonymous"></script>
 
 <script is:inline>
   document.addEventListener("DOMContentLoaded", function () {
@@ -17,28 +13,18 @@
       "<h2>Table of Contents</h2>" +
       "<ol>";
 
-    var newLine,
-      el,
-      title,
-      link,
-      isFirstH2 = true;
+    var isFirstH2 = true;
+    document.querySelectorAll("h2, h3").forEach(function (el) {
+      // var el = this;
+      var isH2 = el.tagName === "H2";
+      var isH3 = el.tagName === "H3";
 
-    $("h2, h3").each(function () {
-      el = $(this);
+      var title = el.textContent;
+      var link = "#" + el.id;
 
-      const isH2 = el.prop("tagName") == "H2";
-      const isH3 = el.prop("tagName") == "H3";
-      console.log(isH3);
+      var newLine = "<li><a href='" + link + "'>" + title + "</a>" + "</li>";
 
-      title = el.text();
-      link = "#" + el.attr("id");
-
-      newLine = "<li><a href='" + link + "'>" + title + "</a>" + "</li>";
-
-      // There are three options.
-      // First, if it's not the first h2, then do this:
-      // Second, if it's the first h2, then do this without the ol
-      // Third, if it's an h3, don't do this
+      // Don't close the outer ol on the first h2 by checking if it's the first h2
       if (isH2 && isFirstH2) {
         newLine = newLine + "<ol class='table-of-contents-inner'>";
         isFirstH2 = false;
@@ -47,14 +33,11 @@
       }
 
       // if it's an H2, open it up
-
       ToC += newLine;
     });
 
     ToC += "</ol>" + "</ol>" + "</nav>";
-    console.log(ToC);
-
-    $(".toc-target").prepend(ToC);
+    document.querySelector(".toc-target").insertAdjacentHTML("afterbegin", ToC);
   });
 </script>
 
