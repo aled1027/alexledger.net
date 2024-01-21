@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/default.astro";
 import PlaytimeComponent from "../../components/PlaytimeComponent.svelte";
-import Sankey from "../../components/Sankey.astro";
+import Sankey from "../../components/KombuchaSankey.astro";
 ---
 
 <Layout>
@@ -10,13 +10,3 @@ import Sankey from "../../components/Sankey.astro";
   <Sankey />
 </Layout>
 
-<style is:global>
-  .link {
-    fill: none;
-    stroke: #000;
-    stroke-opacity: 0.2;
-  }
-  .link:hover {
-    stroke-opacity: 0.5;
-  }
-</style>

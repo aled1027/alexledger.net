@@ -1,0 +1,88 @@
+---
+// This was generated with this python code https://github.com/aled1027/design_experiments/blob/main/Untitled.ipynb
+// And then there was a manually added & modified line (see comment).
+// In particular, dependencies that skip a tier aren't yet elegantly handled.
+---
+
+<div class="recipe">
+  <table>
+    <tr>
+      <td colspan="100" class="recipe-title">Kombucha (≈1 gallon)</td>
+    </tr>
+    <tr>
+      <td rowspan="1">4 C hot water</td>
+      <td rowspan="2">Brew tea concentrate</td>
+      <td rowspan="3">Dissolve in sugar</td>
+      <td rowspan="6">Incorporate it all together</td>
+    </tr>
+    <tr>
+      <td rowspan="1">4 T black tea</td>
+    </tr>
+    <tr>
+      <td rowspan="1">1 C sugar</td>
+      <!-- This is the line that's manually added: -->
+      <td rowspan="1" class="righthide"></td>
+    </tr>
+    <tr>
+      <td rowspan="1">12 C room temp water</td>
+    </tr>
+    <tr>
+      <td rowspan="1">SCOBY and starter</td>
+    </tr>
+  </table>
+</div>
+
+<style>
+  :root {
+    --recipe-color: #7d44b2;
+  }
+
+  .recipe table {
+    border: 2px solid var(--recipe-color);
+    font:
+      9pt/120% Trebuchet MS,
+      Arial,
+      sanserif;
+    border-spacing: 0px;
+    empty-cells: show;
+    border-collapse: collapse;
+    background-color: #ffffff;
+  }
+
+  .recipe table th {
+    border: 1px solid var(--recipe-color);
+    border-bottom: 2px solid var(--recipe-color);
+  }
+
+  .recipe table td {
+    border: 1px solid var(--recipe-color);
+    border-left: 0;
+    border-top: 0;
+    padding: 2px 4px;
+  }
+
+  .recipe table td.righthide {
+    border-right: 0;
+    border-bottom: 1px solid var(--recipe-color);
+  }
+
+  .recipe table td.vertical {
+    text-align: center;
+    layout-flow: vertical-ideographic;
+    vertical-align: middle;
+  }
+
+  .recipe table td.recipe-title {
+    font:
+      12pt/140% Trebuchet MS,
+      Arial,
+      sanserif;
+    text-align: center;
+    layout-flow: vertical-ideographic;
+    vertical-align: middle;
+  }
+
+  .recipe table td.recipe-center {
+    text-align: center;
+  }
+</style>
