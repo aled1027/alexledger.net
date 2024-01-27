@@ -40,6 +40,13 @@ export default defineConfig({
             isTitle: true,
             required: true,
           },
+          {
+            type: "boolean",
+            name: "draft",
+            label: "Is Draft",
+            isTitle: false,
+            required: false,
+          },
 
           {
             type: "datetime",
