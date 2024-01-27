@@ -2,7 +2,7 @@
 title: "Weeknotes: October 15, 2023"
 date: 2023-10-15T11:49:38-07:00
 draft: false
-tags: [weeknotes, trans, news, websites, frontend]
+tags: [notes, trans, news, websites, frontend]
 ---
 
 ## What I'm Reading and Thinking About

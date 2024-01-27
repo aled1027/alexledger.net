@@ -6,6 +6,7 @@ export const collections = {
       title: z.string(),
       date: z.coerce.date(),
       tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
       // description: z.string().max(200),
     }),
   }),

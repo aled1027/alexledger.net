@@ -1,6 +1,7 @@
 ---
 date: 2023-01-04
 title: Building with Mkdocs
+tags: [docs, websites]
 ---
 
 I'm exploring different ways to to build & host these notes.

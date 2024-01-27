@@ -1,6 +1,7 @@
 ---
 date: 2023-01-05
 title: Design Resources
+tags: [design, websites]
 ---
 
 ## Web and Product Design

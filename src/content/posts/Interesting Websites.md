@@ -1,8 +1,7 @@
 ---
 date: 2023-03-01
-tags:
-  - design
 title: Interesting Plumbing Behind Personal Websites
+tags: [design, websites]
 ---
 
 People do some cool and fascinating things with their personal websites. This note documents some sites I've come across that have inspired me with their experiments, interesting technical plumbing, and philosophies of websites.

@@ -2,16 +2,15 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/default.astro";
 import BlogList from "../components/BlogList.astro";
-// export const prerender = true;
-const posts = await getCollection("posts");
 
+const posts = await getCollection("posts");
 const recentPosts = posts
+  .filter((p) => !p.data.draft)
   .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
   .reverse()
   .slice(0, 5);
 
 const guides = await getCollection("guides");
-
 const recentGuides = guides
   .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
   .reverse()

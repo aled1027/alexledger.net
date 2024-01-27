@@ -1,6 +1,7 @@
 ---
 date: 2023-01-02
 title: Basic Cloudformation Templates
+tags: [software, cloud]
 ---
 
 Been learning about CloudFormation Templates recently.

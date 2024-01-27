@@ -2,7 +2,7 @@
 title: "Weeknotes: July 29, 2023"
 date: 2023-07-29
 draft: false
-tags: [weeknotes, climate-change, electric-vehicles, sustainability, frontend]
+tags: [notes, climate-change, electric-vehicles, sustainability, frontend]
 ---
 
 ## What I've been working on

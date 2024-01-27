@@ -7,6 +7,7 @@ export const prerender = true;
 
 const postsCollection = await getCollection("posts");
 const posts = postsCollection
+  .filter((p) => !p.data.draft)
   .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
   .reverse();
 ---

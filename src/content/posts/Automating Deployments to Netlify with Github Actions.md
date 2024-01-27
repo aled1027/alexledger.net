@@ -1,6 +1,7 @@
 ---
 title: Automating Deployments to Netlify with Github Actions
 date: 2023-01-01
+tags: [websites]
 ---
 
 I set up automated deployments to Netlify using Github Actions.

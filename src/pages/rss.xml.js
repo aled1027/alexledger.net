@@ -7,6 +7,7 @@ const parser = new MarkdownIt();
 // Docs: https://docs.astro.build/en/guides/rss/
 
 const postsCollection = await getCollection("posts");
+const posts = postsCollection.filter((p) => !p.data.draft);
 
 /* eslint-disable no-unused-vars */
 export function GET(context) {
@@ -14,7 +15,7 @@ export function GET(context) {
     title: "Alex Ledger's Website",
     description: "Alex Ledger's Website",
     site: "https://alexledger.net",
-    items: postsCollection.map((post) => ({
+    items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
       content: sanitizeHtml(parser.render(post.body)),

@@ -4,21 +4,13 @@ import Layout from "../../layouts/default.astro";
 import BlogList from "../../components/BlogList.astro";
 
 export async function getStaticPaths() {
-  const allPostsCollection = await getCollection("posts");
+  const postsCollection = await getCollection("posts");
+  const posts = postsCollection.filter((p) => !p.data.draft);
 
-  const allPosts = allPostsCollection.map((post) => {
-    if (post.data?.tags === undefined) {
-      post.data.tags = [];
-    }
-    return post;
-  });
-
-  const uniqueTags = [
-    ...new Set(allPosts.map((post) => post.data.tags).flat()),
-  ];
+  const uniqueTags = [...new Set(posts.map((post) => post.data.tags).flat())];
 
   return uniqueTags.map((tag) => {
-    const filteredPosts = allPosts
+    const filteredPosts = posts
       .filter((post) => post.data.tags.includes(tag))
       .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
       .reverse();
