@@ -381,6 +381,22 @@
       line-height: 1.7;
     }
   </style>
+  <style is:global>
+    /* COMPONENTS */
+    a.link-button {
+      /* A link that looks like a button */
+      /* This should be used when there's a link to another page that
+      should look like a button. In general, buttons should be used for actions
+      on the page and a tags should be used for navigating to other pages. */
+      color: var(--text-1);
+      background-color: var(--surface-1);
+      border: 1px solid var(--text-1);
+      border-radius: var(--radius-2);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+  </style>
+
   <style>
     /* Styles specific to this page */
     header {
