@@ -1,0 +1,73 @@
+---
+const favoriteBooks = [
+  {
+    title: "The Revolution Will Not Be Microwaved",
+    author: "Sandor Katz",
+    authorLink: "https://www.wildfermentation.com/",
+    link: "https://bookshop.org/p/books/the-revolution-will-not-be-microwaved-inside-america-s-underground-food-movements-sandor-ellix-katz/14458522?ean=9781933392110",
+  },
+  {
+    title: "On Freedom: Four Songs of Care and Constraint",
+    author: "Maggie Nelson",
+    authorLink: "",
+    link: "https://bookshop.org/p/books/on-freedom-four-songs-of-care-and-constraint-maggie-nelson/15911469?ean=9781644452028",
+  },
+  {
+    title: "Ender's Game",
+    author: "Orson Scott Card",
+    authorLink: "",
+    link: "https://bookshop.org/p/books/ender-s-game-orson-scott-card/286719?ean=9781250773012",
+  },
+  {
+    title: "A Deadly Education (and the whole Scholamance Trilogy)",
+    author: "Naomi Novik",
+    authorLink: "https://www.naominovik.com/",
+    link: "https://bookshop.org/p/books/a-deadly-education-naomi-novik/14143485?ean=9780593128503",
+  },
+  {
+    title: "A Wizard of Earthsea",
+    author: "Ursula K. Le Guin",
+    authorLink: "",
+    link: "https://bookshop.org/p/books/a-wizard-of-earthsea-1-ursula-k-le-guin/6389611",
+  },
+  {
+    title: "A Pattern Language: Towns, Buildings, Construction",
+    author: "Christopher Alexander",
+    authorLink: "",
+    link: "https://bookshop.org/p/books/a-pattern-language-towns-buildings-construction-christopher-alexander/11764078?ean=9780195019193",
+  },
+];
+---
+
+<h2>Books</h2>
+
+<h3>Favorite Books</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+    </tr>
+  </thead>
+  {
+    favoriteBooks.map((book) => {
+      return (
+        <tr>
+          <td>
+            <a href={book.link}>{book.title}</a>
+          </td>
+          <td>
+            {!!book.authorLink ? (
+              <a href={book.authorLink}>{book.author}</a>
+            ) : (
+              <span>{book.author}</span>
+            )}
+          </td>
+        </tr>
+      );
+    })
+  }
+</table>
+
+<style></style>
