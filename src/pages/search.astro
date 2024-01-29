@@ -8,9 +8,13 @@ import Layout from "../layouts/default.astro";
   <script is:inline src="/pagefind/pagefind-ui.js"></script>
   <div id="search"></div>
   <script is:inline>
-    window.addEventListener("DOMContentLoaded", (event) => {
-      new PagefindUI({ element: "#search", showSubResults: true });
-    });
+    window.addEventListener(
+      "astro:page-load",
+      (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+      },
+      { once: true }
+    );
   </script>
   <style is:inline>
     @media (prefers-color-scheme: dark) {
