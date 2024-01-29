@@ -423,13 +423,13 @@ import Footer from "../components/Footer.astro";
       }
 
       .content {
-        margin-bottom: 2rem;
-        /* Min height should be everything but the size of the footer, plus 3rem */
-        min-height: calc(88vh - 3rem);
-
-        @media only screen and (max-width: 600px) {
-          margin: 0 1rem 2rem 1rem;
-        }
+        margin: 0 1rem 3rem 1rem;
+        /* Min height should be everything but the size of the footer:
+        - 88vh for the footer,
+        - 3rem for the margin-bottom
+        - 2rem for something I'm not sure about
+        */
+        min-height: calc(88vh - 3rem - 2rem);
       }
 
       .page-content {

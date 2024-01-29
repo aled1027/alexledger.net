@@ -2,26 +2,44 @@
 
 ---
 
-<script></script>
-
 <footer>
-  <p>
-    Created by <a href="https://alexledger.net">Alex Ledger</a>
-  </p>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li>Made by Alex Ledger</li>
+    </ul>
+  </nav>
 </footer>
 
 <style>
   footer {
     min-height: 12vh;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
     /* Add 2px to the padding to compensate for the border-top */
     padding: 2rem 2rem calc(2rem + 2px) 2rem;
     border-top: 2px solid rgba(var(--fun-1-rgb), 0.3);
     background-color: rgba(var(--fun-1-rgb), 0.1);
+  }
+
+  nav ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0;
+    width: 100%;
+  }
+
+  nav li {
+    display: inline;
+    font-size: 0.875rem;
+  }
+
+  nav a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 </style>
