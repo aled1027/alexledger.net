@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import Footer from "../components/Footer.astro";
 ---
 
 <html lang="en">
@@ -44,56 +45,58 @@ import { ViewTransitions } from "astro:transitions";
     <ViewTransitions />
   </head>
   <body>
-    <!-- This i s a little theme cycler button that 
+    <div class="content">
+      <!-- This i s a little theme cycler button that 
     cycles through different css themes on the root.
   -->
-    <!-- TODO: before going live with this, make sure that it's skipped in accessibility, or whatever is correct -->
-    <button id="theme-cycler">Cycle theme</button>
-    <script>
-      let curTheme = 0;
-      const themeMapping = {
-        0: "light",
-        1: "purple",
-        2: "blue",
-      };
+      <!-- TODO: before going live with this, make sure that it's skipped in accessibility, or whatever is correct -->
+      <button id="theme-cycler">Cycle theme</button>
+      <script>
+        let curTheme = 0;
+        const themeMapping = {
+          0: "light",
+          1: "purple",
+          2: "blue",
+        };
 
-      const tgt = document.querySelector("#theme-cycler");
-      tgt.addEventListener("click", () => {
-        curTheme = (curTheme + 1) % Object.keys(themeMapping).length;
-        console.log(curTheme);
+        const tgt = document.querySelector("#theme-cycler");
+        tgt.addEventListener("click", () => {
+          curTheme = (curTheme + 1) % Object.keys(themeMapping).length;
+          console.log(curTheme);
 
-        const element = document.querySelector(":root");
-        if (element instanceof HTMLElement) {
-          element.dataset.theme = themeMapping[curTheme];
-          console.log("Now on theme: ", themeMapping[curTheme]);
-        }
-      });
-    </script>
+          const element = document.querySelector(":root");
+          if (element instanceof HTMLElement) {
+            element.dataset.theme = themeMapping[curTheme];
+            console.log("Now on theme: ", themeMapping[curTheme]);
+          }
+        });
+      </script>
 
-    <header>
-      <!--
+      <header>
+        <!--
         As noted in the codepen below,the nav is set up with ul and li for
         accessibility purposes.  https://codepen.io/aled1027/pen/PoLoWwj
       -->
-      <nav>
-        <ul>
-          <li><a href="/" rel="home">Home</a></li>
-          <li><a href="/posts">Posts</a></li>
-          <li><a href="/guides">Guides</a></li>
-          <li><a href="/projects">Projects</a></li>
-          <li><a href="/lists">Lists</a></li>
-          <li><a href="/tags">Tags</a></li>
-          <li><a href="/rss.xml">RSS</a></li>
-          <li><a href="/search">Search</a></li>
-        </ul>
-      </nav>
-    </header>
+        <nav>
+          <ul>
+            <li><a href="/" rel="home">Home</a></li>
+            <li><a href="/posts">Posts</a></li>
+            <li><a href="/guides">Guides</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/lists">Lists</a></li>
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/rss.xml">RSS</a></li>
+            <li><a href="/search">Search</a></li>
+          </ul>
+        </nav>
+      </header>
 
-    <div class="content">
-      <slot />
+      <div class="page-content">
+        <slot />
+      </div>
     </div>
+    <Footer />
 
-    <footer></footer>
     <script is:inline>
       // Add event handlers for the opening of the modals. This should automatically work
       // across components as long as they have the right classes and data values.
@@ -261,10 +264,6 @@ import { ViewTransitions } from "astro:transitions";
         /* See https://css-tricks.com/snippets/css/system-font-stack/ */
         font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
           "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-
-        @media only screen and (max-width: 600px) {
-          margin: 0 1rem;
-        }
       }
 
       /* A elements that don't have a class get default styles */
@@ -424,13 +423,18 @@ import { ViewTransitions } from "astro:transitions";
       }
 
       .content {
-        max-inline-size: 1000px;
-        padding: 1rem;
-        margin-inline: auto;
+        margin-bottom: 2rem;
+        /* Min height should be everything but the size of the footer, plus 3rem */
+        min-height: calc(88vh - 3rem);
+
+        @media only screen and (max-width: 600px) {
+          margin: 0 1rem 2rem 1rem;
+        }
       }
 
-      footer {
-        min-height: 10dvh;
+      .page-content {
+        max-inline-size: 1000px;
+        margin-inline: auto;
       }
 
       #theme-cycler {
