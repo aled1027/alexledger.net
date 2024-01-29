@@ -7,31 +7,38 @@
 <div class="toc-target"></div>
 
 <script is:inline>
-  document.addEventListener("DOMContentLoaded", function () {
-    var ToC =
-      "<nav role='navigation' class='table-of-contents'><h2>Table of Contents</h2><ol>";
+  console.log("hi");
+  document.addEventListener(
+    "astro:page-load",
+    function () {
+      var ToC =
+        "<nav role='navigation' class='table-of-contents'><h2>Table of Contents</h2><ol>";
 
-    let isFirstH2 = true;
-    document.querySelectorAll("h2, h3").forEach(function (el) {
-      const title = el.textContent;
-      const link = "#" + el.id;
+      let isFirstH2 = true;
+      document.querySelectorAll("h2, h3").forEach(function (el) {
+        const title = el.textContent;
+        const link = "#" + el.id;
 
-      let newLine = "<li><a href='" + link + "'>" + title + "</a>" + "</li>";
+        let newLine = "<li><a href='" + link + "'>" + title + "</a>" + "</li>";
 
-      // Don't close the outer ol on the first h2 by checking if it's the first h2
-      const isH2 = el.tagName === "H2";
-      if (isH2 && isFirstH2) {
-        newLine = newLine + "<ol class='table-of-contents-inner'>";
-        isFirstH2 = false;
-      } else if (isH2) {
-        newLine = "</ol>" + newLine + "<ol class='table-of-contents-inner'>";
-      }
-      ToC += newLine;
-    });
+        // Don't close the outer ol on the first h2 by checking if it's the first h2
+        const isH2 = el.tagName === "H2";
+        if (isH2 && isFirstH2) {
+          newLine = newLine + "<ol class='table-of-contents-inner'>";
+          isFirstH2 = false;
+        } else if (isH2) {
+          newLine = "</ol>" + newLine + "<ol class='table-of-contents-inner'>";
+        }
+        ToC += newLine;
+      });
 
-    ToC += "</ol>" + "</ol>" + "</nav>";
-    document.querySelector(".toc-target").insertAdjacentHTML("afterbegin", ToC);
-  });
+      ToC += "</ol>" + "</ol>" + "</nav>";
+      document
+        .querySelector(".toc-target")
+        .insertAdjacentHTML("afterbegin", ToC);
+    },
+    { once: true }
+  );
 </script>
 
 <style is:global>

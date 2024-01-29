@@ -23,4 +23,4 @@ Start by checking out the Oregon Secret of State's [site](https://sos.oregon.gov
 
 ## Additional Links
 
-* [Oregon Public Elections Calendar](https://data.oregon.gov/Administrative/Public-Elections-Calendar/tzci-8iq5)
+- [Oregon Public Elections Calendar](https://data.oregon.gov/Administrative/Public-Elections-Calendar/tzci-8iq5)

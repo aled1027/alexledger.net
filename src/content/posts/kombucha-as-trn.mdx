@@ -13,7 +13,11 @@ import KombuchaSankey from "../../components/KombuchaSankey.astro";
 
 Before getting to Kombucha I want to describe my favorite recipe design: tabular recipe notation or TRN. TRN is from [Cooking for Engineers](https://www.cookingforengineers.com/) and is a layout of a recipe in HTML that, in my opinion, makes the recipe incredibly easy to follow.
 
-<img src="/images/trn_pancakes.png" alt="Tabular Recipe Notation of Pancakes" style="max-width:300px;margin-inline:auto;width:100%;"/>
+<img
+  src="/images/trn_pancakes.png"
+  alt="Tabular Recipe Notation of Pancakes"
+  style="max-width:300px;margin-inline:auto;width:100%;"
+/>
 
 You can imagine that there's a directed acyclic graph underlying the recipe, and that HTML table is derived from it. At some point I'd love to write a converter from YAML directions, or something of the like, into a tabular recipe notation HTML table. I have a basic version that works on very simple recipes, but it doesn't work on anything complex.
 
@@ -29,7 +33,7 @@ All credit for Tabular Recipe Notation goes to [Michael Chu](https://www.cooking
 
 ## Kombucha as a Sankey
 
-Here's an alternative, experimental version as a Sankey diagram that I thought might be interesting. 
+Here's an alternative, experimental version as a Sankey diagram that I thought might be interesting.
 
 It's missing the visual succinctness of the table approach. There's a lot of unused space and pixels and the relationships between the tiers doesn't reflect the steps adequately.
 
@@ -41,24 +45,24 @@ This is the Kombucha Recipe acyclic graph as a JSON object for experimentation:
 
 ```json
 {
-    nodes: [
-        { "node": 0, "name": "1 C hot water" },
-        { "node": 1, "name": "2 tea bags" },
-        { "node": 2, "name": "1/3 C Sugar" },
-        { "node": 3, "name": "2 C room temp water" },
-        { "node": 4, "name": "SCOBY and starter" },
-        { "node": 5, "name": "Brew tea concentrate" },
-        { "node": 6, "name": "Dissolve in sugar" },
-        { "node": 7, "name": "Incorporate it all together" },
-    ],
-    links: [
-        { "source": 0, "target": 5, "value": 2 },
-        { "source": 1, "target": 5, "value": 2 },
-        { "source": 2, "target": 6, "value": 2 },
-        { "source": 5, "target": 6, "value": 2 },
-        { "source": 3, "target": 7, "value": 2 },
-        { "source": 4, "target": 7, "value": 2 },
-        { "source": 6, "target": 7, "value": 2 },
-    ],
+  "nodes": [
+    { "node": 0, "name": "1 C hot water" },
+    { "node": 1, "name": "2 tea bags" },
+    { "node": 2, "name": "1/3 C Sugar" },
+    { "node": 3, "name": "2 C room temp water" },
+    { "node": 4, "name": "SCOBY and starter" },
+    { "node": 5, "name": "Brew tea concentrate" },
+    { "node": 6, "name": "Dissolve in sugar" },
+    { "node": 7, "name": "Incorporate it all together" }
+  ],
+  "links": [
+    { "source": 0, "target": 5, "value": 2 },
+    { "source": 1, "target": 5, "value": 2 },
+    { "source": 2, "target": 6, "value": 2 },
+    { "source": 5, "target": 6, "value": 2 },
+    { "source": 3, "target": 7, "value": 2 },
+    { "source": 4, "target": 7, "value": 2 },
+    { "source": 6, "target": 7, "value": 2 }
+  ]
 }
 ```
