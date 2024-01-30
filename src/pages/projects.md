@@ -1,5 +1,5 @@
 ---
-layout: ../layouts/default.astro
+layout: "@layouts/default.astro"
 ---
 
 # Projects
