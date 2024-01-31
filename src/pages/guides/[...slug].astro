@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@layouts/default.astro";
+import AutoToc from "@components/AutoToc.astro";
 
 export const prerender = true;
 
@@ -21,7 +22,6 @@ const { Content } = await post.render();
 
 <Layout>
   <h1>{post.data.title}</h1>
-  <!-- <span>Date:</span> -->
-  <!-- <span>{post.data.date.toLocaleDateString()}</span> -->
+  {post.data.includeToc && <AutoToc />}
   <Content />
 </Layout>

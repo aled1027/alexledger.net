@@ -1,6 +1,7 @@
 ---
 title: 2024 Guide to Voting in Portland
 date: 2024-01-26T08:00:00.000Z
+includeToc: true
 ---
 
 This page is intended to be a quick guide to voting in Oregon in 2024. It's information will be updated over time.

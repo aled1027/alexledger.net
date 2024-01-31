@@ -4,10 +4,11 @@ interface Props {
   titleLink: string;
 }
 const { title, titleLink } = Astro.props;
+const titleSlug = title.toLowerCase().replace(" ", "-");
 ---
 
 <div class="news-card">
-  <h3><a href={titleLink}>{title}</a></h3>
+  <h3 id={titleSlug}><a href={titleLink}>{title}</a></h3>
   <slot />
 </div>
 

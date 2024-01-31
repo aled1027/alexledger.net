@@ -1,12 +1,14 @@
 ---
-// This component infers and renders a client-side table of contents by reading h2 and h3 elements
-// on the page to populate itself. This does make a few assumptions about the h1/h2/h3 structure
-// being well formed, following an appropriate hierarchical structure.
+// This component infers and renders a table of contents by reading h2 and h3 elements
+// on the page to populate itself.
+// Assumptions:
+// (a) Assumes the h1/h2/h3 structure is well-formed (like there's no straight h1 to h3 jump)
+// (b) Assumes all h2s and h3s have an id.
 ---
 
 <div class="toc-target"></div>
 
-<script is:inline>
+<script>
   document.addEventListener(
     "astro:page-load",
     function () {
