@@ -11,10 +11,7 @@ const recentPosts = posts
   .slice(0, 5);
 
 const guides = await getCollection("guides");
-const recentGuides = guides
-  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
-  .reverse()
-  .slice(0, 5);
+guides.sort((a, b) => a.data.date.getTime() - b.data.date.getTime()).reverse();
 ---
 
 <Layout>
@@ -60,8 +57,7 @@ const recentGuides = guides
 
   <section class="guides">
     <h2>Guides</h2>
-    <BlogList blogs={recentGuides} />
-    <a class="see-all-posts-a" href="/guides"> </a>
+    <BlogList blogs={guides} />
   </section>
 
   <section class="about">
