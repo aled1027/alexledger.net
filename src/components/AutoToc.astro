@@ -12,6 +12,12 @@
   document.addEventListener(
     "astro:page-load",
     function () {
+      const tocTarget = document.querySelector(".toc-target");
+      if (tocTarget.firstElementChild !== null) {
+        // Return early because the toc already exists
+        return;
+      }
+
       var ToC =
         "<nav role='navigation' class='table-of-contents'><h2>Table of Contents</h2><ol>";
 
@@ -34,11 +40,9 @@
       });
 
       ToC += "</ol>" + "</ol>" + "</nav>";
-      document
-        .querySelector(".toc-target")
-        .insertAdjacentHTML("afterbegin", ToC);
+      tocTarget.insertAdjacentHTML("afterbegin", ToC);
     },
-    { once: true }
+    { once: false }
   );
 </script>
 
