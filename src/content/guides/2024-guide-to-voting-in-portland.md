@@ -4,7 +4,7 @@ date: 2024-01-26T08:00:00.000Z
 includeToc: true
 ---
 
-This page is intended to be a quick guide to voting in Oregon in 2024. It's information will be updated over time.
+This page is a quick guide to 2024 voting in Oregon. Its information will be updated over time.
 
 ## When is the Oregon primary?
 
