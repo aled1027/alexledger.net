@@ -2,51 +2,35 @@
 // @ts-nocheck
 
 import Flag from "./icons/Flag.astro";
+
+interface Flag {
+  id: number,
+  date: string,
+  description: string,
+  greenYellowRed: string,
+
+}
+
+interface Grocery {
+  name: string,
+  greenYellowRed: string,
+  website: string,
+  owner: string,
+  ownerSubtext: string,
+  flags: Flag[],
+}
 interface Props {
-  grocery: Object;
+  grocery: Grocery;
 }
+
 const { grocery } = Astro.props;
-
-let baseFlags = [
-  {
-    color: "green",
-    title: "Unionized",
-    description: "The workers at this store are unionized.",
-  },
-  {
-    color: "red",
-    title: "International Owner",
-    description:
-      "The owner of this grocery store is Evil Corp, who is based out of South Korea.",
-  },
-  {
-    color: "yellow",
-    title: "Starting Wage",
-    description:
-      "The starting wage of this grocery store is $15.75, which is below a living wage but around the median grocery store starting wage",
-  },
-];
-
-const numFlags = 1 + Math.floor(Math.random() * 6);
-let flags = [];
-for (let i = 0; i < numFlags; ++i) {
-  // Pick a random flag index
-  const r = Math.floor(Math.random() * baseFlags.length);
-  const flag = structuredClone(baseFlags[r]);
-  flag.id = i;
-  flags.push(flag);
-}
 
 const colorOrderMap = {
   green: 0,
   yellow: 1,
   red: 2,
 }
-
-flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]);
-
-
-console.log(flags)
+grocery.flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]);
 
 // Design influenced by: https://cars.usnews.com/cars-trucks/rankings/small-cars
 ---
@@ -55,28 +39,28 @@ console.log(flags)
   <div class="card">
     <div class="left">
       <button
-        class=`tooltip dot align-self-center bg-${grocery.GreenYellowRed.toLowerCase()}`>
-        <span class="tooltiptext">Rated: {grocery.GreenYellowRed}</span>
+        class=`tooltip dot align-self-center bg-${grocery.greenYellowRed.toLowerCase()}`>
+        <span class="tooltiptext">Rated: {grocery.greenYellowRed}</span>
       </button>
       <div class="left-content">
-        <h3><a href={grocery.Website}>{grocery.Name}</a></h3>
-        <span>{grocery.Owner}</span>
-        <small>{grocery.OwnerSubtext}</small>
+        <h3><a href={grocery.website}>{grocery.name}</a></h3>
+        <span>{grocery.owner}</span>
+        <small>{grocery.ownerSubtext}</small>
       </div>
     </div>
     <div class="right">
       {
-        flags.map((flag) => {
+        grocery.flags.map((flag) => {
           // TODO: this can be moved out into a GroceryFlag component
           return (
-            <dialog id=`dialog${grocery.Id}-flag${flag.id}`>
-              <h4>{flag.title}</h4>
+            <dialog id=`dialog${grocery.id}-flag${flag.id}`>
+              <h4>{flag.description}</h4>
               <p>{flag.description}</p>
-              <button data-target=`#dialog${grocery.Id}-flag${flag.id}` class="register-close-modal">Close</button>
+              <button data-target=`#dialog${grocery.id}-flag${flag.id}` class="register-close-modal">Close</button>
             </dialog>
-            <div class=`flag fill-${flag.color} tooltip register-open-modal` data-target=`#dialog${grocery.Id}-flag${flag.id}`>
+            <div class=`flag fill-${flag.greenYellowRed.toLowerCase()} tooltip register-open-modal` data-target=`#dialog${grocery.id}-flag${flag.id}`>
               <Flag />
-              <span class="tooltiptext">{flag.title}</span>
+              <span class="tooltiptext">{flag.description}</span>
             </div>
           );
         })
@@ -149,6 +133,7 @@ console.log(flags)
     display: flex;
     gap: 1rem;
     padding: 1rem;
+    /* Weird stuff with this border overlapping the the tooltip */
     border: 1px solid var(--stone-5);
     @container (min-width: 600px) {}
   }
@@ -186,7 +171,7 @@ console.log(flags)
 
     /* Position the tooltip text - see examples below! */
     position: absolute;
-    z-index: 1;
+    z-index: 999;
   }
 
   /* Show the tooltip text when you mouse over the tooltip container */
