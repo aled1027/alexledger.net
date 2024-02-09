@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@layouts/default.astro";
+import AutoToc from "@components/AutoToc.astro";
 
 export const prerender = true;
 
@@ -39,6 +40,7 @@ const { Content } = await post.render();
       })
     }
   </div>
+  {post.data.includeToc && <AutoToc />}
   <Content />
 </Layout>
 
@@ -47,5 +49,11 @@ const { Content } = await post.render();
     display: flex;
     flex-wrap: wrap;
     gap: 0 0.5rem;
+    margin-bottom: 1rem;
+  }
+</style>
+<style is:global>
+  body img {
+    margin-inline: auto;
   }
 </style>
