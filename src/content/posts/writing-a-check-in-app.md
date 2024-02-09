@@ -65,10 +65,14 @@ The only reason I wanted a PWA was to support push notifications. I was never ab
 
 By adding [ntfy.sh](ntfy.sh) I no longer needed any of the PWA features so I pulled it out.
 
+Other than that, adding a PWA and making a native app vibe was pretty straightforward with Astro's [vite-pwa](https://github.com/vite-pwa/astro). I'd use it again for sure if needed.
+
 ### The iPhone API Notifications and Web Push Notification Was Hard for Me
 
 I was able to get basic notifications working, like if a user clicks a button, I could send a notification. I was more daunted by web push notifications, which just seemed to require so much.
 
 The best resource I found on the topic is https://simple-push-demo.vercel.app/. If I ever _need_ push notifications to use web push in the future, this is the first place I'll look.
+
+
 
 [^1]: Quotation from [https://ntfy.sh/](https://ntfy.sh/)
