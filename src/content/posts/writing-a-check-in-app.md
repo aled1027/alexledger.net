@@ -21,6 +21,8 @@ I started by building a little website with Astro that had a basic form. I deplo
 
 Finally, after some experimentation with PWAs, I set up notifications with [Ntfy](https://ntfy.sh) and GitHub actions so that there's a push notification to fill out the form once a day.
 
+The source code for the website is publicly available [here](https://github.com/aled1027/check-in).
+
 ![A screenshot of the check-in app.](../../assets/check-in-app-screenshot.png)
 
 ## The Daily Workflow

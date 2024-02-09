@@ -6,6 +6,10 @@ layout: "@layouts/default.astro"
 
 Below is a list of the some of the projects I've worked on over the years. If you're interested in learning more about a project or collaborating, please reach out; I'd love to chat!
 
+## Check-in Daily
+
+A website for doing check-ins with push notification reminders. The site is written in Astro, and [Ntfy](https://ntfy.sh) is used for push notifications. ([code](https://github.com/aled1027/check-in), [blog post](https://www.alexledger.net/posts/writing-a-check-in-app))
+
 ## The Hub
 
 Given a link to a JSON file of links and labels, [The Hub](https://github.com/aled1027/the-hub) will populate an easy to navigate hub of the links. It's a shareable page of bookmarks, inspired by LinkTree. ([code](https://github.com/aled1027/the-hub))
@@ -16,7 +20,7 @@ Given a link to a JSON file of links and labels, [The Hub](https://github.com/al
 
 ## Flattener
 
-[Flattener](https://flattener.netlify.app/) is a tool for taking a nested JSON file as input and returning a CSV file with the data flattened. This was written as a project to play with [Pyodide](https://pyodide.org/en/stable/), a port of CPython to WebAssembly/Emscripten. such that the code for flattening the JSON imports pandas and uses `pd.json_normalize`. ([code](https://github.com/aled1027/flattener),[ hosted page](https://flattener.netlify.app/))
+[Flattener](https://flattener.netlify.app/) is a tool for taking a nested JSON file as input and returning a CSV file with the data flattened. This was written as a project to play with [Pyodide](https://pyodide.org/en/stable/), a port of CPython to WebAssembly/Emscripten. such that the code for flattening the JSON imports pandas and uses `pd.json_normalize`. ([code](https://github.com/aled1027/flattener), [hosted page](https://flattener.netlify.app/))
 
 ## This Site
 
