@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@layouts/default.astro";
+import AutoToc from "@components/AutoToc.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const guidePosts = await getCollection("ferments");
+
+  return guidePosts.map((post) => {
+    return {
+      params: { slug: post.slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout>
+  <h1>{post.data.title}</h1>
+  <ul>
+    <li>Ferment Type: {post.data.fermentType}</li>
+    <li>Status: {post.data.status}</li>
+    <li>Start Date: {post.data?.dateStart.toLocaleDateString()}</li>
+    {post.data?.dateEnd && <li>End Date: {post.data?.dateEnd}</li>}
+  </ul>
+  {post.data.includeToc && <AutoToc />}
+  <Content />
+</Layout>
