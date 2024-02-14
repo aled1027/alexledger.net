@@ -26,7 +26,11 @@ const { Content } = await post.render();
     <li>Ferment Type: {post.data.fermentType}</li>
     <li>Status: {post.data.status}</li>
     <li>Start Date: {post.data?.dateStart.toLocaleDateString()}</li>
-    {post.data?.dateEnd && <li>End Date: {post.data?.dateEnd}</li>}
+    {
+      post.data?.dateEnd && (
+        <li>End Date: {post.data?.dateEnd.toLocaleDateString()}</li>
+      )
+    }
   </ul>
   {post.data.includeToc && <AutoToc />}
   <Content />

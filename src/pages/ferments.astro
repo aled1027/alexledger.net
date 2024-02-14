@@ -22,12 +22,12 @@ const recentFerments = ferments.filter((p) => p.data.status !== "In Progress");
 
 <Layout>
   <h1>Ferments</h1>
-  <h2>Ongoing Ferments</h2>
+  <h2>Ongoing Ferments ({ongoingFerments.length})</h2>
   <BlogList blogs={ongoingFerments} />
 
-  <!-- <h2>Recent Ferments</h2> -->
-  <!-- <BlogList blogs={recentFerments} /> -->
+  <h2>Recent Ferments ({recentFerments.length})</h2>
+  <BlogList blogs={recentFerments} />
 
-  <h2>Fermentation Guides</h2>
+  <h2>Fermentation Guides ({guides.length})</h2>
   <BlogList blogs={guides} />
 </Layout>
