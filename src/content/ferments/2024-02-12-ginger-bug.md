@@ -7,6 +7,7 @@ dateStart: 2024-02-12T08:00:00.000Z
 # dateEnd: 2024-02-14T08:00:00.000Z
 fermentType: Ginger Bug
 status: In Progress
+includeToc: false
 ---
 
 Started the recipe based on Better Done Yourself's approach in their youtube [video](https://www.youtube.com/watch?v=9xxb-yt0FZw).

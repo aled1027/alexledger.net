@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "@layouts/default.astro";
 import BlogList from "@components/BlogList.astro";
+import AutoToc from "@components/AutoToc.astro";
 
 export const prerender = true;
 
@@ -21,28 +22,30 @@ const recentFerments = ferments.filter((p) => p.data.status !== "In Progress");
 ---
 
 <Layout>
-  <h1>Ferments</h1>
-  <h2>Ongoing Ferments ({ongoingFerments.length})</h2>
+  <h1 id="ferments">Ferments</h1>
+  <AutoToc />
+
+  <h2 id="ongoing-ferments">Ongoing Ferments ({ongoingFerments.length})</h2>
   <BlogList blogs={ongoingFerments} />
 
-  <h2>Recent Ferments ({recentFerments.length})</h2>
+  <h2 id="recent-ferments">Recent Ferments ({recentFerments.length})</h2>
   <BlogList blogs={recentFerments} />
 
-  <h2>Fermentation Guides ({guides.length})</h2>
+  <h2 id="fermentation-guides">Fermentation Guides ({guides.length})</h2>
   <BlogList blogs={guides} />
 
-  <h2>My Fermentation Equipment</h2>
+  <h2 id="my-fermentation-equipment">My Fermentation Equipment</h2>
   <ul>
     <li>
       <a
         href="https://cosori.com/products/premium-stainless-steel-food-dehydrator-cp267-fd?_psq=dehydrator&_v=1.0"
-        >Cosori 6-tray Food Dehydrator</a
+        >Cosori 6-tray food dehydrator</a
       >
       <!-- Primarily used for tempeh at this time. -->
     </li>
     <li>
       <a href="https://stonewareoutlet.com/1-gallon-starter-kit-boxed/"
-        >Ohio Stoneware 1-gallon Crock with lid and weights</a
+        >Ohio Stoneware 1-gallon crock with lid and weights</a
       >
       <!-- Used for kraut. Fits about two cabbages. -->
     </li>
@@ -57,7 +60,7 @@ const recentFerments = ferments.filter((p) => p.data.status !== "In Progress");
     </li>
   </ul>
 
-  <h2>Fermentation Resources</h2>
+  <h2 id="fermentation-resources">Fermentation Resources</h2>
   <p>
     Below are miscellaneous resources for learning about Fermentation. The
     individual pages on ferments have a bunch of resources as well

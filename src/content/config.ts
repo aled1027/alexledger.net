@@ -24,7 +24,7 @@ export const collections = {
     schema: z.object({
       title: z.string(),
       date: z.coerce.date(),
-      includeToc: z.boolean().default(false),
+      includeToc: z.boolean().default(true),
       dateStart: z.optional(z.date()),
       dateEnd: z.optional(z.date()),
       status: z.string(),
