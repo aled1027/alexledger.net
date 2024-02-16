@@ -354,6 +354,21 @@ import Footer from "@components/Footer.astro";
         text-decoration-color: var(--fun-2);
       }
 
+      sup > a {
+        /* Used primarily for footnotes */
+        text-decoration: none;
+        color: var(--fun-1);
+        font-size: 0.75em;
+
+        &:before {
+          content: "[";
+        }
+
+        &:after {
+          content: "]";
+        }
+      }
+
       button {
         color: var(--text-1);
         background-color: var(--surface-1);
