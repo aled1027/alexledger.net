@@ -11,7 +11,12 @@
   class="progress"
   style="--progress: {progress}%"
 >
-  {progress}%
+  {#if progress < 100}
+    {progress}%
+  {:else}
+    <!-- TODO: if progress is 100 then show checkmark -->
+    Checkmark
+  {/if}
 </div>
 <input type="range" min="0" max="100" bind:value={progress} />
 
@@ -32,15 +37,15 @@
 
 <style>
   .progress {
-    /* the hue of the color to show progress */
-    --hue: 220;
-
     /* the size of the hole in the indicator. A value of zero is a fully filled circled and a value of 100%
     means the hole takes the whole space, and there's no colored indicator visible.*/
     --holesize: 65%;
 
-    /* the background of the indicator, shown when when still in progress */
-    --track-bg: var(--stone-2);
+    /* the foreground of the indicator track, shown for the part that is completed */
+    --track-fg: rgb(10, 10, 10);
+
+    /* the background of the indicator track, shown for the part that's not yet completed */
+    --track-bg: var(--stone-3);
 
     /* The amount of progress to render. Update this variable to update the rendering */
     /* --progress: 55%; */
@@ -72,20 +77,18 @@
       left: 0;
       right: 0;
       border-radius: 50%;
-      /* z-index: -1; */
+      /* z-index: -1; */ /* not sure if this is needed and why */
 
       /* Set the background to be a colored circle with a nice gradient based on the progress */
       background: conic-gradient(
-        hsl(var(--hue) 100% 70%),
-        hsl(var(--hue) 100% 40%),
-        hsl(var(--hue) 100% 70%) var(--progress, 0%),
+        var(--track-fg) var(--progress, 0%),
         var(--track-bg) var(--progress, 0%) 100%
       );
 
       /* Then mask the background to only reveal the progress */
       mask-image: radial-gradient(
         transparent var(--holesize),
-        black calc(var(--holesize) + 0.5px)
+        var(--track-fg) calc(var(--holesize) + 0.5px)
       );
     }
   }
