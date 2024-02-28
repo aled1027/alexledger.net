@@ -1,24 +1,32 @@
 <script>
-  let progress = 25;
+  import { writable, derived } from "svelte/store";
+  let trackFgInProgressColor = "var(--stone-9)";
+  let trackFgCompleteColor = "black";
+  const progress = writable(25);
+  const trackFg = derived(progress, ($progress) => {
+    return $progress === 100 ? trackFgCompleteColor : trackFgInProgressColor;
+  });
 </script>
 
 <h1>Frontend Coding Challenge: Progress Indicator</h1>
 <div
   role="progressbar"
-  aria-valuenow={progress}
+  aria-valuenow={$progress}
   aria-valuemin="0"
   aria-valuemax="100"
   class="progress"
-  style="--progress: {progress}%"
+  style="--progress: {$progress}%; --track-fg: {$trackFg};"
 >
-  {#if progress < 100}
-    {progress}%
+  {#if $progress < 100}
+    {$progress}%
   {:else}
     <!-- TODO: if progress is 100 then show checkmark -->
-    Checkmark
+    <div class="checkbox-wrapper">
+      <sl-icon name="check-lg"></sl-icon>
+    </div>
   {/if}
 </div>
-<input type="range" min="0" max="100" bind:value={progress} />
+<input type="range" min="0" max="100" bind:value={$progress} />
 
 <p>
   This was my attempt (and semi-failure as I didn't know how to get started with
@@ -42,13 +50,12 @@
     --holesize: 65%;
 
     /* the foreground of the indicator track, shown for the part that is completed */
-    --track-fg: rgb(10, 10, 10);
+    /* --track-fg: rgb(10, 10, 10); */
 
     /* the background of the indicator track, shown for the part that's not yet completed */
     --track-bg: var(--stone-3);
 
-    /* The amount of progress to render. Update this variable to update the rendering */
-    /* --progress: 55%; */
+    --color-success: #76f7bf;
 
     /* color: white; */
     /* background: blue; */
@@ -98,5 +105,10 @@
     margin-inline: auto;
     margin-block: 2rem;
     width: 50vmin;
+  }
+
+  .checkbox-wrapper {
+    display: flex;
+    font-size: 12rem;
   }
 </style>
