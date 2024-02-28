@@ -70,8 +70,11 @@
 <h3>Considering the questions that Piccalil asks:</h3>
 <ul>
   <li>
-    Q: What is the experience when JavaScript isn't enabled? A: I'm not sure.
-    Need to check.
+    Q: What is the experience when JavaScript isn't enabled? A: Nothing renders
+    because of the way Astro serves Svelte is entirely client-side. Even if this
+    were rendered with Sveltekit, I think it'd require JavaScript to be enabled.
+    So I would say this implementation fails to pass a requirement to support
+    JavaScript-disabled sites.
   </li>
   <li>
     Q: What technology is best suited for this component? A: This could be done
