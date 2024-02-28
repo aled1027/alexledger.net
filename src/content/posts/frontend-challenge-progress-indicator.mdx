@@ -25,7 +25,7 @@ The code for this component can be found in the alexledger.net repo on GitHub [h
   A: This could be done with vanilla JavaScript, HTML and CSS, per Mattia's codepen example above, but I liked using Svelte because it makes it easy to react and manage different state changes. The only real _state_ that changes is the progress meter, and everything else is derived from that.
 
 - Q: How can JavaScript and CSS communicate well?
-  A: I decided to have JavaScript communicate to CSS via CSS variables that in the style section of a div. The svelte engine is tracking the state and re-rendering the div with the appropriate variables. In the CSS, there's some calculations made based on the progress, but some of the colors are also chosen in the JavaScript and passed via variables because that was easier for me to write, read and reason about.
+  A: I decided to have JavaScript communicate to CSS via CSS variables that are in the style section of a div. The svelte engine is tracking the state and re-rendering the div with the appropriate variables. In the CSS, there's some calculations made based on the progress, but some of the colors are also chosen in the JavaScript and passed via variables because that was easier for me to write, read and reason about.
 
 I spent most of my time on (a) getting the CSS of the circles to look right and (b) making sure the CSS would show render the completed state when the task was complete.
 
