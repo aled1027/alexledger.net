@@ -117,8 +117,12 @@
 
   .checkbox-wrapper {
     display: flex;
-    font-size: 12rem;
+    font-size: 8rem;
     animation: fadeIn ease-in 1s;
+
+    @media (max-width: 1200px) {
+      font-size: 16rem;
+    }
   }
 
   @keyframes fadeIn {
