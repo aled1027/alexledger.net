@@ -24,7 +24,6 @@
   });
 </script>
 
-<h1>Frontend Coding Challenge: Progress Indicator</h1>
 <div
   role="progressbar"
   aria-valuenow={$progress}
@@ -44,7 +43,6 @@
     {#if $progress < 100}
       {$progress}%
     {:else}
-      <!-- TODO: if progress is 100 then show checkmark -->
       <div class="checkbox-wrapper">
         <sl-icon name="check-lg"></sl-icon>
       </div>
@@ -52,47 +50,6 @@
   </div>
 </div>
 <input type="range" min="0" max="100" bind:value={$progress} />
-
-<p>
-  This was my attempt (and semi-failure as I didn't know how to get started with
-  searching codepen) at the progress indicator frontend coding challenge from
-  <a href="https://piccalil.li/blog/challenge-009-progress-indicator/"
-    >piccalil</a
-  >.
-</p>
-<p>
-  My approach was adapted from the CSS Circular Progress codepen from Mattia
-  Astorino
-  <a href="https://codepen.io/equinusocio/pen/OJMBpdK">link</a>. Instead of
-  vanilla JavaScript, I used svelte for this. Big thanks to Mattia for the
-  instructional codepen.
-</p>
-<h3>Considering the questions that Piccalil asks:</h3>
-<ul>
-  <li>
-    Q: What is the experience when JavaScript isn't enabled? A: Nothing renders
-    because of the way Astro serves Svelte is entirely client-side. Even if this
-    were rendered with Sveltekit, I think it'd require JavaScript to be enabled.
-    So I would say this implementation fails to pass a requirement to support
-    JavaScript-disabled sites.
-  </li>
-  <li>
-    Q: What technology is best suited for this component? A: This could be done
-    with vanilla JavaScript, HTML and CSS, per Mattia's codepen example above,
-    but I liked using Svelte because it makes it easy to react and manage
-    different state changes. The only real _state_ that changes is the progress
-    meter, and everything else is derived from that.
-  </li>
-  <li>
-    Q: How can JavaScript and CSS communicate well? A: I decided to have
-    JavaScript communicate to CSS via CSS variables that in the style section of
-    a div. The svelte engine is tracking the state and re-rendering the div with
-    the appropriate variables. In the CSS, there's some calculations made based
-    on the progress, but some of the colors are also chosen in the JavaScript
-    and passed via variables because that was easier for me to write, read and
-    reason about.
-  </li>
-</ul>
 
 <style>
   .progress {

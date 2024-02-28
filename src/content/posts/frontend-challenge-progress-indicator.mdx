@@ -1,0 +1,30 @@
+---
+title: "Frontend Challenge: Progress Indicator"
+date: 2024-02-28T00:00:00-07:00
+draft: false
+tags: [frontend-challenge, html, css, svelte, javascript]
+---
+
+import ProgressIndicator from "@components/ProgressIndicator.svelte";
+
+<ProgressIndicator client:only />
+
+This was my solution (and semi-failure as I didn't know how to get started with searching codepen) at the [progress indicator frontend coding challenge](https://piccalil.li/blog/challenge-009-progress-indicator) from [piccalil](https://piccalil.li/).
+
+My approach was adapted from the CSS Circular Progress codepen from Mattia Astorino [link](https://codepen.io/equinusocio/pen/OJMBpdK). Instead of vanilla JavaScript, I used svelte for this. Big thanks to Mattia for the instructional codepen.
+
+The code for this component can be found in the alexledger.net repo on GitHub [here](https://github.com/aled1027/alexledger.net/blob/main/src/components/ProgressIndicator.svelte).
+
+### Considering the questions that Piccalil asks:
+
+- Q: What is the experience when JavaScript isn't enabled?
+  A: Nothing renders because of the way Astro serves Svelte is entirely client-side. Even if this were rendered with Sveltekit, I think it'd require JavaScript to be enabled. So I would say this implementation fails to pass a requirement to support JavaScript-disabled sites.
+
+- Q: What technology is best suited for this component?
+  A: This could be done with vanilla JavaScript, HTML and CSS, per Mattia's codepen example above, but I liked using Svelte because it makes it easy to react and manage different state changes. The only real _state_ that changes is the progress meter, and everything else is derived from that.
+
+- Q: How can JavaScript and CSS communicate well?
+  A: I decided to have JavaScript communicate to CSS via CSS variables that in the style section of a div. The svelte engine is tracking the state and re-rendering the div with the appropriate variables. In the CSS, there's some calculations made based on the progress, but some of the colors are also chosen in the JavaScript and passed via variables because that was easier for me to write, read and reason about.
+
+I was pretty unsure how to get started on this. I spent most of my time on (a) getting the CSS of the circles to look right and (b) making sure the CSS would show render the completed state when the task was complete.
+
