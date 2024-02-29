@@ -1,4 +1,6 @@
 <script>
+  // This an implementation of Picalli's solution to the frontend progress stepper challenge.
+  // WARNING: THIS CODE IS COPIED AND PASTED FROM PICALLI'S SOLUTION BLOG POST
 </script>
 
 <link

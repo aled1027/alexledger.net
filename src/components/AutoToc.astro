@@ -13,7 +13,7 @@
     "astro:page-load",
     function () {
       const tocTarget = document.querySelector(".toc-target");
-      if (tocTarget.firstElementChild !== null) {
+      if (tocTarget?.firstElementChild !== null) {
         // Return early because the toc already exists
         return;
       }
