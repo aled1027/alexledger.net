@@ -33,8 +33,6 @@
       </svg></button
     >
   </form>
-  <!-- TODO: is this used? -->
-  <div aria-atomic="true" role="alert" class="signup__alert"></div>
 </div>
 
 <style>
