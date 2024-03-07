@@ -87,7 +87,7 @@ grocery.flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]
     }
 
     &:hover {
-      background: var(--surface-2);
+      background: var(--color-surface-secondary);
     }
   }
 
@@ -149,9 +149,9 @@ grocery.flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]
     max-width: 80vw;
     border: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 5px;
-    background-color: var(--surface-1);
-    color: var(--text-1);
-    fill: var(--text-1);
+    background-color: var(--color-surface-primary);
+    color: var(--color-text-primary);
+    fill: var(--color-text-primary);
   }
 
 
@@ -186,7 +186,7 @@ grocery.flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]
     width: 35px;
     border-radius: 50%;
     display: inline-block;
-    border-color: var(--text-1);
+    border-color: var(--color-text-primary);
   }
 
   .button-like-link {
@@ -197,13 +197,13 @@ grocery.flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]
     color: inherit;
     background: inherit;
     text-decoration: underline;
-    text-decoration-color: var(--fun-1);
+    text-decoration-color: var(--color-primary);
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
     text-decoration-skip-ink: skip;
 
     &:hover {
-      text-decoration-color: var(--fun-2);
+      text-decoration-color: var(--color-secondary);
     }
   }
 
@@ -211,7 +211,7 @@ grocery.flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]
   .flag {
     width: 24px;
     height: 24px;
-    color: var(--text-1);
+    color: var(--color-text-primary);
 
     &:hover {
       cursor: pointer;

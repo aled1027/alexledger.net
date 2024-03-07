@@ -92,7 +92,7 @@ const { grocery } = Astro.props;
     }
 
     &:hover {
-      background: var(--surface-2);
+      background: var(--color-surface-secondary);
     }
   }
 
@@ -160,8 +160,8 @@ const { grocery } = Astro.props;
     max-width: 80vw;
     border: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 5px;
-    background-color: var(--surface-1);
-    color: var(--text-1);
+    background-color: var(--color-surface-primary);
+    color: var(--color-text-primary);
   }
 
   /* Components */
@@ -171,7 +171,7 @@ const { grocery } = Astro.props;
     width: 35px;
     border-radius: 50%;
     display: inline-block;
-    border-color: var(--text-1);
+    border-color: var(--color-text-primary);
   }
 
   .button-like-link {
@@ -182,13 +182,13 @@ const { grocery } = Astro.props;
     color: inherit;
     background: inherit;
     text-decoration: underline;
-    text-decoration-color: var(--fun-1);
+    text-decoration-color: var(--color-primary);
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
     text-decoration-skip-ink: skip;
 
     &:hover {
-      text-decoration-color: var(--fun-2);
+      text-decoration-color: var(--color-secondary);
     }
   }
 
