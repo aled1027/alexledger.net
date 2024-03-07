@@ -5,13 +5,18 @@ interface Props {
 }
 
 const { title, link } = Astro.props;
+
+// Random id so that we don't have conflicts while selecting elements if this compnent is
+// used multiple times on the same page.
 const id = Math.random().toString(36).slice(2, 11);
 
-// Has a javascript based solution
-// https://indieweb.org/hovercard
-// https://jamesg.blog/2022/10/12/hovercards/
-// https://jamesg.blog/2022/10/10/announcing-indieweb-utils-v0-3-1/
-// https://github.com/capjamesg/hovercard.js/blob/4578cc6ccaf9701ce83af115ecdf5c7b742602d9/hovercard.js#L4
+// This component is an Info button that on click, shows a dialog with more information.
+// The HTML for the dialog comes from the <slot />, and there's a title and link that can also be
+// included. While the title and link are really superfluous to this compnent, they're needed
+// for natural support of what I'm looking for in mdx files.
+// This implemention is inspired by, but deviates from, James G at:
+// - https://jamesg.blog/2022/10/12/hovercards/
+// - https://github.com/capjamesg/hovercard.js/blob/4578cc6ccaf9701ce83af115ecdf5c7b742602d9/hovercard.js#L4
 ---
 
 <div class="content">
