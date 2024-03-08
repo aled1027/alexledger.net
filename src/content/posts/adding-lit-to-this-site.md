@@ -8,6 +8,7 @@ tags:
   - lit
   - web-components
   - astro
+  - html
 ---
 
 I've been wanting a little info icon that when clicked would render a dialog with more information.
