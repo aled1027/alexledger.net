@@ -1,22 +1,15 @@
 import { LitElement, html, css } from "lit";
 
 class InfoButton extends LitElement {
-  static properties = {
-    title: { type: String },
-    link: { type: String },
-  };
-
   constructor() {
     super();
+    // TODO: probably dont need id anymore
     this.id = Math.random().toString(36).slice(2, 11);
   }
 
   render() {
     return html`
       <div class="content">
-        ${this.link
-          ? html`<a href=${this.link}>${this.title}</a>`
-          : html`<span>${this.title}</span>`}
         <button
           id="info-${this.id}"
           class="hoverable icon-container text-button">
@@ -68,8 +61,8 @@ class InfoButton extends LitElement {
 
   static styles = css`
     .content {
-      display: flex;
-      align-items: center;
+      display: inline-flex;
+      vertical-align: sub;
     }
 
     .icon {
@@ -100,6 +93,20 @@ class InfoButton extends LitElement {
       margin: 0;
       padding: 1rem 1rem 2rem 1rem;
       max-width: 60ch;
+    }
+
+    button {
+      color: black;
+      background-color: white;
+      border: 1px solid black;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .text-button {
+      border: none;
+      padding: 0;
     }
   `;
 }
