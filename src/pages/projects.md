@@ -6,6 +6,11 @@ layout: "@layouts/default.astro"
 
 Below is a list of the some of the projects I've worked on over the years. If you're interested in learning more about a project or collaborating, please reach out; I'd love to chat!
 
+## Know Portland, News Aggregator
+
+Know Portland is a living project providing residents of Portland with more information about what's happening.
+The [home page](https://knowportland-v2.netlify.app) aggregates local Portland news into an easy-to-read feed. ([site](https://knowportland-v2.netlify.app/), code coming soon)
+
 ## Check-in Daily
 
 A website for doing check-ins with push notification reminders. The site is written in Astro, and [Ntfy](https://ntfy.sh) is used for push notifications. ([code](https://github.com/aled1027/check-in), [blog post](https://www.alexledger.net/posts/writing-a-check-in-app))
