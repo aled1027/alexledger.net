@@ -19,6 +19,12 @@ A website for doing check-ins with push notification reminders. The site is writ
 
 Given a link to a JSON file of links and labels, [The Hub](https://github.com/aled1027/the-hub) will populate an easy to navigate hub of the links. It's a shareable page of bookmarks, inspired by LinkTree. ([code](https://github.com/aled1027/the-hub))
 
+## CSS Zen Garden - Blast
+
+The [CSS Zen Garden](https://csszengarden.com/) is general HTML page that folks style using only CSS. The intention is to show off the capabilities of CSS by styling the same HTML in dramatically different ways.
+
+I wrote a version of the CSS Zen Garden that's inspired by [Blast](https://blast.io/en/about), which is a yellow-hued theme with fun, futuristic, computer vibes. ([code](https://github.com/aled1027/csszengarden-blast), [site](https://aled1027.github.io/csszengarden-blast/))
+
 ## Barter
 
 [Barter](https://github.com/aled1027/barter) is a trading system for setting up generic, automated (but not real-time) trades. Currently, this system is built for dydx. ([code](https://github.com/aled1027/barter))
