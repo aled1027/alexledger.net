@@ -8,11 +8,9 @@ tags:
   - credit-freeze
 ---
 
-I recently froze and checked my credit with the three credit agencies in the U.S., and I thought I'd share my experience so that it can assist others.
+I recently froze and checked my credit with the three large credit agencies in the U.S., and I thought I'd share my experience so that it can assist others.
 
-In general, it was a hard process to complete, and I'm still working on it, but there were a few bits that were easier than I expected.
-
-The last time that I checked with the three majors was probably in 2018, so it was due time to check-in and make sure my credit was frozen properly.
+In general, it was a hard process to complete, and I'm still working on it, but there were a few bits that were easier than I expected. The last time that I checked with the three majors was probably in 2018, so it was due time to check-in and make sure my credit was frozen properly.
 
 ## CreditWise (Not one of the majors)
 
@@ -46,7 +44,7 @@ It's possible someone else has gained access for my account to Experian, but we'
 
 ## My Recommendations
 
-I'm not an expert, but here's what I recommend based on what I understand.
+I'm not an expert, but here's what I recommend based on what I understand[^1].
 
 1. Set up and use CreditWise, especially if you have a Capital One card. I've had a wonderful experience with CreditWise and it gives me peace of mind regarding my credit. On CreditWise, pay particular to attention to credit pulls and amount of credit: those will indicate if someone tried to open an account in your name.
 
@@ -55,3 +53,5 @@ I'm not an expert, but here's what I recommend based on what I understand.
 3. Use a password manager. Losing access to these accounts is very annoying (I never really had access because I had issues at sign-up, but it'd be the same experience if you ost your password). You'll want to remember your passwords fore the future, and, because these passwords gateway access to your credit, the passwords need to be secure. I recommend [1Password](https://1password.com/) - I've been using it for years and love it.
 
 4. Be careful clicking links and be skeptical of every website you visit! Even links when you google can be fraudulent, including and especially the sponsored links.
+
+[^1]: I've been doing tech help sessions at my local library, which has prompted me to push through bureaucratic hurdles myself so that I'm better equipped to assist library patrons. Here and there, I'm also going to try to document my experiences and tips to assist others - and my future self.
