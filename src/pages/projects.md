@@ -8,8 +8,9 @@ Below is a list of the some of the projects I've worked on over the years. If yo
 
 ## Know Portland, News Aggregator
 
-Know Portland is a living project providing residents of Portland with more information about what's happening.
-The [home page](https://knowportland-v2.netlify.app) aggregates local Portland news into an easy-to-read feed. ([site](https://knowportland-v2.netlify.app/), code coming soon)
+Know Portland is a living project providing residents of Portland with more information about what's happening. ([site](https://knowportland.org))
+
+I'm working adding a [news page](https://knowportland-v2.netlify.app) that aggregates local Portland news into an easy-to-read feed. ([site](https://knowportland-v2.netlify.app/), code coming soon)
 
 ## Check-in Daily
 
