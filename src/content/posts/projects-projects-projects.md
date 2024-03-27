@@ -1,35 +1,32 @@
 ---
-title: "Projects Projects Projects"
-draft: true
-date: 2024-03-25T08:00:00.000Z
+title: "Reviewing Recent Projects"
+draft: false
+date: 2024-03-27T10:00:00.000Z
 tags:
   - websites
   - ai
   - backend
   - learning
+  - lists
 ---
 
 ## Projects
 
-Since I started my sabbatical about 3 months ago, I've been doing a ton of little projects. They've been fun and rewarding and interesting, so I wanted to share them here.
+Since I started my sabbatical about 3 months ago, I've been doing a lot of little projects. They've been fun and rewarding and interesting, so I wanted to share them here.[^1][^2]
 
-I love listing and posting these things because it gives me a sense of accomplishment.
-We had a cat-therapist-team come over and help us with our cats, and one cool thing they told us about was building cats' confidences from play: a primary goal of playing with cats is that when they catch the toy, and when they get up higher vertically in the room, they get more confidence which helps them be happier and interact with other cats and humans better.
-I've been thinking about that for myself and those around me. I definitely use little projects as play and a way to boost my confidence because it's so fun to do things and finish them and share them with others.
-
-1. Alex at Peoples Food Coop blog: https://alexatpeoples.micro.blog/
-2. Telegram Captain: stealth
-3. Nite Bot: stealth
-4. Slurp: stealth
-5. This website - in general
-6. This website: the fermentation section
-7. A personal API: api.alexledger.net
-8. [Check-in app](https://www.alexledger.net/posts/writing-a-check-in-app): A small home-baked app for checking in daily.
-9. [knowportland.org](https://knowportland.org)
-10. [knowportland.org's news tool](https://knowportland.org/tools/portland_news)
-11. With much assistance, I co-built a futon frame; learned to use a miter saw
-12. Added a door to our catio, using my new miter saw skills
-13. Fermented apple cider vineger for the first time
+1. General updates on this [website](/) (view transitions, dark mode, etc.)
+2. The [fermentation](/ferments) section of this site
+3. Telegram Captain: stealth
+4. Nite Bot: stealth
+5. Slurp: stealth
+6. A personal API: api.alexledger.net[^3][^4]
+7. [Check-in app](https://www.alexledger.net/posts/writing-a-check-in-app): A small home-baked app for checking in daily.
+8. [knowportland.org](https://knowportland.org)
+9. [knowportland.org's news tool](https://knowportland.org/tools/portland_news)
+10. With much assistance, I co-built a futon frame; learned to use a miter saw
+11. Alex at Peoples Food Coop blog: https://alexatpeoples.micro.blog/
+12. Added a door to our catio
+13. Fermented apple cider vinegar for the first time
 14. Fermented kraut, kombucha, and tempeh, which I've done before.
 
 More projects can be found on my [projects](/projects) page.
@@ -40,14 +37,28 @@ More projects can be found on my [projects](/projects) page.
 2. [Supabase](https://supabase.com/)
 3. [Render](https://render.com/)
 4. A miter saw
-5. Astro's Starlight theme
-6. Astro's view transitions
-7. [JS Datatables](https://datatables.net/)
-8. [Raycast](https://www.raycast.com/)
-9. [RunJS](https://runjs.app/)
-10. [Rye](https://rye-up.com/) for python environment management
-11. OpenAI's [Completions API](https://supabase.com/docs/guides/ai/examples/openai)
+5. Astro's [Starlight](https://starlight.astro.build/)
+6. Astro's [view transitions](https://docs.astro.build/en/guides/view-transitions/)
+7. A lot of CSS (e.g., container queries)
+8. [JS Datatables](https://datatables.net/)
+9. [List JS](https://listjs.com/)
+10. [Raycast](https://www.raycast.com/)
+11. [RunJS](https://runjs.app/)
+12. [Rye](https://rye-up.com/) for python environment management
+13. OpenAI's [Completions API](https://supabase.com/docs/guides/ai/examples/openai)
+14. [Web Components](https://developer.mozilla.org/en-US/docs/Web/API/Web_Components) (my [post](/posts/adding-lit-to-this-site))
+15. [CSS Battles](https://cssbattle.dev/)
+16. [Arc Browser](https://arc.net/)
 
 ## More things I'm thinking about
 
 1. Porting [catnesh.net](https://catnesh.net) to Astro from Hugo
+2. A tags API: I assume this exists somewhere but I can't find it. I'd like a basic API like `POST /tags` that given some data returns a list of reasonable tags. The input would be flexible, but it'd try to find title, description, body, etc to inform the tag. Probably would leverage LLMs. I'd use this for classifying articles, my own posts, things I found around the internet.
+
+[^1]:
+    We had a cat-therapist-team help us with our cats, and one cool thing they told us about was building cats' confidences from play. A primary goal of playing with cats is that when they catch the toy, and when they get up higher vertically in the room, they get more confidence which helps them be happier and interact with other cats and humans better.
+    I've been thinking about that for myself and those around me. I definitely use little projects as play and a way to boost my confidence because it's fun to do things and finish them and share them with others.
+
+[^2]: This list doesn't include projects that had minor maintenance and updates.
+[^3]: The API is currently being hosted at a secret URL while it's in development.
+[^4]: I'm excited about using this to quickly deploy little API endpoints for projects.
