@@ -3,18 +3,20 @@ date: 2023-01-14
 tags:
     - pkm
     - tools
+    - lists
 title: Toolbox
 ---
 ## General Tools
 
-| Tool                                           | Description                                                                                                                                   |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Raycast](https://www.raycast.com/)            | Spotlight alternative that is customizable, faster, and really fun to use.                                                                    |
-| [Proton Mail](https://mail.proton.me/)         | A private, trustworthy, non-google email provider.                                                                                            |
-| [Proton Calendar](https://calendar.proton.me/) | A private, non-google calendar.                                                                                                               |
-| [Obsidian](https://www.spectacleapp.com/)      | Note taking app with great plugins. I love that behind the scenes, it's all just simple mark down files in a repository.                      |
-| [1Password](https://1password.com/)            | My preferred password manager. I've also used LastPass and KeepassX and found that I like the UI, UX, and sharing features of 1pass the most. |
-| [Newsblur](https://newsblur.com/)              | My RSS Feed reader. I've used newsblur for a few years and love it. I pay annually.                                                           |
+| Tool                                           | Description                                                                                                                                                                   |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Arc](https://arc.net/)                        | My go-to browser right now. It has a great command-t type in command experience that I use extensively. I also like the tab and space management; it fits my workflows nicely |
+| [Raycast](https://www.raycast.com/)            | Spotlight alternative that is customizable, faster, and really fun to use.                                                                                                    |
+| [Proton Mail](https://mail.proton.me/)         | A private, trustworthy, non-google email provider.                                                                                                                            |
+| [Proton Calendar](https://calendar.proton.me/) | A private, non-google calendar.                                                                                                                                               |
+| [Obsidian](https://www.spectacleapp.com/)      | Note taking app with great plugins. I love that behind the scenes, it's all just simple mark down files in a repository.                                                      |
+| [1Password](https://1password.com/)            | My preferred password manager. I've also used LastPass and KeepassX and found that I like the UI, UX, and sharing features of 1pass the most.                                 |
+| [Newsblur](https://newsblur.com/)              | My RSS Feed reader. I've used newsblur for a few years and love it. I pay annually.                                                                                           |
 
 
 
@@ -62,6 +64,7 @@ title: Toolbox
     - Google drive
     - Muse
 - Added:
+    - Arc
     - Raycast
     - Ntfy
     - Astro
