@@ -4,6 +4,9 @@ draft: true
 date: 2024-03-25T08:00:00.000Z
 tags:
   - websites
+  - ai
+  - backend
+  - learning
 ---
 
 ## Projects
@@ -33,15 +36,17 @@ More projects can be found on my [projects](/projects) page.
 
 ## Things I've tried/learned
 
-1. Supabase
-2. Render
-3. A miter saw
-4. Micro.blog
+1. Micro.blog
+2. [Supabase](https://supabase.com/)
+3. [Render](https://render.com/)
+4. A miter saw
 5. Astro's Starlight theme
 6. Astro's view transitions
 7. [JS Datatables](https://datatables.net/)
 8. [Raycast](https://www.raycast.com/)
 9. [RunJS](https://runjs.app/)
+10. [Rye](https://rye-up.com/) for python environment management
+11. OpenAI's [Completions API](https://supabase.com/docs/guides/ai/examples/openai)
 
 ## More things I'm thinking about
 
