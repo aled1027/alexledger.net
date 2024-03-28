@@ -21,13 +21,14 @@ Since I started my sabbatical about 3 months ago, I've been doing a lot of littl
 5. Slurp: stealth
 6. A personal API: api.alexledger.net[^3][^4]
 7. [Check-in app](https://www.alexledger.net/posts/writing-a-check-in-app): A small home-baked app for checking in daily.
-8. [knowportland.org](https://knowportland.org)
-9. [knowportland.org's news tool](https://knowportland.org/tools/portland_news)
-10. With much assistance, I co-built a futon frame; learned to use a miter saw
-11. Alex at Peoples Food Coop blog: https://alexatpeoples.micro.blog/
-12. Added a door to our catio
-13. Fermented apple cider vinegar for the first time
-14. Fermented kraut, kombucha, and tempeh, which I've done before.
+8. A CSS [Zen Garden](https://aled1027.github.io/csszengarden-blast/)
+9. [knowportland.org](https://knowportland.org)
+10. [knowportland.org's news tool](https://knowportland.org/tools/portland_news)
+11. With much assistance, I co-built a futon frame; learned to use a miter saw
+12. Alex at Peoples Food Coop blog: https://alexatpeoples.micro.blog/
+13. Added a door to our catio
+14. Fermented apple cider vinegar for the first time
+15. Fermented kraut, kombucha, and tempeh, which I've done before.
 
 More projects can be found on my [projects](/projects) page.
 
