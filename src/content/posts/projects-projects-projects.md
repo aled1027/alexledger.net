@@ -19,16 +19,17 @@ Since I started my sabbatical about 3 months ago, I've been doing a lot of littl
 3. Telegram Captain: stealth
 4. Nite Bot: stealth
 5. Slurp: stealth
-6. A personal API: api.alexledger.net[^3][^4]
-7. [Check-in app](https://www.alexledger.net/posts/writing-a-check-in-app): A small home-baked app for checking in daily.
-8. A CSS [Zen Garden](https://aled1027.github.io/csszengarden-blast/)
-9. [knowportland.org](https://knowportland.org)
-10. [knowportland.org's news tool](https://knowportland.org/tools/portland_news)
-11. With much assistance, I co-built a futon frame; learned to use a miter saw
-12. Alex at Peoples Food Coop blog: https://alexatpeoples.micro.blog/
-13. Added a door to our catio
-14. Fermented apple cider vinegar for the first time
-15. Fermented kraut, kombucha, and tempeh, which I've done before.
+6. Pelosi Bot: A half-baked, exploratory trading bot based on [STOCK Act](https://en.wikipedia.org/wiki/STOCK_Act) disclosures.
+7. A personal API: api.alexledger.net[^3][^4]
+8. [Check-in app](https://www.alexledger.net/posts/writing-a-check-in-app): A small home-baked app for checking in daily.
+9. A CSS [Zen Garden](https://aled1027.github.io/csszengarden-blast/)
+10. [knowportland.org](https://knowportland.org)
+11. [knowportland.org's news tool](https://knowportland.org/tools/portland_news)
+12. With much assistance, I co-built a futon frame; learned to use a miter saw
+13. Alex at Peoples Food Coop blog: https://alexatpeoples.micro.blog/
+14. Added a door to our catio
+15. Fermented apple cider vinegar for the first time
+16. Fermented kraut, kombucha, and tempeh, which I've done before.
 
 More projects can be found on my [projects](/projects) page.
 
