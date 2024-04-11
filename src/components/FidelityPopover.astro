@@ -1,4 +1,31 @@
 ---
+// A popover component inspired by Fidelity's popover.
+// Example usage:
+//   <FidelityPopover>
+//     <p slot="text-content">click me to see a popover</p>
+//     <div slot="popover-content">
+//       <div>Traditional IRA</div>
+//       <div>244212345</div>
+//       <div class="popover-content">
+//         <div>Cash Debit from Unsettled Activity</div>
+//         <div>$12341234234</div>
+//       </div>
+//       <div class="popover-links">
+//         <a href="">Balances</a>
+//         <a href="">History</a>
+//       </div>
+//     </div>
+//   </FidelityPopover>
+//   <style>
+//     .popover-content {
+//       display: flex;
+//       justify-content: space-between;
+//       gap: 2rem;
+//       margin-top: 0.5rem;
+//       margin-bottom: 0.5rem;
+//     }
+//   </style>
+
 const rand = Math.floor(Math.random() * 10000);
 const textContentId = `text-content-${rand}`;
 const dialogId = `popover-dialog-${rand}`;
@@ -15,18 +42,8 @@ const closeDialogId = `close-popover-dialog-${rand}`;
   id={dialogId}
   aria-hidden="true"
   data-close-dialog-id={closeDialogId}
-  class="dialog-container">
-  <!-- <slot name="popover-content" /> -->
-  <div>Traditional IRA</div>
-  <div>244212345</div>
-  <div class="middle-content">
-    <div>Cash Debit from Unsettled Activity</div>
-    <div>$12341234234</div>
-  </div>
-  <div class="popover-links">
-    <a href="">Balances</a>
-    <a href="">History</a>
-  </div>
+  class="dialog">
+  <slot name="popover-content" />
   <button id={closeDialogId} class="close-button">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -43,40 +60,37 @@ const closeDialogId = `close-popover-dialog-${rand}`;
 </dialog>
 
 <script is:inline define:vars={{ textContentId }}>
-  // Need things to get in place because this relies on positions
-  // Kind of hacky
-  setTimeout(() => {
-    go();
-  }, 100);
-  function go() {
-    console.log("Loading button 2");
-    const textContent = document.querySelector(`#${textContentId}`);
-    const dialogId = textContent.dataset.dialogId;
-    const dialog = document.querySelector(`#${dialogId}`);
+  const textContent = document.querySelector(`#${textContentId}`);
+  const dialogId = textContent.dataset.dialogId;
+  const dialog = document.querySelector(`#${dialogId}`);
+  const closeDialogId = dialog.dataset.closeDialogId;
+  const closeDialogButton = document.querySelector(`#${closeDialogId}`);
 
+  textContent.addEventListener("click", () => {
+    // Fetch the dialog height via css look-up. Looking up with bounding rect doesn't work
+    // because the dialog isn't currently shown.
+
+    // Set the inset of the dialog to be right above the textContent element
+    const dialogHeight = parseInt(
+      getComputedStyle(dialog).getPropertyValue("height").replace("px", "")
+    );
     const topPos =
       textContent.getBoundingClientRect().top -
       document.body.getBoundingClientRect().top -
-      200;
-    //   dialog.getBoundingClientRect().height;
+      dialogHeight;
     const leftPos = textContent.getBoundingClientRect().left;
     const insetStyle = `${topPos}px auto auto ${leftPos}px`;
     dialog.style.inset = insetStyle;
-    const closeDialogId = dialog.dataset.closeDialogId;
-    const closeDialogButton = document.querySelector(`#${closeDialogId}`);
 
-    textContent.addEventListener("click", () => {
-      console.log("clicked!");
-      dialog.showModal();
-      dialog.setAttribute("aria-hidden", "false");
-    });
+    // Show the modal and update properties accordingly
+    dialog.showModal();
+    dialog.setAttribute("aria-hidden", "false");
+  });
 
-    closeDialogButton.addEventListener("click", () => {
-      dialog.close();
-    });
-  }
-
-  //   const closeButton =
+  // This is the X button inside the modal.
+  closeDialogButton.addEventListener("click", () => {
+    dialog.close();
+  });
 </script>
 
 <style>
@@ -90,15 +104,19 @@ const closeDialogId = `close-popover-dialog-${rand}`;
     }
   }
 
-  .dialog-container {
+  .dialog {
     position: absolute;
     padding: 1.5rem;
     width: 40ch;
+    /* max-width: 100%; */
     height: 200px;
     border-radius: 0.1875em;
     border: solid 1px #ccc;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+
+    &::backdrop {
+      background: rgba(0, 0, 0, 0);
+    }
   }
 
   .close-button {
@@ -115,14 +133,4 @@ const closeDialogId = `close-popover-dialog-${rand}`;
       height: 40px;
     }
   }
-
-  .middle-content {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
 </style>
-
-<!-- style="inset: 184.193px auto auto 40px;/* visibility: visible; */width: auto;" -->
