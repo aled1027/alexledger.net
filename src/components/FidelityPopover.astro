@@ -1,0 +1,128 @@
+---
+const rand = Math.floor(Math.random() * 10000);
+const textContentId = `text-content-${rand}`;
+const dialogId = `popover-dialog-${rand}`;
+const closeDialogId = `close-popover-dialog-${rand}`;
+---
+
+<button
+  id={textContentId}
+  class="text-content text-button"
+  data-dialog-id={dialogId}>
+  <slot name="text-content" />
+</button>
+<dialog
+  id={dialogId}
+  aria-hidden="true"
+  data-close-dialog-id={closeDialogId}
+  class="dialog-container">
+  <!-- <slot name="popover-content" /> -->
+  <div>Traditional IRA</div>
+  <div>244212345</div>
+  <div class="middle-content">
+    <div>Cash Debit from Unsettled Activity</div>
+    <div>$12341234234</div>
+  </div>
+  <div class="popover-links">
+    <a href="">Balances</a>
+    <a href="">History</a>
+  </div>
+  <button id={closeDialogId} class="close-button">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-x"
+      viewBox="0 0 16 16">
+      <path
+        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+      ></path>
+    </svg>
+  </button>
+</dialog>
+
+<script is:inline define:vars={{ textContentId }}>
+  // Need things to get in place because this relies on positions
+  // Kind of hacky
+  setTimeout(() => {
+    go();
+  }, 100);
+  function go() {
+    console.log("Loading button 2");
+    const textContent = document.querySelector(`#${textContentId}`);
+    const dialogId = textContent.dataset.dialogId;
+    const dialog = document.querySelector(`#${dialogId}`);
+
+    const topPos =
+      textContent.getBoundingClientRect().top -
+      document.body.getBoundingClientRect().top -
+      200;
+    //   dialog.getBoundingClientRect().height;
+    const leftPos = textContent.getBoundingClientRect().left;
+    const insetStyle = `${topPos}px auto auto ${leftPos}px`;
+    dialog.style.inset = insetStyle;
+    const closeDialogId = dialog.dataset.closeDialogId;
+    const closeDialogButton = document.querySelector(`#${closeDialogId}`);
+
+    textContent.addEventListener("click", () => {
+      console.log("clicked!");
+      dialog.showModal();
+      dialog.setAttribute("aria-hidden", "false");
+    });
+
+    closeDialogButton.addEventListener("click", () => {
+      dialog.close();
+    });
+  }
+
+  //   const closeButton =
+</script>
+
+<style>
+  .text-content {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    margin: 0;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .dialog-container {
+    position: absolute;
+    padding: 1.5rem;
+    width: 40ch;
+    height: 200px;
+    border-radius: 0.1875em;
+    border: solid 1px #ccc;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+  }
+
+  .close-button {
+    position: absolute;
+    right: 0.125rem;
+    top: 0.125rem;
+    border: none;
+    padding: 0;
+    display: grid;
+    place-content: center;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .middle-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+</style>
+
+<!-- style="inset: 184.193px auto auto 40px;/* visibility: visible; */width: auto;" -->
