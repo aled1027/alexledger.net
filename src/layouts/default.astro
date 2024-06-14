@@ -194,11 +194,12 @@ import Footer from "@components/Footer.astro";
       figure,
       dl,
       dd {
-        margin-block: 1.4rem 1rem;
+        margin-block: 1.25rem;
+        margin-inline: 0;
       }
 
       h1 {
-        margin-block: 1.4rem 2rem;
+        margin-block: 3rem;
         display: flex;
         justify-content: center;
         text-align: center;
@@ -378,8 +379,17 @@ import Footer from "@components/Footer.astro";
 
       ul,
       ol {
-        padding-left: 1.35rem;
-        line-height: 1.7;
+        /* A nice codepen outlining some options: https://codepen.io/jordanthornquest/pen/VEQBWG */
+        /* Browsers default padding-inline-start to 40px */
+        padding-inline-start: 2rem;
+        line-height: 1.625;
+        list-style-position: outside;
+      }
+
+      /* Make p tags that are inside of ul have margin-block of 0 */
+      /* This makes lists look better, like the footnotes */
+      li > p {
+        margin-block: 0;
       }
     </style>
     <style is:global>
@@ -401,12 +411,17 @@ import Footer from "@components/Footer.astro";
         border: none;
         padding: 0;
       }
+
+      /* UTILITIES */
+      .m-block-0 {
+        margin-block: 0;
+      }
     </style>
 
     <style>
       /* Styles specific to this page */
       header {
-        padding-block: 2.75rem 0.75rem;
+        padding-block-start: 2.75rem;
         padding-inline: 0.35rem;
       }
 
@@ -417,6 +432,7 @@ import Footer from "@components/Footer.astro";
         gap: 0.6rem 1.5rem;
         padding: 0;
         width: 100%;
+        margin-block: 0;
       }
 
       nav li {
