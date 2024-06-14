@@ -15,7 +15,7 @@ const { blogs } = Astro.props;
           </a>
           <div class="post-tags">
             {post.data.tags && post.data.tags.sort().map((tag) => {
-              return <a class="post-tags-a" href=`/tags/${tag}`>{tag}</a>
+              return <a href=`/tags/${tag}`>{tag}</a>
             })}
           </div>
           <div class="post-date">
@@ -31,16 +31,37 @@ const { blogs } = Astro.props;
   .posts-container {
     container-type: inline-size;
   }
+  .post-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    border-block-start: 1px solid rgba(128, 128, 128, 0.375);
+    padding: 0.5rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+    width: 100%;
+
+    @container (min-width: 600px) {
+      grid-template-columns: 6fr 4fr 2fr;
+      gap: 2rem;
+      padding: 0rem 0.5rem;
+    }
+  }
 
   a.post-name {
+    /* Override default a stylings */
     font-size: 1rem;
     font-weight: var(--font-weight-5);
-    margin-block: 0.65rem;
     text-decoration: none;
     width: fit-content;
 
     &:hover {
       text-decoration: underline;
+    }
+
+    @container (min-width: 600px) {
+      margin-block: 0.65rem;
     }
   }
 
@@ -48,43 +69,9 @@ const { blogs } = Astro.props;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-block: 1rem;
-  }
 
-  .post-tags a {
-    background: var(--blue-7);
-    color: white;
-    font-weight: var(--font-weight-3);
-    padding: 0.3rem 0.3rem;
-    border-radius: var(--radius-2);
-    text-decoration: none;
-
-    &:hover {
-      background: var(--jungle-9)
-    }
-  }
-
-
-  .post-date {
-  }
-
-  .post-card {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: center;
-    gap: 0;
-    border-block-start: 1px solid rgba(128, 128, 128, 0.375);
-    padding: 0.5rem 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 300;
-    width: 100%;
-  }
-
-  @container (min-width: 600px) {
-    .post-card {
-      grid-template-columns: 6fr 4fr 2fr;
-      gap: 2rem;
-      padding: 0rem 0.5rem;
+    @container (min-width: 600px) {
+      margin-block: 0.65rem;
     }
   }
 </style>
