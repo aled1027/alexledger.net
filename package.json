@@ -29,6 +29,7 @@
     "remark": "^15.0.1",
     "remark-rehype": "^11.1.0",
     "sanitize-html": "^2.11.0",
+    "sass": "^1.77.8",
     "scrollama": "^3.2.0",
     "svelte": "^4.2.8",
     "tinacms": "^1.5.28"
