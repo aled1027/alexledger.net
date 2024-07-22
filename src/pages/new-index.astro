@@ -3,68 +3,53 @@ import Layout from "@layouts/new-layout.astro";
 ---
 
 <Layout>
-  <div class="grid-container">
-    <div class="header border-top border-bottom">
-      <span>alexledger.net, a collection of posts, lists, and experiments.</span
-      >
-      <div class="header__go-to-end">
-        <span>Portland, OR</span>
-        <button class="button | rounded">
-          <svg
-            class="menu-icon"
-            viewBox="0 0 1200 1200"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M1050 642H162c-20.4 0-36-15.6-36-36s15.6-36 36-36h888c20.4 0 36 15.6 36 36s-15.6 36-36 36zm0-300H162c-20.4 0-36-15.6-36-36s15.6-36 36-36h888c20.4 0 36 15.6 36 36s-15.6 36-36 36zM162 870h888c20.4 0 36 15.6 36 36s-15.6 36-36 36H162c-20.4 0-36-15.6-36-36s15.6-36 36-36z"
-              fill-rule="evenodd"></path>
-          </svg>
-        </button>
-      </div>
+  <!-- TODO:
+ - move header into a separate component, so it can be in the layout
+ - that means moving the header out of the grid and having it float on top
+ - maybe same with the footer
+ 
+-->
+  <div class="site-header | border-top border-bottom">
+    <span>alexledger.net, a collection of posts, lists, and experiments.</span>
+    <div class="header__go-to-end">
+      <span>Portland, OR</span>
+      <button class="button | rounded">
+        <svg
+          class="menu-icon"
+          viewBox="0 0 1200 1200"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M1050 642H162c-20.4 0-36-15.6-36-36s15.6-36 36-36h888c20.4 0 36 15.6 36 36s-15.6 36-36 36zm0-300H162c-20.4 0-36-15.6-36-36s15.6-36 36-36h888c20.4 0 36 15.6 36 36s-15.6 36-36 36zM162 870h888c20.4 0 36 15.6 36 36s-15.6 36-36 36H162c-20.4 0-36-15.6-36-36s15.6-36 36-36z"
+            fill-rule="evenodd"></path>
+        </svg>
+      </button>
     </div>
+  </div>
+  <div class="grid-container">
     <div class="side border-right border-bottom">
       <span class="side-name | ff-accent">Alex Ledger</span>
     </div>
-    <div class="name-box color-on-hover | border-right border-bottom">
+    <div class="grid-box color-on-hover | border-right border-bottom">
       <h1 class="heading-2">ALEX LEDGER</h1>
-      <p class="note">maybe a nice animation here because we say alex a lot</p>
-    </div>
-
-    <div class="posts-box color-on-hover | border-right border-bottom flow">
-      <h2 class="heading-3">POSTS</h2>
-      <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum
-        nulla vitae fugit assumenda, mollitia eligendi similique adipisci ipsum
-        ea dolore voluptatem ab minima enim earum, iusto iste minus commodi
-        sint?
-      </p>
-
-      <div class="metric-groups">
-        <div class="metric-group">
-          <span class="metric-group__value">4</span>
-          <span class="metric-group__label">Posts</span>
-        </div>
-        <div class="metric-group">
-          <span class="metric-group__value">4</span>
-          <span class="metric-group__label">Posts</span>
-        </div>
-      </div>
-
-      <!--      this will show metrics about post and a favorite post< -->
-    </div>
-
-    <div class="box-game color-on-hover | border-right border-bottom">
-      <p class="note">
-        this will be a draggable game or something visually appealing, but not
-        important for clicking
-      </p>
     </div>
 
     <a
+      href="#"
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
+      <h2 class="heading-3">POSTS</h2>
+    </a>
+
+    <a
+      href="/guides"
+      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      <h2 class="heading-3">GUIDES</h2></a
+    >
+    <a
       href="/projects"
-      class="projects-box color-on-hover | border-right border-bottom">
-      <!--
-  I wanted this to be animtaed on repeat with drawSVG, but I'm not sure I want to pay for gsap because drawSVG isn't part of core.
--->
+      class="projects-box color-on-hover | border-right border-bottom text-decoration-none">
+      <!-- I wanted this to be animtaed on repeat with drawSVG,
+      but I'm not sure I want to pay for gsap because drawSVG isn't part of core.
+      -->
       <svg
         class="garden"
         viewBox="0 0 1200 1200"
@@ -100,122 +85,63 @@ import Layout from "@layouts/new-layout.astro";
       <h2 class="heading-3">Projects</h2>
     </a>
 
-    <div class="ferments-box color-on-hover | border-right border-bottom">
-      <p class="note">
-        something about ferments or another topic. not sure here.
-      </p>
+    <a
+      href="/ferments"
+      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
       <h2 class="heading-3">Ferments</h2>
-    </div>
+    </a>
 
-    <div class="showcase-box color-on-hover | border-right border-bottom">
-      <p class="note">
-        display something from someone else I want to showcase that's of someome
-        else. like a cool blog or artist.
-      </p>
-      <h2 class="heading-3">Showcase</h2>
-    </div>
-    <div class="bottom border-bottom">
-      <ul class="nav-list">
+    <a
+      href="/lists"
+      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      <h2 class="heading-3">Lists</h2>
+    </a>
+    <nav class="bottom nav | border-bottom">
+      <ul class="flex-group mx-auto gap-12">
         <li><a href="#">Home</a></li>
         <li><a href="#">Posts</a></li>
         <li><a href="#">Projects</a></li>
       </ul>
-    </div>
+    </nav>
   </div>
-
-  <p class="note">Remixed from https://www.konvoy.vc/</p>
-
   <style>
     /* The grid container and its boxes */
     .grid-container {
       display: grid;
       grid-template-columns: 96px 5fr 5fr;
-      grid-template-rows: 48px 1fr 1fr 1fr 72px;
+      grid-template-rows: 1fr 1fr 1fr 72px;
       min-height: 100vh;
     }
 
-    .header {
-      grid-column: 1 / -1;
-      background: var(--color-primary-200);
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-
-    .header__go-to-end {
-      position: absolute;
-      right: 0.75rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .header .menu-icon {
-      width: 1.25rem;
-      height: 1.25rem;
-
-      /* The bottom margin is needed to raise the up logo slightly to make it more visually appealing */
-      /*   margin-bottom: .25rem; */
-    }
-
     .side {
-      grid-row: 2 / -1;
+      grid-row: 1 / -1;
       position: relative;
-    }
-
-    .side-name {
-      position: absolute;
-      display: inline-block;
-      transform: rotate(-0.25turn);
-      top: 50%;
-      left: -65px;
-      font-size: 3rem;
-      width: 11ch;
-    }
-
-    .name-box {
-      display: flex;
-      align-items: center;
-      padding-left: 1rem;
-    }
-
-    .posts-box {
-      padding: 2rem 0.75rem 0.75rem;
-    }
-
-    .posts-box > .heading2 {
-      text-align: center;
+      & .side-name {
+        position: absolute;
+        display: inline-block;
+        transform: rotate(-0.25turn);
+        top: 50%;
+        left: -65px;
+        font-size: 3rem;
+        width: 11ch;
+      }
     }
 
     .projects-box {
       display: grid;
       grid-template-rows: 1fr 3fr 1fr;
       padding: 1rem;
-    }
 
-    .projects-box .garden {
-      grid-row: 2 / 3;
-      width: 100px;
-      height: 100px;
-      margin-inline: auto;
-    }
+      & .garden {
+        grid-row: 2 / 3;
+        width: 100px;
+        height: 100px;
+        margin-inline: auto;
+      }
 
-    .projects-box h2 {
-      grid-row: -1;
-    }
-
-    .ferments-box {
-      padding: 1rem;
-      display: grid;
-      align-items: end;
-    }
-
-    .showcase-box {
-      padding: 1rem;
-      display: grid;
-      align-items: end;
+      & h2 {
+        grid-row: -1;
+      }
     }
 
     .bottom {
@@ -234,32 +160,6 @@ import Layout from "@layouts/new-layout.astro";
 
       & a:hover {
         text-decoration: underline;
-      }
-    }
-
-    /* MOVE SOMEWHERE ELSE */
-
-    .metric-groups {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr;
-      justify-content: center;
-      align-items: center;
-      place-content: center;
-
-      & .metric-group {
-        margin-inline: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        border: 1px solid gray;
-        border-radius: 4px;
-        padding: 0.25rem 0.375rem;
-      }
-
-      & .metric-group__label {
-        color: gray;
       }
     }
   </style>

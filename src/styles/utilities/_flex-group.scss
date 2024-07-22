@@ -11,3 +11,8 @@
 .flex-group.mx-auto {
   justify-content: center;
 }
+
+.gap-12 {
+  --flex-column-gap: 3rem;
+  --flex-row-gap: 3rem;
+}
