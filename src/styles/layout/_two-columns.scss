@@ -4,6 +4,7 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: 1fr;
+  height: 100%;
 
   @include mq(medium) {
     grid-template-columns: 1fr 1fr;

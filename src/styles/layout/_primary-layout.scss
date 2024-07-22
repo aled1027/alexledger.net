@@ -7,6 +7,10 @@
     display: grid;
     grid-template-columns: 96px auto;
     grid-template-rows: 72px auto auto;
+    
+    max-width: 1200px;
+    margin-inline: auto;
+    min-height: 100vh;
 }
 
 .site-header {

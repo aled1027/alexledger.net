@@ -3,7 +3,7 @@
 .site-footer {
   background-color: $footer-background-color;
   color: $footer-text-color;
-  height: $footer-height;
+  min-height: $footer-min-height;
   padding: $footer-padding;
 
   display: grid;
