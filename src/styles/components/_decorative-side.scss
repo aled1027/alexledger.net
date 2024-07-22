@@ -1,12 +1,19 @@
+@use "../abstracts/" as *;
+
 .decorative-side {
   position: relative;
+
   & .side-name {
     position: absolute;
     display: inline-block;
     transform: rotate(-0.25turn);
     top: 35%;
-    left: -65px;
+    left: -80px;
     font-size: 3rem;
     width: 11ch;
+
+    @include mq(medium) {
+      left: -65px;
+    }
   }
 }
