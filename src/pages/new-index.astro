@@ -81,21 +81,19 @@ import Layout from "@layouts/new-layout.astro";
       class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
       <h2 class="heading-3">Lists</h2>
     </a>
-    <nav class="bottom nav | border-bottom">
-      <ul class="flex-group mx-auto gap-12">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Posts</a></li>
-        <li><a href="#">Projects</a></li>
-      </ul>
-    </nav>
   </div>
   <style>
     /* The grid container and its boxes */
     .grid-container {
       display: grid;
-      grid-template-columns: 96px 5fr 5fr;
-      grid-template-rows: 1fr 1fr 1fr 72px;
+      grid-template-columns: 96px 5fr;
+      grid-template-rows: repeat(6, 1fr);
       min-height: 100vh;
+
+      @media (min-width: 45em) {
+        grid-template-columns: 96px 5fr 5fr;
+        grid-template-rows: 1fr 1fr 1fr;
+      }
     }
 
     .side {
@@ -105,7 +103,7 @@ import Layout from "@layouts/new-layout.astro";
         position: absolute;
         display: inline-block;
         transform: rotate(-0.25turn);
-        top: 50%;
+        top: 35%;
         left: -65px;
         font-size: 3rem;
         width: 11ch;
@@ -126,25 +124,6 @@ import Layout from "@layouts/new-layout.astro";
 
       & h2 {
         grid-row: -1;
-      }
-    }
-
-    .bottom {
-      display: grid;
-      place-content: center;
-      grid-column: 2 / -1;
-    }
-
-    .nav-list {
-      display: flex;
-      gap: 5rem;
-
-      & a {
-        color: inherit;
-      }
-
-      & a:hover {
-        text-decoration: underline;
       }
     }
   </style>
