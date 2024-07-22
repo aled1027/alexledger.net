@@ -13,7 +13,11 @@ import Layout from "@layouts/new-layout.astro";
     <span>alexledger.net, a collection of posts, lists, and experiments.</span>
     <div class="header__go-to-end">
       <span>Portland, OR</span>
-      <button class="button | rounded">
+      <!-- margin-block-end-1 on the button to make it visually look like it's aligned  -->
+      <!-- And padding 3 because it's a round button and our buttons aren't round by default -->
+      <button
+        class="button | rounded margin-block-end-1 padding-3"
+        data-type="transparent">
         <svg
           class="menu-icon"
           viewBox="0 0 1200 1200"

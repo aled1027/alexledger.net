@@ -34,4 +34,13 @@
       color: $button-accent-color-hover;
     }
   }
+
+  &[data-type="transparent"] {
+    background-color: transparent;
+
+    &:is(:hover, :focus) {
+      background-color: rgba(0, 0, 0, .1);
+    }
+  }
+
 }

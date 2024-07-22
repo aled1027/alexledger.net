@@ -5,22 +5,10 @@
   background-color: $site-header-background-color;
   padding: $site-header-padding;
 
-  &__inner {
-    display: flex;
-    gap: $size-4;
-    align-items: $site-header-alignment;
-    justify-content: $site-header-justification-small-screens;
-
-    @include mq(medium) {
-      justify-content: $site-header-justification-large-screens;
-    }
-  }
-
- text-align: center;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
 
   .header__go-to-end {
     position: absolute;
@@ -34,5 +22,16 @@
     width: 1.25rem;
     height: 1.25rem;
   }
-}
 
+  /* TODO: I'm not sure this is used */
+  &__inner {
+    display: flex;
+    gap: $size-4;
+    align-items: $site-header-alignment;
+    justify-content: $site-header-justification-small-screens;
+
+    @include mq(medium) {
+      justify-content: $site-header-justification-large-screens;
+    }
+  }
+}
