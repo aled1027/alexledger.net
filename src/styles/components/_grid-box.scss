@@ -1,5 +1,22 @@
 .grid-box {
-    padding: 1rem;
+  padding: 1rem;
+  display: grid;
+  align-items: end;
+
+  &[data-type="svg"] {
     display: grid;
-    align-items: end;
+    grid-template-rows: 1fr 3fr 1fr;
+    padding: 1rem;
+
+    & .svg {
+      grid-row: 2 / 3;
+      width: 100px;
+      height: 100px;
+      margin-inline: auto;
+    }
+
+    & h2 {
+      grid-row: -1;
+    }
+  }
 }

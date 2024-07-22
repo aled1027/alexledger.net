@@ -4,28 +4,28 @@ import Layout from "@layouts/new-layout.astro";
 
 <Layout>
   <div class="two-columns">
-    <div class="grid-box color-on-hover | border-right border-bottom">
+    <div class="grid-box | color-on-hover border-right border-bottom">
       <h1 class="heading-2">ALEX LEDGER</h1>
     </div>
     <a
       href="/posts"
       class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
-      <h2 class="heading-3">POSTS</h2>
+      <h2 class="heading-3">Posts</h2>
     </a>
 
     <a
       href="/guides"
-      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
-      <h2 class="heading-3">GUIDES</h2></a
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
+      <h2 class="heading-3">Guides</h2></a
     >
     <a
       href="/projects"
-      class="projects-box color-on-hover | border-right border-bottom text-decoration-none">
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none"
+      data-type="svg">
       <!-- I wanted this to be animtaed on repeat with drawSVG,
-      but I'm not sure I want to pay for gsap because drawSVG isn't part of core.
-      -->
+      but I'm not sure I want to pay for gsap because drawSVG isn't part of gsap core.  -->
       <svg
-        class="garden"
+        class="svg"
         viewBox="0 0 1200 1200"
         xmlns="http://www.w3.org/2000/svg">
         <path
@@ -61,22 +61,22 @@ import Layout from "@layouts/new-layout.astro";
 
     <a
       href="/ferments"
-      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
       <h2 class="heading-3">Ferments</h2>
     </a>
 
     <a
       href="/lists"
-      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
       <h2 class="heading-3">Lists</h2>
     </a>
     <a
       href="/search"
-      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
       <h2 class="heading-3">Search</h2>
     </a>
     <div
-      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
       <p>
         This site was made with <a href="https://astro.build/" target="_blank"
           >Astro</a
@@ -88,23 +88,4 @@ import Layout from "@layouts/new-layout.astro";
       <h2 class="heading-3">this site</h2>
     </div>
   </div>
-  <style>
-    /* The grid container and its boxes */
-    .projects-box {
-      display: grid;
-      grid-template-rows: 1fr 3fr 1fr;
-      padding: 1rem;
-
-      & .garden {
-        grid-row: 2 / 3;
-        width: 100px;
-        height: 100px;
-        margin-inline: auto;
-      }
-
-      & h2 {
-        grid-row: -1;
-      }
-    }
-  </style>
 </Layout>
