@@ -67,10 +67,11 @@ $flex-group-gap: $size-4;
 $hero-padding-block: clamp(15rem, 15vh, 20rem);
 $section-padding-block: clamp(5rem, 10vh, 6rem);
 
-$container-min-margin-inline: $size-4;
+$container-min-margin-inline: 0px;  // was $size-4
 $container-max-width: 64rem;
 $container-max-width-narrow: 40rem;
-$container-max-width-wide: 75rem;
+$container-max-width-wide: 125rem;  // was 75rem in og template
+$container-min-height: 100vh;
 
 // site header
 $site-header-background-color: $color-primary-200;
