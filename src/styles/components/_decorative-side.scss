@@ -10,32 +10,3 @@
     width: 11ch;
   }
 }
-
-.content {
-    // header          header
-    // decorative-side slot-wrapper
-    // decorative-side footer
-    display: grid;
-    grid-template-columns: 96px auto;
-    grid-template-rows: 72px auto auto;
-}
-
-.site-header {
-    grid-column: 1 / 3;
-    grid-row: 1 / 2;
-}
-
-.decorative-side {
-    grid-column: 1 / 2;
-    grid-row: 2 / -1;
-}
-
-.slot-wrapper {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-}
-
-.site-footer {
-    grid-column: 2 / 3;
-    grid-row: 3 / -1;
-}

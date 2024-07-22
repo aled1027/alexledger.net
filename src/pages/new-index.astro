@@ -3,7 +3,7 @@ import Layout from "@layouts/new-layout.astro";
 ---
 
 <Layout>
-  <div class="grid-container">
+  <div class="two-columns">
     <div class="grid-box color-on-hover | border-right border-bottom">
       <h1 class="heading-2">ALEX LEDGER</h1>
     </div>
@@ -90,18 +90,6 @@ import Layout from "@layouts/new-layout.astro";
   </div>
   <style>
     /* The grid container and its boxes */
-    .grid-container {
-      display: grid;
-      grid-template-columns: 5fr;
-      grid-template-rows: repeat(8, 1fr);
-      min-height: 100vh;
-
-      @media (min-width: 45em) {
-        grid-template-columns: 5fr 5fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
-      }
-    }
-
     .projects-box {
       display: grid;
       grid-template-rows: 1fr 3fr 1fr;
