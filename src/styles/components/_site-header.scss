@@ -5,33 +5,26 @@
   background-color: $site-header-background-color;
   padding: $site-header-padding;
 
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .header__go-to-end {
-    position: absolute;
-    right: 0.75rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  & .menu-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  /* TODO: I'm not sure this is used */
   &__inner {
+    position: relative;
     display: flex;
+    text-align: center;
     gap: $size-4;
     align-items: $site-header-alignment;
     justify-content: $site-header-justification-small-screens;
 
     @include mq(medium) {
       justify-content: $site-header-justification-large-screens;
+    }
+  }
+
+  .right-side {
+    position: absolute;
+    right: 1.75rem;
+    display: none;
+
+    @include mq(medium) {
+      display: block;
     }
   }
 }

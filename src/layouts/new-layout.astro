@@ -34,13 +34,21 @@ import Footer from "@components/Footer.astro";
     <title>Alex Ledger</title>
     <ViewTransitions />
   </head>
+
   <body>
-    <div class="content">
-      <div class="page-content">
-        <slot />
+    <!-- Header -->
+    <div class="site-header | border-top border-bottom">
+      <div class="site-header__inner">
+        <span
+          >alexledger.net, a collection of posts, lists, and experiments.</span
+        >
+        <span class="right-side">Portland, OR</span>
       </div>
     </div>
+    <!-- Main content -->
+    <slot />
     <!-- <Footer /> -->
+    <footer></footer>
 
     <script is:inline>
       // Add event handlers for the opening of the modals. This should automatically work
