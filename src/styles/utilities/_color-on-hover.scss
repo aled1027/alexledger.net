@@ -1,0 +1,16 @@
+@use "../abstracts/" as *;
+
+.color-on-hover {
+  background: linear-gradient(
+    to right,
+    $color-primary-200 50%,
+    $color-background-default 50%
+  );
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all 0.5s ease-out;
+}
+
+.color-on-hover:hover {
+  background-position: left bottom;
+}

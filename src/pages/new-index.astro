@@ -3,7 +3,7 @@ import Layout from "@layouts/new-layout.astro";
 ---
 
 <Layout>
-  <div class="container">
+  <div class="grid-container">
     <div class="header border-top border-bottom">
       <span>alexledger.net, a collection of posts, lists, and experiments.</span
       >
@@ -25,12 +25,12 @@ import Layout from "@layouts/new-layout.astro";
       <span class="side-name text-decorative">Alex Ledger</span>
     </div>
     <div class="name-box color-on-hover | border-right border-bottom">
-      <h1 class="heading1">ALEX LEDGER</h1>
+      <h1 class="heading-2">ALEX LEDGER</h1>
       <p class="note">maybe a nice animation here because we say alex a lot</p>
     </div>
 
     <div class="posts-box color-on-hover | border-right border-bottom flow">
-      <h2 class="heading2">POSTS</h2>
+      <h2 class="heading-3">POSTS</h2>
       <p>
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum
         nulla vitae fugit assumenda, mollitia eligendi similique adipisci ipsum
@@ -97,14 +97,14 @@ import Layout from "@layouts/new-layout.astro";
           d="m982.87 732.56-82.5-234.94a18.77 18.77 0 0 0-17.63-12.56c-8.06 0-15 5.06-17.8 12.56L781.3 735.93c-1.88 5.81-1.13 12.19 2.44 17.06a18.51 18.51 0 0 0 15.37 7.88h40.13v93.37h-3.38A18.69 18.69 0 0 0 817.12 873v164.26a18.8 18.8 0 0 0 18.75 18.75h93.75a18.8 18.8 0 0 0 18.75-18.75V873c0-10.5-8.44-18.75-18.75-18.75h-3.37v-93.37h40.5a18.8 18.8 0 0 0 18.75-18.75c0-3.38-.94-6.75-2.63-9.57zm-106.12 28.31h12v93.38h-12zm34.13 257.63h-56.25v-78.37h56.25zm0-115.88h-56.25v-10.87h56.25zm-85.32-179.26 57.2-162.94 57.18 162.94z"
         ></path>
       </svg>
-      <h2 class="heading3">Projects</h2>
+      <h2 class="heading-3">Projects</h2>
     </a>
 
     <div class="ferments-box color-on-hover | border-right border-bottom">
       <p class="note">
         something about ferments or another topic. not sure here.
       </p>
-      <h2 class="heading3">Ferments</h2>
+      <h2 class="heading-3">Ferments</h2>
     </div>
 
     <div class="showcase-box color-on-hover | border-right border-bottom">
@@ -112,7 +112,7 @@ import Layout from "@layouts/new-layout.astro";
         display something from someone else I want to showcase that's of someome
         else. like a cool blog or artist.
       </p>
-      <h2 class="heading3">Showcase</h2>
+      <h2 class="heading-3">Showcase</h2>
     </div>
     <div class="bottom border-bottom">
       <ul class="nav-list">
@@ -153,49 +153,7 @@ import Layout from "@layouts/new-layout.astro";
       --border-color: var(--color-slate-500);
     }
 
-    /* harder reset on a */
-    a {
-      all: unset;
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
-
-    body {
-      font-family: "Overpass", sans-serif;
-      font-optical-sizing: auto;
-      font-style: normal;
-      line-height: 1.4;
-      background: var(--background-color);
-    }
-
     /* Major Components */
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      line-height: 1;
-    }
-
-    .heading1 {
-      font-size: 4rem;
-      text-transform: uppercase;
-    }
-
-    .heading2 {
-      font-size: 3rem;
-      text-transform: uppercase;
-    }
-
-    .heading3 {
-      font-size: 2.5rem;
-      text-transform: uppercase;
-    }
-
     .button {
       background: transparent;
       border: none;
@@ -209,11 +167,10 @@ import Layout from "@layouts/new-layout.astro";
     }
 
     /* The grid container and its boxes */
-    .container {
+    .grid-container {
       display: grid;
       grid-template-columns: 96px 5fr 5fr;
       grid-template-rows: 48px 1fr 1fr 1fr 72px;
-
       min-height: 100vh;
     }
 
@@ -320,21 +277,6 @@ import Layout from "@layouts/new-layout.astro";
       }
     }
 
-    /* Color on hover component */
-    .color-on-hover {
-      background: linear-gradient(
-        to right,
-        var(--color-primary-200) 50%,
-        var(--background-color) 50%
-      );
-      background-size: 200% 100%;
-      background-position: right bottom;
-      transition: all 0.5s ease-out;
-    }
-
-    .color-on-hover:hover {
-      background-position: left bottom;
-    }
 
     /* Utilities */
 
