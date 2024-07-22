@@ -3,21 +3,10 @@ import Layout from "@layouts/new-layout.astro";
 ---
 
 <Layout>
-  <!-- TODO:
- - move header into a separate component, so it can be in the layout
- - that means moving the header out of the grid and having it float on top
- - maybe same with the footer
- 
--->
-
   <div class="grid-container">
-    <div class="side border-right border-bottom">
-      <span class="side-name | ff-accent">Alex Ledger</span>
-    </div>
     <div class="grid-box color-on-hover | border-right border-bottom">
       <h1 class="heading-2">ALEX LEDGER</h1>
     </div>
-
     <a
       href="#"
       class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
@@ -81,32 +70,35 @@ import Layout from "@layouts/new-layout.astro";
       class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
       <h2 class="heading-3">Lists</h2>
     </a>
+    <a
+      href="/search"
+      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      <h2 class="heading-3">Search</h2>
+    </a>
+    <div
+      class="grid-box color-on-hover | border-right border-bottom text-decoration-none">
+      <p>
+        This site was made with <a href="https://astro.build/" target="_blank"
+          >Astro</a
+        >. The source code can be found on <a
+          href="https://github.com/aled1027/alexledger.net"
+          target="_blank">GitHub</a
+        >.
+      </p>
+      <h2 class="heading-3">this site</h2>
+    </div>
   </div>
   <style>
     /* The grid container and its boxes */
     .grid-container {
       display: grid;
-      grid-template-columns: 96px 5fr;
-      grid-template-rows: repeat(6, 1fr);
+      grid-template-columns: 5fr;
+      grid-template-rows: repeat(8, 1fr);
       min-height: 100vh;
 
       @media (min-width: 45em) {
-        grid-template-columns: 96px 5fr 5fr;
-        grid-template-rows: 1fr 1fr 1fr;
-      }
-    }
-
-    .side {
-      grid-row: 1 / -1;
-      position: relative;
-      & .side-name {
-        position: absolute;
-        display: inline-block;
-        transform: rotate(-0.25turn);
-        top: 35%;
-        left: -65px;
-        font-size: 3rem;
-        width: 11ch;
+        grid-template-columns: 5fr 5fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
       }
     }
 
