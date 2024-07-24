@@ -63,13 +63,7 @@ import Layout from "@layouts/new-layout.astro";
       class="grid-box | color-on-hover border-right border-bottom text-decoration-none flow"
       data-type="center">
       <div class="flex-group mx-auto">
-        <svg
-          id="game-of-life"
-          viewBox="0 0 330 220"
-          width="330"
-          height="220"
-          xmlns="http://www.w3.org/2000/svg">
-        </svg>
+        <canvas id="game-of-life" width="350" height="200"></canvas>
         <div class="even-columns .mx-auto">
           <button class="button start-gol mx-auto my-auto" data-type="primary"
             >Start</button
@@ -112,13 +106,14 @@ import Layout from "@layouts/new-layout.astro";
     document.addEventListener(
       "astro:page-load",
       function () {
-        const svg = document.getElementById("game-of-life");
+        const canvas = document.getElementById("game-of-life");
+        const ctx = canvas.getContext("2d");
         const cellSize = 10;
         const rows = 330;
-        const cols = 130;
+        const cols = 230;
 
         // Define color variables
-        const liveCellColor = "var(--primary-700)";
+        const liveCellColor = "#447f6f";
         const deadCellColor = "rgb(255, 255, 255)";
         const cellStrokeColor = "rgb(220, 240, 220)";
 
@@ -191,10 +186,7 @@ import Layout from "@layouts/new-layout.astro";
               const newCol = startCol + colIndex;
               if (newRow < rows && newCol < cols) {
                 grid[newRow][newCol] = cell;
-                cells[newRow][newCol].setAttribute(
-                  "fill",
-                  cell ? liveCellColor : deadCellColor
-                );
+                drawCell(newRow, newCol, cell ? liveCellColor : deadCellColor);
               }
             });
           });
@@ -217,23 +209,13 @@ import Layout from "@layouts/new-layout.astro";
           }
         }
 
-        // Create SVG elements for the cells
-        const cells = grid.map((row, rowIndex) =>
-          row.map((cell, colIndex) => {
-            const rect = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "rect"
-            );
-            rect.setAttribute("x", colIndex * cellSize);
-            rect.setAttribute("y", rowIndex * cellSize);
-            rect.setAttribute("width", cellSize);
-            rect.setAttribute("height", cellSize);
-            rect.setAttribute("fill", deadCellColor);
-            rect.setAttribute("stroke", cellStrokeColor);
-            svg.appendChild(rect);
-            return rect;
-          })
-        );
+        // Function to draw a cell
+        function drawCell(row, col, color) {
+          ctx.fillStyle = color;
+          ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+          ctx.strokeStyle = cellStrokeColor;
+          ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        }
 
         function getNextState(grid, x, y) {
           const neighbors = [
@@ -266,50 +248,48 @@ import Layout from "@layouts/new-layout.astro";
           const newGrid = grid.map((row, rowIndex) =>
             row.map((cell, colIndex) => getNextState(grid, rowIndex, colIndex))
           );
-          grid = newGrid;
 
+          newGrid.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+              if (grid[rowIndex][colIndex] !== cell) {
+                drawCell(
+                  rowIndex,
+                  colIndex,
+                  cell ? liveCellColor : deadCellColor
+                );
+              }
+            });
+          });
+
+          grid = newGrid;
+        }
+
+        function setup() {
+          const startingMessage = ["HELLO", "WORLD"];
+          const startRow = 2;
+          const startCol = 2;
+          placeMessage(startingMessage, startRow, startCol);
           grid.forEach((row, rowIndex) => {
             row.forEach((cell, colIndex) => {
-              cells[rowIndex][colIndex].setAttribute(
-                "fill",
+              drawCell(
+                rowIndex,
+                colIndex,
                 cell ? liveCellColor : deadCellColor
               );
             });
           });
         }
 
-        // Function to create a glider pattern
-        function createGlider(x, y) {
-          const glider = [
-            [0, 1],
-            [1, 2],
-            [2, 0],
-            [2, 1],
-            [2, 2],
-          ];
-
-          glider.forEach(([dx, dy]) => {
-            const newX = x + dx;
-            const newY = y + dy;
-            if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
-              grid[newX][newY] = 1;
-              cells[newX][newY].setAttribute("fill", liveCellColor);
-            }
-          });
-        }
-
+        // Control buttons
         const startButton = document.querySelector(".start-gol");
         const pauseButton = document.querySelector(".pause-gol");
         const resetButton = document.querySelector(".reset-gol");
-
-        console.log(startButton, pauseButton, resetButton);
 
         let intervalId;
         let isRunning = false;
 
         startButton.addEventListener("click", () => {
           if (!isRunning) {
-            updateGrid();
             intervalId = setInterval(updateGrid, 500);
             isRunning = true;
           }
@@ -326,19 +306,11 @@ import Layout from "@layouts/new-layout.astro";
           grid = Array.from({ length: rows }, () =>
             Array.from({ length: cols }, () => 0)
           );
-          grid.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-              cells[rowIndex][colIndex].setAttribute("fill", deadCellColor);
-            });
-          });
-          placeMessage(startingMessage, startRow, startCol);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          setup();
         });
 
-        // Place the starting message on the grid
-        const startingMessage = ["HELLO", "WORLD"];
-        const startRow = 2;
-        const startCol = 2;
-        placeMessage(startingMessage, startRow, startCol);
+        setup();
       },
       { once: false }
     );
