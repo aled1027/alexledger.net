@@ -60,15 +60,22 @@ import Layout from "@layouts/new-layout.astro";
     </a>
 
     <div
-      class="grid-box | color-on-hover border-right border-bottom text-decoration-none"
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none flow"
       data-type="center">
-      <svg
-        id="game-of-life"
-        viewBox="0 0 330 220"
-        width="330"
-        height="220"
-        xmlns="http://www.w3.org/2000/svg">
-      </svg>
+      <div class="flex-group mx-auto">
+        <svg
+          id="game-of-life"
+          viewBox="0 0 330 220"
+          width="330"
+          height="220"
+          xmlns="http://www.w3.org/2000/svg">
+        </svg>
+        <div class="even-columns .mx-auto">
+          <button class="button start-gol" data-type="primary">Start</button>
+          <button class="button pause-gol" data-type="primary">Pause</button>
+          <button class="button end-gol" data-type="primary">Reset</button>
+        </div>
+      </div>
     </div>
 
     <a
