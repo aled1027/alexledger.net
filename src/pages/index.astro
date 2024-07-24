@@ -71,9 +71,15 @@ import Layout from "@layouts/new-layout.astro";
           xmlns="http://www.w3.org/2000/svg">
         </svg>
         <div class="even-columns .mx-auto">
-          <button class="button start-gol" data-type="primary">Start</button>
-          <button class="button pause-gol" data-type="primary">Pause</button>
-          <button class="button end-gol" data-type="primary">Reset</button>
+          <button class="button start-gol mx-auto my-auto" data-type="primary"
+            >Start</button
+          >
+          <button class="button pause-gol mx-auto my-auto" data-type="primary"
+            >Pause</button
+          >
+          <button class="button reset-gol mx-auto my-auto" data-type="primary"
+            >Reset</button
+          >
         </div>
       </div>
     </div>
@@ -289,18 +295,40 @@ import Layout from "@layouts/new-layout.astro";
       });
     }
 
-    // Event listener for clicks to add a glider and start the game
-    let gameStarted = false;
-    svg.addEventListener("click", (event) => {
-      const rect = svg.getBoundingClientRect();
-      const x = Math.floor((event.clientY - rect.top) / cellSize);
-      const y = Math.floor((event.clientX - rect.left) / cellSize);
-      if (!gameStarted) {
-        gameStarted = true;
-        setInterval(updateGrid, 500);
-      } else {
-        createGlider(x, y);
+    const startButton = document.querySelector(".start-gol");
+    const pauseButton = document.querySelector(".pause-gol");
+    const resetButton = document.querySelector(".reset-gol");
+
+    console.log(startButton, pauseButton, resetButton);
+
+    let intervalId;
+    let isRunning = false;
+
+    startButton.addEventListener("click", () => {
+      if (!isRunning) {
+        updateGrid();
+        intervalId = setInterval(updateGrid, 500);
+        isRunning = true;
       }
+    });
+
+    pauseButton.addEventListener("click", () => {
+      clearInterval(intervalId);
+      isRunning = false;
+    });
+
+    resetButton.addEventListener("click", () => {
+      clearInterval(intervalId);
+      isRunning = false;
+      grid = Array.from({ length: rows }, () =>
+        Array.from({ length: cols }, () => 0)
+      );
+      grid.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          cells[rowIndex][colIndex].setAttribute("fill", deadCellColor);
+        });
+      });
+      placeMessage(startingMessage, startRow, startCol);
     });
 
     // Place the starting message on the grid
