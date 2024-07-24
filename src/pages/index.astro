@@ -114,8 +114,10 @@ import Layout from "@layouts/new-layout.astro";
 
         // Define color variables
         const liveCellColor = "#447f6f";
-        const deadCellColor = "rgb(255, 255, 255)";
-        const cellStrokeColor = "rgb(220, 240, 220)";
+
+        // These two colors are the same as the body background
+        const deadCellColor = "hsl(0 0% 95%)";
+        const cellStrokeColor = "hsl(0 0% 95%)";
 
         // Initialize the grid with empty values
         let grid = Array.from({ length: rows }, () =>
