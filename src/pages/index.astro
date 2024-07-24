@@ -59,11 +59,17 @@ import Layout from "@layouts/new-layout.astro";
       <h2 class="heading-3">Projects</h2>
     </a>
 
-    <a
-      href="/ferments"
-      class="grid-box | color-on-hover border-right border-bottom text-decoration-none">
-      <h2 class="heading-3">Ferments</h2>
-    </a>
+    <div
+      class="grid-box | color-on-hover border-right border-bottom text-decoration-none"
+      data-type="center">
+      <svg
+        id="game-of-life"
+        viewBox="0 0 330 220"
+        width="330"
+        height="220"
+        xmlns="http://www.w3.org/2000/svg">
+      </svg>
+    </div>
 
     <a
       href="/lists"
@@ -88,4 +94,212 @@ import Layout from "@layouts/new-layout.astro";
       <h2 class="heading-3">this site</h2>
     </div>
   </div>
+
+  <script is:inline>
+    const svg = document.getElementById("game-of-life");
+    const cellSize = 10;
+    const rows = 330;
+    const cols = 130;
+
+    // Define color variables
+    const liveCellColor = "var(--primary-700)";
+    const deadCellColor = "rgb(255, 255, 255)";
+    const cellStrokeColor = "rgb(220, 240, 220)";
+
+    // Initialize the grid with empty values
+    let grid = Array.from({ length: rows }, () =>
+      Array.from({ length: cols }, () => 0)
+    );
+
+    // Patterns for each letter in "HELLO WORLD" (scaled up)
+    const letters = {
+      H: [
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+      ],
+      E: [
+        [1, 1, 1, 1, 1],
+        [1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 1],
+        [1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 1],
+      ],
+      L: [
+        [1, 1, 0, 0, 0],
+        [1, 1, 0, 0, 0],
+        [1, 1, 0, 0, 0],
+        [1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 1],
+      ],
+      O: [
+        [1, 1, 1, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 1, 1, 1],
+      ],
+      W: [
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 0, 1],
+      ],
+      R: [
+        [1, 1, 1, 1, 0],
+        [1, 1, 0, 1, 1],
+        [1, 1, 1, 1, 0],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+      ],
+      D: [
+        [1, 1, 1, 1, 0],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 1, 1, 0],
+      ],
+    };
+
+    // Utility function to place a letter on the grid
+    function placeLetter(letter, startRow, startCol) {
+      const pattern = letters[letter];
+      if (!pattern) return;
+
+      pattern.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          const newRow = startRow + rowIndex;
+          const newCol = startCol + colIndex;
+          if (newRow < rows && newCol < cols) {
+            grid[newRow][newCol] = cell;
+            cells[newRow][newCol].setAttribute(
+              "fill",
+              cell ? liveCellColor : deadCellColor
+            );
+          }
+        });
+      });
+    }
+
+    // Utility function to place a message on the grid
+    function placeMessage(words, startRow, startCol) {
+      let rowOffset = 0;
+      for (const word of words) {
+        let colOffset = 0;
+        word.split("").forEach((letter) => {
+          if (letter === " ") {
+            colOffset += 6; // Add space between words
+          } else {
+            placeLetter(letter, startRow + rowOffset, startCol + colOffset);
+            colOffset += 6; // Space between letters
+          }
+        });
+        rowOffset += 10;
+      }
+    }
+
+    // Create SVG elements for the cells
+    const cells = grid.map((row, rowIndex) =>
+      row.map((cell, colIndex) => {
+        const rect = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect"
+        );
+        rect.setAttribute("x", colIndex * cellSize);
+        rect.setAttribute("y", rowIndex * cellSize);
+        rect.setAttribute("width", cellSize);
+        rect.setAttribute("height", cellSize);
+        rect.setAttribute("fill", deadCellColor);
+        rect.setAttribute("stroke", cellStrokeColor);
+        svg.appendChild(rect);
+        return rect;
+      })
+    );
+
+    function getNextState(grid, x, y) {
+      const neighbors = [
+        [0, 1],
+        [1, 1],
+        [1, 0],
+        [1, -1],
+        [0, -1],
+        [-1, -1],
+        [-1, 0],
+        [-1, 1],
+      ];
+      const liveNeighbors = neighbors.reduce((acc, [dx, dy]) => {
+        const newX = x + dx;
+        const newY = y + dy;
+        if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
+          return acc + grid[newX][newY];
+        }
+        return acc;
+      }, 0);
+
+      if (grid[x][y] === 1) {
+        return liveNeighbors === 2 || liveNeighbors === 3 ? 1 : 0;
+      } else {
+        return liveNeighbors === 3 ? 1 : 0;
+      }
+    }
+
+    function updateGrid() {
+      const newGrid = grid.map((row, rowIndex) =>
+        row.map((cell, colIndex) => getNextState(grid, rowIndex, colIndex))
+      );
+      grid = newGrid;
+
+      grid.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          cells[rowIndex][colIndex].setAttribute(
+            "fill",
+            cell ? liveCellColor : deadCellColor
+          );
+        });
+      });
+    }
+
+    // Function to create a glider pattern
+    function createGlider(x, y) {
+      const glider = [
+        [0, 1],
+        [1, 2],
+        [2, 0],
+        [2, 1],
+        [2, 2],
+      ];
+
+      glider.forEach(([dx, dy]) => {
+        const newX = x + dx;
+        const newY = y + dy;
+        if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
+          grid[newX][newY] = 1;
+          cells[newX][newY].setAttribute("fill", liveCellColor);
+        }
+      });
+    }
+
+    // Event listener for clicks to add a glider and start the game
+    let gameStarted = false;
+    svg.addEventListener("click", (event) => {
+      const rect = svg.getBoundingClientRect();
+      const x = Math.floor((event.clientY - rect.top) / cellSize);
+      const y = Math.floor((event.clientX - rect.left) / cellSize);
+      if (!gameStarted) {
+        gameStarted = true;
+        setInterval(updateGrid, 500);
+      } else {
+        createGlider(x, y);
+      }
+    });
+
+    // Place the starting message on the grid
+    const startingMessage = ["HELLO", "WORLD"];
+    const startRow = 2;
+    const startCol = 2;
+    placeMessage(startingMessage, startRow, startCol);
+  </script>
 </Layout>
