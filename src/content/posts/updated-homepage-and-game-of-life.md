@@ -13,7 +13,7 @@ I've been working through some courses on design, and after trying out a few ide
 
 For my personal site, I wanted zones where I could play and easily show off concepts. I liked the multi-column grid to keep things orderly, and contrast with my previous layout that was too vertical.
 
-I like the green primary color instead of the boring, corporate blue from before. I've tried to go single color with a couple neutral colors and that shade of green. I kept the green simple by finding a hue I liked, and then varying it's lightness using [oklch](https://oklch.com/).
+I like the green primary color instead of the boring, corporate blue from before. I've tried to go single color with a couple neutral colors and that shade of green. I kept the green simple by finding a hue I liked, and then varying its lightness using [oklch](https://oklch.com/).
 
 I wanted a design that would communicate the following qualities about me: experimental, diverse interests, and playful.
 I hope that the grid boxes and the variety within them demonstrates diverse interests. And the nature of the content in the boxes themselves should communicate the experimental and playful qualities.
