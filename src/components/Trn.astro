@@ -1,0 +1,146 @@
+---
+
+---
+
+<div id="container"></div>
+
+<script is:inline src="https://d3js.org/d3.v4.min.js"></script>
+<script is:inline>
+  const A = { label: "A" };
+  const B = { label: "B" };
+  const C = { label: "C" };
+  const D = { label: "D" };
+  const nodeE = { label: "E" };
+
+  // Define edges (connections between nodes)
+  const edges = {
+    A: ["C"],
+    B: ["C"],
+    C: ["E"],
+    D: ["E"],
+    nodeE: [],
+  };
+
+  const nodes = [A, B, C, D, nodeE];
+
+  function computeDepth(nodes, edges) {
+    // Initialize the depth of all nodes to -1 (undefined)
+    for (const node of nodes) {
+      node.depth = -1;
+    }
+
+    // Helper function to perform depth-first traversal
+    function dfs(node, currentDepth) {
+      if (node.depth < currentDepth) {
+        node.depth = currentDepth;
+      }
+      if (edges[node.label]) {
+        for (const neighborLabel of edges[node.label]) {
+          const neighbor = nodes.find((n) => n.label === neighborLabel);
+          dfs(neighbor, node.depth + 1);
+        }
+      }
+    }
+
+    // Find all nodes with no incoming edges (roots)
+    const nodeLabels = nodes.map((n) => n.label);
+    const incomingEdges = new Set(Object.values(edges).flat());
+    const roots = nodeLabels.filter((label) => !incomingEdges.has(label));
+
+    // Compute depth starting from each root
+    for (const rootLabel of roots) {
+      const root = nodes.find((n) => n.label === rootLabel);
+      dfs(root, 0);
+    }
+  }
+
+  function computePositions(nodes, edges) {
+    const depths = [...new Set(nodes.map((n) => n.depth))].sort(
+      (a, b) => a - b
+    );
+    for (const depth of depths) {
+      const nodesAtDepth = nodes.filter((n) => n.depth === depth);
+      console.log(
+        `Depth ${depth}:`,
+        nodesAtDepth.map((n) => n.label)
+      );
+      row = 0;
+
+      for (const node of nodesAtDepth) {
+        console.log(`Node ${node.label}:`, node.depth);
+
+        let length = 1;
+        const nodeEdges = edges[node.label];
+        if (!!nodeEdges && nodeEdges.length > 0) {
+          const nextNode = nodes.find((n) => n.label === nodeEdges[0]);
+          length = nextNode.depth - node.depth;
+        }
+
+        // compute indegree
+        let indegree = 0;
+        for (const n of nodes) {
+          const nEdges = edges[n.label];
+          if (nEdges && nEdges.includes(node.label)) {
+            indegree++;
+          }
+        }
+
+        node.row = row;
+        node.col = depth;
+        node.length = length;
+        row++;
+
+        // I think we'll need indegree for the height
+
+        // Now, compute the coordinates
+        node.top = node.row * 100;
+        node.left = node.col * 100;
+        node.width = 100 * node.length;
+        node.height = 100 + 100 * indegree;
+      }
+    }
+  }
+
+  // Compute the depth of each node
+  computeDepth(nodes, edges);
+
+  // Compute the position for each node
+  computePositions(nodes, edges);
+
+  const container = d3.select("#container");
+  for (const node of nodes) {
+    const nodeElement = container
+      .append("div")
+      .style("left", `${node.left}px`)
+      .style("top", `${node.top}px`)
+      .style("height", `${node.height}px`)
+      .style("width", `${node.width}px`)
+      .attr("class", "node")
+      .text(node.label);
+    console.log("nodeElement", nodeElement);
+  }
+
+  // Compute the coordinates for each node
+  // Output the result
+  console.log(nodes);
+</script>
+
+<style is:inline>
+  .node {
+    border: 1px solid #ccc;
+    background-color: #ffcc00;
+    text-align: center;
+    line-height: 1.5em;
+    padding: 10px;
+    box-sizing: border-box;
+    position: absolute;
+    font-size: 14px;
+  }
+
+  #container {
+    position: relative;
+    width: 1000px;
+    height: 600px;
+    border: 1px solid #ccc;
+  }
+</style>
