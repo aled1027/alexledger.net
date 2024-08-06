@@ -6,13 +6,13 @@
 
 <script is:inline src="https://d3js.org/d3.v4.min.js"></script>
 <script is:inline>
-  const edges = {
-    A: ["C"],
-    B: ["C"],
-    C: ["E"],
-    D: ["E"],
-    E: [],
-  };
+  // const edges = {
+  //   A: ["C"],
+  //   B: ["C"],
+  //   C: ["E"],
+  //   D: ["E"],
+  //   E: [],
+  // };
 
   // const edges = {
   //   A: ["C"],
@@ -22,6 +22,18 @@
   //   E: [],
   // };
 
+  const edges = {
+    "3 C water": ["Boil water"],
+    "1 C pasta": ["Cook water"],
+    "Boil water": ["Cook water"],
+    "Cook water": ["Cook pasta"],
+    "Cook pasta": ["Drain pasta"],
+    "Drain pasta": ["Return pasta to pot"],
+    "2 tbsp olive oil": ["Return pasta to pot"],
+    "1 C tomatoes": ["Return pasta to pot"],
+    "1/2 C cat food": ["Return pasta to pot"],
+  };
+
   function computeDepth(nodes, edges) {
     // Initialize the depth of all nodes to -1 (undefined)
     for (const node of nodes) {
@@ -29,16 +41,22 @@
     }
 
     // Helper function to perform depth-first traversal
-    function dfs(node, currentDepth) {
+    function dfs(node, currentDepth, visited) {
+      if (visited.has(node.label)) return; // Prevent revisiting nodes
+      visited.add(node.label); // Mark the node as visited
+
       if (node.depth < currentDepth) {
         node.depth = currentDepth;
       }
+
       if (edges[node.label]) {
         for (const neighborLabel of edges[node.label]) {
           const neighbor = nodes.find((n) => n.label === neighborLabel);
-          dfs(neighbor, node.depth + 1);
+          dfs(neighbor, node.depth + 1, visited);
         }
       }
+
+      visited.delete(node.label); // Unmark the node as visited (optional)
     }
 
     // Find all nodes with no incoming edges (roots)
@@ -49,7 +67,7 @@
     // Compute depth starting from each root
     for (const rootLabel of roots) {
       const root = nodes.find((n) => n.label === rootLabel);
-      dfs(root, 0);
+      dfs(root, 0, new Set());
     }
   }
 
@@ -108,8 +126,18 @@
     }
   }
 
-  const nodes = Object.keys(edges).map((label) => ({ label }));
+  const nodeSet = new Set();
+  for (const node of Object.keys(edges)) {
+    nodeSet.add(node);
+    for (const node2 of edges[node]) {
+      nodeSet.add(node2);
+    }
+  }
+  let nodes = Array.from(nodeSet).map((label) => ({ label }));
+
   computeDepth(nodes, edges);
+  computePositions(nodes, edges);
+  addToDom(nodes);
 </script>
 
 <style is:inline>
