@@ -2,6 +2,10 @@
 
 ---
 
+<textarea
+  id="code-input"
+  style="width: 100%; height: 300px;"
+  placeholder="Paste your JavaScript code here"></textarea>
 <div id="container"></div>
 
 <script is:inline src="https://d3js.org/d3.v4.min.js"></script>
@@ -34,21 +38,21 @@
   //   "1/2 C cat food": ["Return pasta to pot"],
   // };
 
-  const edges = {
-    "2 1/4 cups quick oats": ["Combine dry ingredients"],
-    "1 1/2 cups crispy rice cereal": ["Combine dry ingredients"],
-    "2 Tablespoons ground flaxseed": ["Combine dry ingredients"],
-    "6 Tablespoons butter": ["Microwave wet ingredients"],
-    "Combine dry ingredients": ["Mix all together"],
-    "1/3 cup honey": ["Microwave wet ingredients"],
-    "3/4 cup packed light brown sugar": ["Microwave wet ingredients"],
-    "1 teaspoon vanilla extract": ["Microwave wet ingredients"],
-    "Microwave wet ingredients": ["Mix all together"],
-    "Mix all together": ["Press into pan"],
-    "1/2 cup mini chocolate chips": ["Mix all together"],
-    "Press into pan": ["Refrigerate"],
-    Refrigerate: ["Cut into bars"],
-  };
+  // const edges = {
+  //   "2 1/4 cups quick oats": ["Combine dry ingredients"],
+  //   "1 1/2 cups crispy rice cereal": ["Combine dry ingredients"],
+  //   "2 Tablespoons ground flaxseed": ["Combine dry ingredients"],
+  //   "6 Tablespoons butter": ["Microwave wet ingredients"],
+  //   "Combine dry ingredients": ["Mix all together"],
+  //   "1/3 cup honey": ["Microwave wet ingredients"],
+  //   "3/4 cup packed light brown sugar": ["Microwave wet ingredients"],
+  //   "1 teaspoon vanilla extract": ["Microwave wet ingredients"],
+  //   "Microwave wet ingredients": ["Mix all together"],
+  //   "Mix all together": ["Press into pan"],
+  //   "1/2 cup mini chocolate chips": ["Mix all together"],
+  //   "Press into pan": ["Refrigerate"],
+  //   Refrigerate: ["Cut into bars"],
+  // };
 
   function computeDepth(nodes, edges) {
     // Initialize the depth of all nodes to -1 (undefined)
@@ -112,7 +116,7 @@
           }
         }
         const baseHeight = 120;
-        const baseWidth = 175;
+        const baseWidth = 155;
         const height = Math.max(indegreeHeight, baseHeight);
 
         node.row = row;
@@ -131,6 +135,7 @@
   }
 
   function addToDom(nodes) {
+    console.log("Adding to dom");
     const container = d3.select("#container");
     for (const node of nodes) {
       container
@@ -144,20 +149,32 @@
     }
   }
 
-  const nodeSet = new Set();
-  for (const node of Object.keys(edges)) {
-    nodeSet.add(node);
-    for (const node2 of edges[node]) {
-      nodeSet.add(node2);
+  function go(edges) {
+    const nodeSet = new Set();
+    for (const node of Object.keys(edges)) {
+      nodeSet.add(node);
+      for (const node2 of edges[node]) {
+        nodeSet.add(node2);
+      }
     }
+    let nodes = Array.from(nodeSet).map((label) => ({ label }));
+    computeDepth(nodes, edges);
+    computePositions(nodes, edges);
+    addToDom(nodes);
   }
-  let nodes = Array.from(nodeSet).map((label) => ({ label }));
 
-  console.log(nodes);
-
-  computeDepth(nodes, edges);
-  computePositions(nodes, edges);
-  addToDom(nodes);
+  document.getElementById("code-input").addEventListener("input", (event) => {
+    const graphFromUser = event.target.value;
+    try {
+      // TODO: it's dangerous!
+      console.log("graphFromUser", graphFromUser);
+      const edges = JSON.parse(graphFromUser);
+      console.log("edges", edges);
+      go(edges);
+    } catch (error) {
+      console.error("Error executing code:", error);
+    }
+  });
 </script>
 
 <style is:inline>
