@@ -6,34 +6,21 @@
 
 <script is:inline src="https://d3js.org/d3.v4.min.js"></script>
 <script is:inline>
-  // const A = { label: "A" };
-  // const B = { label: "B" };
-  // const C = { label: "C" };
-  // const D = { label: "D" };
-  // const nodeE = { label: "E" };
-  // const edges = {
-  //   A: ["C"],
-  //   B: ["C"],
-  //   C: ["E"],
-  //   D: ["E"],
-  //   nodeE: [],
-  // };
-  // const nodes = [A, B, C, D, nodeE];
-
-  const A = { label: "A" };
-  const B = { label: "B" };
-  const C = { label: "C" };
-  const D = { label: "D" };
-  const nodeE = { label: "E" };
   const edges = {
     A: ["C"],
-    B: ["D"],
+    B: ["C"],
     C: ["E"],
     D: ["E"],
     E: [],
-    nodeE: [],
   };
-  const nodes = [A, B, C, D, nodeE];
+
+  // const edges = {
+  //   A: ["C"],
+  //   B: ["D"],
+  //   C: ["E"],
+  //   D: ["E"],
+  //   E: [],
+  // };
 
   function computeDepth(nodes, edges) {
     // Initialize the depth of all nodes to -1 (undefined)
@@ -107,27 +94,22 @@
     }
   }
 
-  // Compute the depth of each node
-  computeDepth(nodes, edges);
-
-  // Compute the position for each node
-  computePositions(nodes, edges);
-
-  const container = d3.select("#container");
-  for (const node of nodes) {
-    container
-      .append("div")
-      .style("left", `${node.left}px`)
-      .style("top", `${node.top}px`)
-      .style("height", `${node.height}px`)
-      .style("width", `${node.width}px`)
-      .attr("class", "node")
-      .text(node.label);
+  function addToDom(nodes) {
+    const container = d3.select("#container");
+    for (const node of nodes) {
+      container
+        .append("div")
+        .style("left", `${node.left}px`)
+        .style("top", `${node.top}px`)
+        .style("height", `${node.height}px`)
+        .style("width", `${node.width}px`)
+        .attr("class", "node")
+        .text(node.label);
+    }
   }
 
-  // Compute the coordinates for each node
-  // Output the result
-  console.log(nodes);
+  const nodes = Object.keys(edges).map((label) => ({ label }));
+  computeDepth(nodes, edges);
 </script>
 
 <style is:inline>
