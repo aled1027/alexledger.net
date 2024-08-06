@@ -111,20 +111,21 @@
             indegreeHeight += n.height;
           }
         }
-        const baseSize = 100;
-        const height = Math.max(indegreeHeight, baseSize);
+        const baseHeight = 120;
+        const baseWidth = 175;
+        const height = Math.max(indegreeHeight, baseHeight);
 
         node.row = row;
         node.col = depth;
         node.length = length;
-        row += height / baseSize; /* This could be more elegant */
+        row += height / baseHeight; /* This could be more elegant */
 
         // Compute the coordinates
 
-        node.top = node.row * baseSize;
-        node.left = node.col * baseSize;
-        node.width = baseSize * node.length;
-        node.height = Math.max(indegreeHeight, baseSize);
+        node.top = node.row * baseHeight;
+        node.left = node.col * baseWidth;
+        node.width = baseWidth * node.length;
+        node.height = Math.max(indegreeHeight, baseHeight);
       }
     }
   }
@@ -161,20 +162,25 @@
 
 <style is:inline>
   .node {
-    border: 1px solid #ccc;
-    background-color: #ffcc00;
-    text-align: center;
+    /* border: 3px solid tranparent; */
+    /* margin: 4px; */
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    background-color: oklch(90% 0.1 143);
     line-height: 1.5em;
-    padding: 10px;
+    padding: 0.5rem;
     box-sizing: border-box;
     position: absolute;
-    font-size: 14px;
+
+    font-size: 1.25rem;
+    text-wrap: balance;
+    text-align: center;
+    display: grid;
+    place-content: center;
   }
 
   #container {
     position: relative;
     height: 1000px;
-    width: 100%;
-    border: 1px solid #ccc;
   }
 </style>
