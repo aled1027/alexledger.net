@@ -22,16 +22,32 @@
   //   E: [],
   // };
 
+  // const edges = {
+  //   "3 C water": ["Boil water"],
+  //   "1 C pasta": ["Cook water"],
+  //   "Boil water": ["Cook water"],
+  //   "Cook water": ["Cook pasta"],
+  //   "Cook pasta": ["Drain pasta"],
+  //   "Drain pasta": ["Return pasta to pot"],
+  //   "2 tbsp olive oil": ["Return pasta to pot"],
+  //   "1 C tomatoes": ["Return pasta to pot"],
+  //   "1/2 C cat food": ["Return pasta to pot"],
+  // };
+
   const edges = {
-    "3 C water": ["Boil water"],
-    "1 C pasta": ["Cook water"],
-    "Boil water": ["Cook water"],
-    "Cook water": ["Cook pasta"],
-    "Cook pasta": ["Drain pasta"],
-    "Drain pasta": ["Return pasta to pot"],
-    "2 tbsp olive oil": ["Return pasta to pot"],
-    "1 C tomatoes": ["Return pasta to pot"],
-    "1/2 C cat food": ["Return pasta to pot"],
+    "2 1/4 cups quick oats": ["Combine dry ingredients"],
+    "1 1/2 cups crispy rice cereal": ["Combine dry ingredients"],
+    "2 Tablespoons ground flaxseed": ["Combine dry ingredients"],
+    "6 Tablespoons butter": ["Microwave wet ingredients"],
+    "Combine dry ingredients": ["Mix all together"],
+    "1/3 cup honey": ["Microwave wet ingredients"],
+    "3/4 cup packed light brown sugar": ["Microwave wet ingredients"],
+    "1 teaspoon vanilla extract": ["Microwave wet ingredients"],
+    "Microwave wet ingredients": ["Mix all together"],
+    "Mix all together": ["Press into pan"],
+    "1/2 cup mini chocolate chips": ["Mix all together"],
+    "Press into pan": ["Refrigerate"],
+    Refrigerate: ["Cut into bars"],
   };
 
   function computeDepth(nodes, edges) {
@@ -95,15 +111,16 @@
             indegreeHeight += n.height;
           }
         }
+        const baseSize = 100;
+        const height = Math.max(indegreeHeight, baseSize);
 
         node.row = row;
         node.col = depth;
         node.length = length;
-        row++;
+        row += height / baseSize; /* This could be more elegant */
 
         // Compute the coordinates
 
-        const baseSize = 100;
         node.top = node.row * baseSize;
         node.left = node.col * baseSize;
         node.width = baseSize * node.length;
@@ -135,6 +152,8 @@
   }
   let nodes = Array.from(nodeSet).map((label) => ({ label }));
 
+  console.log(nodes);
+
   computeDepth(nodes, edges);
   computePositions(nodes, edges);
   addToDom(nodes);
@@ -154,8 +173,8 @@
 
   #container {
     position: relative;
-    width: 1000px;
-    height: 600px;
+    height: 1000px;
+    width: 100%;
     border: 1px solid #ccc;
   }
 </style>
