@@ -8,17 +8,30 @@
 // 4. Make a super crude loading indicator
 ---
 
-<textarea id="openai-api-key">Put your OpenAI API Key here</textarea>
+<script is:inline src="https://d3js.org/d3.v4.min.js"></script>
 
-<!-- <textarea id="input-url">https://example.com</textarea> -->
-<!-- <textarea id="input-url">https://tastesbetterfromscratch.com/no-bake-granola-bars/</textarea> -->
+<div class="form-container">
+  <form id="recipe-form">
+    <div>
+      <label for="openai-api-key">OpenAI API Key:</label>
+      <!-- <textarea id="openai-api-key">Put your OpenAI API Key here</textarea> -->
+      <input type="password" id="openai-api-key" name="apiKey" required />
+    </div>
+    <div>
+      <label for="input-url">URL:</label>
+      <input type="text" id="input-url" name="url" required />
+      <!-- <textarea id="input-url">https://example.com</textarea> -->
+      <!-- <textarea id="input-url">https://tastesbetterfromscratch.com/no-bake-granola-bars/</textarea> -->
+      <!-- <textarea id="input-url">https://homebrewacademy.com/hop-water-recipe/</textarea -->
+    </div>
+    <div>
+      <button id="go-button" type="submit">Go</button>
+    </div>
+  </form>
+</div>
 
-<textarea id="input-url">https://homebrewacademy.com/hop-water-recipe/</textarea
->
-<button id="go-button" class="button">go</button>
 <div id="trn-status"></div>
 <div id="container"></div>
-<script is:inline src="https://d3js.org/d3.v4.min.js"></script>
 
 <script is:inline>
   function computeDepth(nodes, edges) {
@@ -137,7 +150,7 @@
   }
 
   const SMALL_RECIPE_PROMPT = `
-  Your task is to simplify the recipe into a succinct numbered list recipe. Make the recipe as simple as possible, using as few words per step as you can while still communicating clearly. Each step should be a single action.
+  Your task is to simplify the recipe into a succinct numbered list recipe. Make the recipe as simple as possible, using as few words per step as you can while still communicating clearly. Each step should be a single action. Ignore any optional steps.
 
   The output format should be like:
 
@@ -190,8 +203,6 @@
 
   async function getCompletion(prompt, system) {
     const openaiApiKey = document.getElementById("openai-api-key").value;
-    console.log("the key", openaiApiKey);
-
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -227,31 +238,35 @@
     return onlyGraph;
   }
 
-  document.getElementById("go-button").addEventListener("click", async () => {
-    console.log("Clicked!");
-    const status = document.getElementById("trn-status");
-    try {
-      const url = document.getElementById("input-url").value;
-      status.innerHTML = "Fetching...";
+  document
+    .getElementById("recipe-form")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-      console.log("extracted text");
-      const extractedText = await fetchAndExtractText(url);
-      status.innerHTML = "Transforming...";
-      let graph = await recipeToGraph(extractedText);
-      console.log(graph);
+      console.log("Clicked!");
+      const status = document.getElementById("trn-status");
+      try {
+        const url = document.getElementById("input-url").value;
+        status.innerHTML = "Fetching...";
 
-      graph = graph.replace("```json", "");
-      graph = graph.replace("```", "");
+        console.log("extracted text");
+        const extractedText = await fetchAndExtractText(url);
+        status.innerHTML = "Transforming...";
+        let graph = await recipeToGraph(extractedText);
+        console.log(graph);
 
-      status.innerHTML = "Parsing...";
-      const parsedGraph = JSON.parse(graph);
-      renderGraph(parsedGraph);
-      status.innerHTML = "...done!";
-    } catch (error) {
-      status.innerHTML = `Error: ${error}`;
-      console.error(error);
-    }
-  });
+        graph = graph.replace("```json", "");
+        graph = graph.replace("```", "");
+
+        status.innerHTML = "Parsing...";
+        const parsedGraph = JSON.parse(graph);
+        renderGraph(parsedGraph);
+        status.innerHTML = "...done!";
+      } catch (error) {
+        status.innerHTML = `Error: ${error}`;
+        console.error(error);
+      }
+    });
 </script>
 
 <style is:inline>
@@ -274,5 +289,52 @@
   #container {
     position: relative;
     height: 1000px;
+  }
+
+  .form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    width: clamp(280px, 600px, 600px);
+    margin-inline: auto;
+  }
+
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .form-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  .form-container input[type="text"],
+  .form-container input[type="password"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .form-container button:hover {
+    background-color: #0056b3;
   }
 </style>
