@@ -23,25 +23,27 @@ const { Content } = await post.render();
 ---
 
 <Layout>
-  <h1>{post.data.title}</h1>
-  <span>Date:</span>
-  <span>{post.data.date.toLocaleDateString()}</span>
-  <div class="tags">
-    <span>Tags:</span>
-    {
-      post.data.tags.map((tag) => {
-        return (
-          <>
-            <span>
-              <a href={`/tags/${tag}`}>{tag}</a>
-            </span>
-          </>
-        );
-      })
-    }
+  <div class="content-wrapper">
+    <h1>{post.data.title}</h1>
+    <span>Date:</span>
+    <span>{post.data.date.toLocaleDateString()}</span>
+    <div class="tags">
+      <span>Tags:</span>
+      {
+        post.data.tags.map((tag) => {
+          return (
+            <>
+              <span>
+                <a href={`/tags/${tag}`}>{tag}</a>
+              </span>
+            </>
+          );
+        })
+      }
+    </div>
+    {post.data.includeToc && <AutoToc />}
+    <Content />
   </div>
-  {post.data.includeToc && <AutoToc />}
-  <Content />
 </Layout>
 
 <style>
@@ -50,6 +52,12 @@ const { Content } = await post.render();
     flex-wrap: wrap;
     gap: 0 0.5rem;
     margin-bottom: 1rem;
+  }
+
+  .content-wrapper {
+    max-width: 55ch;
+    margin-inline: auto;
+    text-wrap: pretty;
   }
 </style>
 <style is:global>
