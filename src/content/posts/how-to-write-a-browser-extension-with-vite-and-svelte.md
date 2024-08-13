@@ -9,8 +9,6 @@ tags:
   - browser-extension
 ---
 
-# How to Write a Browser Extension with Vite and Svelte
-
 For a project - I'll do a write-up soon - I needed to write a browser extension. I wanted to use Svelte because I've been loving svelte lately. This post goes over how some basics of browser extensions and how to write a basic extension with Svelte and Vite.
 
 ## The Basics
