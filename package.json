@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "format": "prettier --write .",
-    "check": "eslint src/"
+    "check": "eslint src/",
+    "newpost": "sh scripts/new_post"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.1",
