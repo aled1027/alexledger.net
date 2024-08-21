@@ -88,7 +88,7 @@ Things I didn't do that I'd want to do or explore in a full implementation
 
 My demo[^2] is below. You can also try it directly at [https://multco-library-events.netlify.app/](https://multco-library-events.netlify.app/).
 
-(Keep in mind it's a demo and none of the links will work.)
+(Keep in mind it's a demo and none of the links work.)
 
 <iframe 
     src="https://multco-library-events.netlify.app/" 
