@@ -19,6 +19,8 @@ tags:
 
 For fun, I critiqued, redesigned, and reworked the Multnomah County Library events page. This post goes over my approach and what I tried out, with a lot of discussion and brainstorming along the way.
 
+(--> go straight to my [demo below](#my-code--using-my-demo))
+
 ## Starting with a critique
 
 A few things I dislike on the current [Multnomah County Library events](https://multcolib.org/events-classes) page:
