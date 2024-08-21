@@ -39,7 +39,7 @@ A few things I dislike on the current [Multnomah County Library events](https://
 
 ![Screenshot of the current Multnomah County Library Events Page](../../assets/2024-08-current_events.png)
 
-I researched events pages at other libraries across the world, and I was surprised by the general low quality. Many basic cards, like the kind of cards that come out of the box with a component library, were used to show events in a list, which made it hard for eyes to skim through and find relevant events.
+I researched events pages at other libraries across the world, and I was surprised by the general medium-low quality. Many basic cards, like the kind of cards that come out of the box with a component library, were used to show events in a list, which made it hard for eyes to skim through and find relevant events.
 
 The public website I liked the most upon scanning was the city of Berlin's website, [https://www.berlin.de/en/](https://www.berlin.de/en/).
 I love the search bar at the start - get me going somewhere, ala google's search design. And the animated header with Berlin-related imagery, like the standing bear, is really nice.
