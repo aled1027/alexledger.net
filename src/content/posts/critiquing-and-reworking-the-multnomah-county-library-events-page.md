@@ -60,7 +60,7 @@ A few ideas I had going in:
 
 Design & Implementation Decisions:
 
-1. I used checkboxes instead of dropdowns where possible.
+1. Use checkboxes instead of dropdowns where possible.
 
 I've noticed that less computer-savvy patrons tend to struggle with dropdowns because they need to click the dropdown, and then click the item. Often they butter-finger (is that term?) and select the wrong thing, which means they need to do the process again. I like checkboxes for this use-case because if they butter-finger and click the wrong thing, then (a) the remediation is to do the same action, as opposed to trying the dropdown flow again, and (b) they can click the location they want and worst case they get results for two locations instead of one.
 
@@ -74,8 +74,6 @@ A good example of a low-cost mistake is in Google search where if a user searche
 
 4. Remove the images because they don't seem to offer much visual or informational value to users.
 
-5. Hot Filters(?)[^1] could have been cool. I'm imaging pills above the events that show common filters to click. Like "for kids" which would instantly filters to stuff for kids. I think google images does something like this to narrow searches after the initial search.
-
 Things I didn't do that I'd want to do or explore in a full implementation
 
 1. I didn't encode filters into the URL to support shareable URLs.
@@ -84,6 +82,7 @@ Things I didn't do that I'd want to do or explore in a full implementation
 4. I didn't implement pagination (which has the benefit of support control-f search)
 5. I didn't determine which events had registration requirements versus learn more requirements.
 6. I didn't implement the hyperlink for clicking on locations. This would either link to the library page or filter to just that library. I think the former is more predictable, but the latter is flashier.
+7. Hot Filters(?)[^1] could have been cool. I'm imaging pills above the events that show common filters to click. Like "for kids" which would instantly filters to stuff for kids. I think google images does something like this to narrow searches after the initial search.
 
 ## My Code & Using My Demo
 
