@@ -264,7 +264,10 @@ import Footer from "@components/Footer.astro";
       img,
       picture {
         max-width: 100%;
+        height: auto;
         display: block;
+        padding-inline: clamp(0.5rem, 5vw, 5rem);
+        padding-block: 1rem 1.5rem;
       }
 
       /* Inherit fonts for inputs and buttons */
