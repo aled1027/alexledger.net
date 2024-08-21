@@ -86,9 +86,9 @@ Things I didn't do that I'd want to do or explore in a full implementation
 
 ## My Code & Using My Demo
 
-Here's my demo, visible directly at [https://multco-library-events.netlify.app/](https://multco-library-events.netlify.app/).
+My demo[^2] is below. You can also try it directly at [https://multco-library-events.netlify.app/](https://multco-library-events.netlify.app/).
 
-Keep in mind it's a demo and none of the links will work.
+(Keep in mind it's a demo and none of the links will work.)
 
 <iframe 
     src="https://multco-library-events.netlify.app/" 
@@ -102,6 +102,6 @@ Keep in mind it's a demo and none of the links will work.
 
 The [code](https://github.com/aled1027/multco-library-redesign/) is written in Svelte and publicly available.
 
-I scraped the library events for August 14, 2024, through October 14, 2024, using a python script. I stored the events in a JSON file that's fetched & read client-side to render them. Even with all that work, this implementation got near full 100s in lighthouse.
-
 [^1]: There's probably an actual name for these, but I'll call them hot filters because they're fast, easy-to-apply and often based on search trends.
+
+[^2]: I scraped the library events for August 14, 2024, through October 14, 2024, using a python script. I stored the events in a JSON file that's fetched & read client-side to render them.
