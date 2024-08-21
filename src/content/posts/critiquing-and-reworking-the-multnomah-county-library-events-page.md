@@ -25,13 +25,13 @@ For fun, I critiqued, redesigned, and reworked the Multnomah County Library even
 
 A few things I dislike on the current [Multnomah County Library events](https://multcolib.org/events-classes) page:
 
-- The full-text search button has a separate search button that's distinct from the rest of the filters, so it's confusing and unclear how it interests with the existing filters.
+- The full-text search button has a separate search button that's distinct from the rest of the filters, so it's confusing and unclear how it interacts with the existing filters.
 - There's also a site-wide and catalog search button above the event filters and page title, which can confuse users as to which searchbox to use.
 - The event search button seems to only do full-word search. For example, "bili" doesn't yield any of the results for bilingual.
-- Visually, the images don't offer much and feel like filler.
-- On large screen sizes, the date graphic on the left is very odd and feels like a placeholder that wasn't finished.
-- The date graphic draws my attention more than the title of the event
+- Visually, the images next to the event entries don't offer much and feel like filler.
 - I'd like to be able to click the location in an event description and get information about that library - like its hours, location, and so on.
+- On large screen sizes, the date graphic on the left feels like a placeholder that wasn't finished.
+- The date graphic draws my attention more than the title of the event
 - The calendar graphic and image don't have rounded corners, but the buttons and text fields do, which confuses me.
 - I wish I could easily link to all tech help events, so it'd be nice if filters were encoded in the URL and shareable.
 - Clicking the register button doesn't always take me somewhere to register. For example, clicking Register for a Goodwill Industries class on Google Docs takes me here: https://events.multcolib.org/event/11374898&registration=true, which seems to be a page with event information.
