@@ -2,7 +2,7 @@
 title: "Critiquing and Reworking the Multnomah County Library Events Page"
 date: 2024-08-21T08:00:00.000Z
 draft: false
-includeToc: true
+includeToc: false
 tags:
   - library
   - design
