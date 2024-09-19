@@ -2,7 +2,7 @@
 title: "How to use Google Sheets as a Data Source"
 draft: false
 date: 2024-09-18T08:00:00.000Z
-includeToc: true
+includeToc: false
 tags:
   - website
   - database
