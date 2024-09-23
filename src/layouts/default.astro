@@ -394,6 +394,10 @@ import Footer from "@components/Footer.astro";
       li > p {
         margin-block: 0;
       }
+
+      li {
+        margin-block: 0.75rem;
+      }
     </style>
     <style is:global>
       /* COMPONENTS */
@@ -413,6 +417,14 @@ import Footer from "@components/Footer.astro";
       .text-button {
         border: none;
         padding: 0;
+      }
+
+      /* Make Youtube iframes look better on small screens*/
+      iframe[src*="youtube"] {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        padding-bottom: 10px;
       }
 
       /* UTILITIES */
