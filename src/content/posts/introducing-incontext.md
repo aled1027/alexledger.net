@@ -20,7 +20,7 @@ tl;dr: Learning a language? Try **[inContext](https://incontext.fun)** for free!
 
 Miguel and I started building **inContext** when I visited him in Spain over the summer. Inspired by other amazing language learning tools like Duolingo, Readlang, and Yomitan, we wanted to build a tool that leveraged the most recent capabilities of AI to build definitions that made sense for readers.
 
-As learners of other languages, we try to read texts that are just beyond our current level - the idea of the [N+1 language learning thesis](https://en.wikipedia.org/wiki/Input_hypothesis) - which means that we're frequently finding words we don't know.
+As learners of other languages, we try to read texts that are just beyond our current level - the idea of the [i+1 language learning thesis](https://en.wikipedia.org/wiki/Input_hypothesis) - which means that we're frequently finding words we don't know.
 
 We used to do one of two things: (a) look up the word on google translate and translate to English or (b) look up the word in a dictionary.
 
