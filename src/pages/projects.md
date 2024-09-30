@@ -6,6 +6,12 @@ layout: "@layouts/default.astro"
 
 Below is a list of the some of the projects I've worked on over the years. If you're interested in learning more about a project or collaborating, please reach out; I'd love to chat!
 
+## inContext
+
+inContext is a language-learning browser extension that builds tailored, context-informed definitions of words and displays them in the webpage.
+
+Check out the [inContext website](https://incontext.fun) or the [blog post](https://www.alexledger.net/posts/introducing-incontext) for more information.
+
 ## Know Portland, News Aggregator
 
 Know Portland is a living project providing residents of Portland with more information about what's happening. ([site](https://knowportland.org))
