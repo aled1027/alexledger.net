@@ -4,7 +4,7 @@
   @each $size-name, $size-value in $size-map {
     @if $screen-size == small {
       .fs-#{$size-name} {
-        font-size: var(--fs-#{$size-name});
+        font-size: var(--fs-#{$size-name}) !important;
       }
     }
   }
