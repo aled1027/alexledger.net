@@ -25,7 +25,7 @@
     </p>
   </section>
 
-  <section class="section"></section>
+  <section class="section projects"></section>
 </div>
 
 <style>
@@ -69,7 +69,6 @@
 
   .sentence a::after {
     content: "";
-    opacity: 0;
     position: absolute;
     left: 0;
     bottom: 2px;
@@ -77,6 +76,7 @@
     height: 3px;
     background-color: hsl(255.65, 81.3%, 62.35%);
     animation: drawUnderline 2s forwards;
+    animation-delay: 4s;
   }
 
   @keyframes drawUnderline {
