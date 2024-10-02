@@ -4,7 +4,7 @@
 
 <div class="landing-page">
   <section class="top-section | section">
-    <h1 class="heading-1 fs-1000">Alex Ledger</h1>
+    <h1 class="heading-1 fs-1000 padding-block-start-12">Alex Ledger</h1>
     <p class="landing-page-text">
       <span class="sentence sentence1">
         is a software developer with skills spanning the full stack.
@@ -29,10 +29,6 @@
 </div>
 
 <style>
-  .section {
-    margin-top: 4rem;
-  }
-
   .heading-1 {
     letter-spacing: -0.05em;
   }
