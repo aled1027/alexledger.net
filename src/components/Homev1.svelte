@@ -1,0 +1,70 @@
+<div class="landing-page">
+  <section class="top-section | section">
+    <h1 class="heading-1 fs-1000">ALEX<br />LEDGER</h1>
+    <div class="heading-3 flex-group flex-col padding-block-start-12">
+      <span>Full-stack Engineer</span>
+      <span>Creative Coder</span>
+      <span>Writer</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <p class="iam">
+      I'm Alex Ledger. I'm a designer and developer of creative and useful
+      products. I love working on thorny problems and building useful tools.
+    </p>
+  </section>
+
+  <!-- <section class="section links-section">
+      <div class="flex-group flex-col">
+        <a href="/posts" class="heading-3">Posts</a>
+        <a href="/projects" class="heading-3" data-type="svg">Projects</a>
+        <a href="/search" class="heading-3">Search</a>
+      </div>
+    </section> -->
+
+  <!-- <section class="section">
+      <h2 class="heading-3">This Site</h2>
+      <p>
+        This site was made with <a href="https://astro.build/" target="_blank"
+          >Astro</a
+        >. The source code can be found on <a
+          href="https://github.com/aled1027/alexledger.net"
+          target="_blank">GitHub</a
+        >.
+      </p>
+    </section> -->
+</div>
+
+<style>
+  .landing-page {
+    & .top-section {
+      margin-top: 8rem;
+      padding-left: 1rem;
+    }
+
+    & .links-section {
+      padding-left: 1rem;
+    }
+
+    & a .links-sections {
+      text-decoration: none;
+    }
+
+    & .heading-1 {
+      line-height: 0.82;
+    }
+
+    & .section {
+      min-height: 60vh;
+    }
+
+    & .iam {
+      max-width: 40ch;
+      border: 1px solid var(--neutral-200);
+      padding: 1rem;
+      border-radius: 4px;
+      margin-inline: auto;
+    }
+  }
+</style>
