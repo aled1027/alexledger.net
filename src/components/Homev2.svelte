@@ -29,37 +29,25 @@
 </div>
 
 <style>
-  /* .landing-page { } */
   .section {
     margin-top: 4rem;
   }
 
-  .landing-page-text {
-    /* font-size: 2.5rem; */
-    /* Font-size idea from pudding.cool */
-    text-wrap: pretty;
-    font-size: clamp(1.5rem, 3.25vw, 3.25rem);
-    line-height: 1.5;
+  .heading-1 {
+    letter-spacing: -0.05em;
   }
 
-  a {
-    /* text-decoration: underline;
-    text-decoration-thickness: 3px;
-    text-decoration-skip-ink: none;
-    text-decoration-color: hsl(255.65, 81.3%, 62.35%); */
+  .landing-page-text {
+    text-wrap: pretty;
+    font-size: clamp(1.25rem, 3.25vw, 3.25rem);
+    line-height: 1.6;
   }
 
   .sentence {
     opacity: 0;
     animation: fadeIn 2s forwards;
   }
-  .sentence a {
-    animation-delay: 4s;
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-    text-decoration-skip-ink: none;
-    text-decoration-color: hsl(255.65, 81.3%, 62.35%);
-  }
+
   .sentence1 {
     animation-delay: 0.5s;
   }
@@ -74,6 +62,30 @@
 
   @keyframes fadeIn {
     to {
+      opacity: 1;
+    }
+  }
+
+  .sentence a {
+    text-decoration: none;
+    position: relative;
+  }
+
+  .sentence a::after {
+    content: "";
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 0;
+    height: 3px;
+    background-color: hsl(255.65, 81.3%, 62.35%);
+    animation: drawUnderline 2s forwards;
+  }
+
+  @keyframes drawUnderline {
+    to {
+      width: 100%;
       opacity: 1;
     }
   }
