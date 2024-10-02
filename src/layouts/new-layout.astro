@@ -35,36 +35,23 @@ import { ViewTransitions } from "astro:transitions";
   </head>
 
   <body>
-    <!-- Header -->
-    <div class="content | container" data-type="wide">
+    <div class="primary-layout">
       <div
         class="site-header | border-top border-bottom border-left border-right">
         <div class="site-header__inner">
-          <span
-            >alexledger.net, a collection of posts, lists, and experiments.</span
-          >
-          <span class="right-side">Portland, OR</span>
+          <span>Header left</span>
         </div>
       </div>
-      <div class="decorative-side | border-left border-right border-bottom">
-        <span class="side-name | ff-accent">Alex Ledger</span>
-      </div>
       <!-- Main content -->
-      <div class="slot-wrapper">
+      <div class="slot-wrapper container">
         <slot />
       </div>
       <!-- <Footer /> -->
-      <footer class="site-footer | border-bottom">
+      <footer class="site-footer
+        |
+        border-bottom">
         <ul role="list">
           <li><a href="/">Home</a></li>
-          <li><a href="/posts">Posts</a></li>
-          <li><a href="/guides">Guides</a></li>
-          <li><a href="/projects">Projects</a></li>
-          <li><a href="/ferments">Ferments</a></li>
-          <li><a href="/lists">Lists</a></li>
-          <li><a href="/tags">Tags</a></li>
-          <li><a href="/rss.xml">RSS</a></li>
-          <li><a href="/search">Search</a></li>
         </ul>
       </footer>
     </div>
@@ -73,7 +60,6 @@ import { ViewTransitions } from "astro:transitions";
       // Add event handlers for the opening of the modals. This should automatically work
       // across components as long as they have the right classes and data values.
       // See GroceryStoreCard.astro for a particular implementation for reference.
-
       const openButtons = document.querySelectorAll(".register-open-modal");
       openButtons.forEach((button) => {
         const targetId = button.dataset.target;

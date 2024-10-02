@@ -18,14 +18,4 @@
       justify-content: $site-header-justification-large-screens;
     }
   }
-
-  .right-side {
-    position: absolute;
-    right: 1.75rem;
-    display: none;
-
-    @include mq(medium) {
-      display: block;
-    }
-  }
 }
