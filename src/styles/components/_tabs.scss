@@ -28,17 +28,30 @@
 
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-
   box-shadow: $box-shadow-4;
+
   & > * {
     background-color: var(--bg-color);
     color: var(--color);
   }
 
   &__inner {
+    padding-top: 2rem;
     max-width: 45ch;
     text-wrap: pretty;
   }
+
+  &__video {
+    border-radius: 8px;
+    overflow: hidden;
+
+    // width: min(280px, 560px);
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.tabs p {
+  line-height: 1.6;
 }
 
 .tabs .tabpanel[data-state="inactive"] {
@@ -56,4 +69,5 @@
   font-size: $size-12;
   letter-spacing: -0.05em;
   font-weight: $font-weight-bold;
+  line-height: 1;
 }

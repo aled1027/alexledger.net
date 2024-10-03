@@ -7,7 +7,7 @@
   let compassBgColor = "hsl(256.32, 44.88%, 49.8%)";
   let compassColor = "white";
 
-  let knowportlandBgColor = "hsl(150.87, 94.5%, 21.37%)";
+  let knowportlandBgColor = "hsl(150.87, 94.5%, 31.37%)";
   let knowPortlandColor = "white";
 
   // TODO: I don't understand why tabindex="-1" is needed for the buttons
@@ -75,6 +75,34 @@
           tailored, context-informed definitions of words and displays them in
           the webpage.
         </p>
+
+        <div class="tabpanel__video">
+          <iframe
+            src="https://www.youtube.com/embed/rZlKI_I89ZI?showinfo=0&autoplay=1&mute=1&loop=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&controls=0&disablekb=1&playlist=rZlKI_I89ZI"
+            width="100%"
+            height="100%"
+            title="inContext Video"
+            frameborder="0"
+          ></iframe>
+        </div>
+        <button class="button" data-type="project"
+          ><span>View site</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            height="20"
+            width="20"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+            />
+          </svg>
+        </button>
       </div>
     </div>
     <div

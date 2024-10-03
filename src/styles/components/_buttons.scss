@@ -3,9 +3,11 @@
 .button {
   display: inline-flex;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
   text-decoration: none;
   line-height: 1;
+  gap: 0.5em;
   font-family: $button-font-family;
   font-size: $button-font-size;
   text-transform: $button-text-transform;
@@ -39,8 +41,22 @@
     background-color: transparent;
 
     &:is(:hover, :focus) {
-      background-color: rgba(0, 0, 0, .1);
+      background-color: rgba(0, 0, 0, 0.1);
     }
   }
 
+  &[data-type="project"] {
+    // TODO: the default font family im using doesn't center its text vertically...
+    font-family: system-ui;
+
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    border-radius: 28px;
+    fill: white;
+
+    &:is(:hover, :focus) {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
 }
