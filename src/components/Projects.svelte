@@ -1,97 +1,45 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
-  import { spring } from "svelte/motion";
-
-  let filling = false;
-  let fillSpeed = 0.01; // New prop to control fill speed
-  let fillLevel = spring(0, { stiffness: fillSpeed, damping: 0.25 });
-
-  let canvas;
-  let ctx;
-  let animationId;
-
-  onMount(() => {
-    console.log("Mounting");
-    canvas = document.getElementById("fluidCanvas");
-    ctx = canvas.getContext("2d");
-    canvas.width = 400;
-    canvas.height = 400;
-  });
-
-  function toggleFill() {
-    console.log("Filling");
-    filling = !filling;
-    if (filling) {
-      fillLevel.set(100);
-    } else {
-      fillLevel.set(0);
-    }
-  }
-
-  function drawFluid(level) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "rgba(0, 100, 255, 0.7)";
-
-    const waveHeight = 10;
-    const waveCount = 3;
-
-    ctx.beginPath();
-    ctx.moveTo(0, canvas.height);
-
-    for (let x = 0; x <= canvas.width; x++) {
-      let y = canvas.height - (canvas.height * level) / 100;
-      y += Math.sin(x / 30 + Date.now() / 200) * waveHeight;
-      y += (Math.sin(x / 60 + Date.now() / 400) * waveHeight) / 2;
-      y += (Math.sin(x / 90 + Date.now() / 600) * waveHeight) / 4;
-
-      ctx.lineTo(x, y);
-    }
-
-    ctx.lineTo(canvas.width, canvas.height);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  function animate() {
-    drawFluid($fillLevel);
-    animationId = requestAnimationFrame(animate);
-  }
-
-  $: {
-    if (canvas && ctx) {
-      if (filling) {
-        animate();
-      } else {
-        // cancelAnimationFrame(animationId);
-        drawFluid($fillLevel);
-      }
-    }
-  }
-
-  onDestroy(() => {
-    //   cancelAnimationFrame(animationId);
-  });
+  let activeTab = "tab-1";
 </script>
 
-<h2 class="heading-2">Projects</h2>
+<h2>Projects</h2>
 
-<button class="button" data-type="primary" on:click={toggleFill}
-  >inContext</button
->
-
-<div class="canvas-container">
-  <canvas id="fluidCanvas"></canvas>
+<div class="mytabs">
+  <div role="tablist">
+    <button
+      role="tab"
+      aria-controls="tabpanel-1"
+      id="tab-1"
+      aria-selected={activeTab === "tab-1" ? "true" : "false"}>inContext</button
+    >
+    <button
+      role="tab"
+      aria-controls="tabpanel-2"
+      id="tab-2"
+      aria-selected={activeTab === "tab-2" ? "true" : "false"}
+      tabindex="-1">Compass</button
+    >
+    <button
+      role="tab"
+      aria-controls="tabpanel-3"
+      id="tab-3"
+      aria-selected={activeTab === "tab-3" ? "true" : "false"}
+      tabindex="-1">KnowPortland</button
+    >
+  </div>
+  <div role="tabpanel" id="tabpanel-1" aria-labelledby="tab-1">
+    Paris is the capital of France.
+  </div>
+  <div role="tabpanel" id="tabpanel-2" aria-labelledby="tab-2">
+    Rome is the capital of Italy.
+  </div>
+  <div role="tabpanel" id="tabpanel-3" aria-labelledby="tab-3">
+    Athens is the capital of Greece.
+  </div>
 </div>
 
-<style>
-  .canvas-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
+<!-- https://codepen.io/kevinpowell/pen/oNQgRKm?editors=1010 -->
+<!-- https://accessibilitymadeeasy.org/accessible-tabs-a-step-by-step-guide/ -->
+<!-- https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tab_role -->
 
-  canvas {
-    border: 1px solid #ccc;
-  }
-</style>
+<!-- Mark the active tab with aria-selected="true" -->
