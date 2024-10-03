@@ -1,3 +1,5 @@
+@use "../abstracts/" as *;
+
 .project-card {
   // TODO: manage colors
   --primary-900: hsl(255.65, 45%, 30%);
@@ -15,7 +17,7 @@
   height: fit-content;
   text-wrap: pretty;
 
-  /* box-shadow: $box-shadow-2; */
+  box-shadow: $box-shadow-2;
 }
 
 .project-card__title-wrapper {
