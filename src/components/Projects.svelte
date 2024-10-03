@@ -55,7 +55,7 @@
       id="tab-3"
       aria-selected={activeTab === "tab-3" ? "true" : "false"}
       tabindex="-1"
-      on:click={() => setTab("tab-3")}>KnowPortland</button
+      on:click={() => setTab("tab-3")}>Know Portland</button
     >
   </div>
 
@@ -85,7 +85,12 @@
             frameborder="0"
           ></iframe>
         </div>
-        <button class="button" data-type="project"
+        <a
+          href="https://incontext.fun"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="button"
+          data-type="project"
           ><span>View site</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +107,7 @@
               d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
             />
           </svg>
-        </button>
+        </a>
       </div>
     </div>
     <div
@@ -113,8 +118,42 @@
       aria-labelledby="tab-2"
       data-state={activeTab === "tab-2" ? "active" : "inactive"}
     >
-      Compass is a web application that allows users to search for and save
-      hiking trails. It was built with React, Redux, and the Hiking Project API.
+      <div class="tabpanel__inner flow">
+        <h3 class="tab-heading">Compass</h3>
+        <p>Compass...</p>
+        <div class="tabpanel__video">
+          <iframe
+            src="https://www.youtube.com/embed/rZlKI_I89ZI?showinfo=0&autoplay=1&mute=1&loop=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&controls=0&disablekb=1&playlist=rZlKI_I89ZI"
+            width="100%"
+            height="100%"
+            title="inContext Video"
+            frameborder="0"
+          ></iframe>
+        </div>
+        <a
+          href="https://thelittlecompass.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="button"
+          data-type="project"
+          ><span>View site</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            height="20"
+            width="20"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+            />
+          </svg>
+        </a>
+      </div>
     </div>
     <div
       class="tabpanel"
@@ -124,7 +163,36 @@
       aria-labelledby="tab-3"
       data-state={activeTab === "tab-3" ? "active" : "inactive"}
     >
-      KnowPortland info here.
+      <div class="tabpanel__inner flow">
+        <h3 class="tab-heading">Know Portland</h3>
+        <p>
+          Know Portland is a living project providing residents of Portland with
+          information about what's happening.
+        </p>
+        <a
+          href="https://knowportland.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="button"
+          data-type="project"
+          ><span>View site</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            height="20"
+            width="20"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+            />
+          </svg>
+        </a>
+      </div>
     </div>
   </div>
 </section>
