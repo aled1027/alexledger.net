@@ -1,6 +1,9 @@
 <script lang="ts">
   import ProjectCard from "./ProjectCard.svelte";
 
+  // TODO: one issue with the masonry is that my best projects and newest projects aren't necessarily on top
+  // Maybe a top projects section?
+
   let projects = [
     {
       projectName: "inContext",
@@ -19,13 +22,146 @@
       videoUrl: "",
       label: "",
     },
+    {
+      projectName: "Know Portland",
+      description:
+        "A living project providing residents of Portland with more information about what's happening, including a news page that aggregates local Portland news into an easy-to-read feed.",
+      url: "https://knowportland.org",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Check-in Daily",
+      description:
+        "A website for doing check-ins with push notification reminders. The site is written in Astro, and Ntfy is used for push notifications.",
+      url: "https://github.com/aled1027/check-in",
+      linkLabel: "View code",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "The Hub",
+      description:
+        "Given a link to a JSON file of links and labels, The Hub will populate an easy to navigate hub of the links. It's a shareable page of bookmarks, inspired by LinkTree.",
+      url: "https://github.com/aled1027/the-hub",
+      linkLabel: "View code",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "CSS Zen Garden - Blast",
+      description:
+        "A version of the CSS Zen Garden inspired by Blast, which is a yellow-hued theme with fun, futuristic, computer vibes.",
+      url: "https://aled1027.github.io/csszengarden-blast/",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Barter",
+      description:
+        "A trading system for setting up generic, automated (but not real-time) trades. Currently, this system is built for dydx.",
+      url: "https://github.com/aled1027/barter",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Flattener",
+      description:
+        "A tool for taking a nested JSON file as input and returning a CSV file with the data flattened. Written as a project to play with Pyodide.",
+      url: "https://flattener.netlify.app/",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "alexledger.net",
+      description: "Personal website built with astro.",
+      url: "https://alexledger.net",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "catnesh.net",
+      description:
+        "Partner's Hugo site that uses the CSS from pandoc as the basis of the theme. The site prioritizes accessibility as well as showcasing Cat's work.",
+      url: "https://catnesh.net",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Blondel Communities",
+      description:
+        "An implementation of Blondel et al.'s community detection algorithm in python.",
+      url: "https://github.com/aled1027/blondel_communities",
+      linkLabel: "View code",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Tiny Ped Com",
+      description:
+        "A small Rust library for Pedersen commitments over elliptic curves.",
+      url: "https://github.com/aled1027/tiny_ped_com",
+      linkLabel: "View code",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Chaos in Schelling's Model",
+      description:
+        "Project exploring chaos and emergent properties in Schelling's Bounded Neighborhood model.",
+      url: "https://github.com/aled1027/chaos_in_schellings_model",
+      linkLabel: "View code",
+
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName:
+        "The Looming Threat of China: An Analysis of Chinese Influence on Bitcoin",
+      description:
+        "A paper published on arXiv, presented at CESC 2018, in collaboration with Ben Kaiser and Mireya Jurado.",
+      url: "https://arxiv.org/abs/1810.02466",
+      linkLabel: "View paper",
+      //   TODO:
+      //   videoUrl: "https://www.youtube.com/watch?v=ylhCVZPhdNw",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Externally Verifiable Oblivious RAM",
+      description:
+        "A paper published at the Privacy Enhancing Technologies Symposium (PETS) in July 2017, advised by Adam Groce and in collaboration with Josh Gancher.",
+      url: "https://eprint.iacr.org/2017/008.pdf",
+      linkLabel: "View paper",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName:
+        "CompGC: Efficient Offline/Online Semi-honest Two-party Computation",
+      description:
+        "A paper written in 2017, as part of the senior thesis at Reed, on a novel technique for efficient two-party-computation. A collaboration with Adam Groce, Arkady Yerukhimovich and Alex Malozemoff.",
+      url: "https://eprint.iacr.org/2016/458.pdf",
+      linkLabel: "View paper",
+      videoUrl: "",
+      label: "",
+    },
   ];
 </script>
 
 <h2 class="heading-2">Projects</h2>
 
 <div class="project-cards masonry">
-  {#each projects as project}
+  {#each projects.slice(0, 6) as project}
+    <div class="masonry-item">
+      <ProjectCard {project} />
+    </div>
+  {/each}
+</div>
+
+<h3 class="heading-2 padding-block-start-14">More Projects</h3>
+<div class="project-cards masonry">
+  {#each projects.slice(6) as project}
     <div class="masonry-item">
       <ProjectCard {project} />
     </div>

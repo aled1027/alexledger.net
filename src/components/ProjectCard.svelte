@@ -5,6 +5,7 @@
     url: string;
     videoUrl: string;
     label: string;
+    linkLabel?: string;
   }
   export let project: Project;
 
@@ -45,7 +46,9 @@
   {/if}
   <div class="project-card__bottom">
     <div class="project-card__bottom-left">
-      <a href={project.url}>Visit site</a>
+      <a href={project.url}>
+        {project.linkLabel ? project.linkLabel : "View site"}
+      </a>
     </div>
     <div class="project-card__bottom-right">{project.label}</div>
   </div>
