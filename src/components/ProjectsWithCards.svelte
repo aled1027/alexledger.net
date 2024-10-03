@@ -12,7 +12,9 @@
       url: "https://incontext.fun",
       videoUrl:
         "https://www.youtube.com/embed/rZlKI_I89ZI?showinfo=0&autoplay=1&mute=1&loop=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&controls=0&disablekb=1&playlist=rZlKI_I89ZI",
-      label: "",
+      label: "blog post",
+      blogPost: "https://www.alexledger.net/posts/introducing-incontext",
+      youtube: "https://www.youtube.com/@inContext-app",
     },
     {
       projectName: "Compass",

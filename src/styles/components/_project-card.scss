@@ -44,6 +44,11 @@
   padding: 1rem;
   border-left: 0.25px solid var(--card-border-color-light);
   text-align: center;
+
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .project-card__video-wrapper {
