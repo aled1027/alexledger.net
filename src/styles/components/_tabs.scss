@@ -4,9 +4,14 @@
   margin-top: 2rem;
 }
 
+.tabs .tablist {
+  display: flex;
+}
+
 .tabs .tab-button {
   display: inline-flex;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
   text-decoration: none;
   line-height: 1;
@@ -35,12 +40,6 @@
     color: var(--color);
   }
 
-  &__inner {
-    padding-top: 2rem;
-    max-width: 55ch;
-    text-wrap: pretty;
-  }
-
   &__video {
     border-radius: 8px;
     overflow: hidden;
@@ -48,6 +47,23 @@
     // width: min(280px, 560px);
     aspect-ratio: 16 / 9;
   }
+}
+
+.tabs .tabpanel__inner {
+  padding-top: 4rem;
+  text-wrap: pretty;
+
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+
+  @include mq(medium) {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+.tabs .tabpanel__inner__right {
+  align-self: center;
 }
 
 .tabs p {

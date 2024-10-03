@@ -36,6 +36,11 @@
     letter-spacing: -0.05em;
   }
 
+  .landing-page {
+    /* border-left: 2px solid rgba(0, 0, 0, 1); */
+    /* padding-left: 2rem; */
+  }
+
   .landing-page-text {
     text-wrap: pretty;
     font-size: clamp(1.25rem, 3.25vw, 3.25rem);
