@@ -1,0 +1,52 @@
+.project-card {
+  // TODO: manage colors
+  --primary-900: hsl(255.65, 45%, 30%);
+  --primary-200: hsl(255.65, 45%, 90%);
+
+  --card-border-color: var(--primary-900);
+  --card-border-color-light: hsl(from var(--primary-900) h s l / 0.2);
+  --card-bg-color: hsl(from var(--primary-200) h s l / 0.6);
+
+  display: inline-block;
+  background: var(--card-bg-color);
+  border-radius: 4px;
+  border: 0.125px solid var(--card-border-color);
+  width: 100%;
+  height: fit-content;
+  text-wrap: pretty;
+
+  /* box-shadow: $box-shadow-2; */
+}
+
+.project-card__title-wrapper {
+  padding: 1rem;
+  border-bottom: 0.5px solid var(--card-border-color);
+}
+
+.project-card__middle-entry {
+  padding: 0.5rem 1rem;
+  border-bottom: 0.25px solid var(--card-border-color-light);
+}
+
+.project-card__bottom {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  border-top: 0.5px solid var(--card-border-color);
+}
+
+.project-card__bottom-left {
+  padding: 1rem;
+  text-align: center;
+}
+.project-card__bottom-right {
+  padding: 1rem;
+  border-left: 0.25px solid var(--card-border-color-light);
+  text-align: center;
+}
+
+.project-card__video-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+}

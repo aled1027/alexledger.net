@@ -1,5 +1,6 @@
 <script lang="ts">
   import Projects from "./Projects.svelte";
+  import ProjectsWithCards from "./ProjectsWithCards.svelte";
   // Inspo: https://pudding.cool/
 </script>
 
@@ -27,7 +28,8 @@
   </section>
 
   <section class="section">
-    <Projects />
+    <!-- <Projects /> -->
+    <ProjectsWithCards />
   </section>
 </div>
 

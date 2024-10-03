@@ -54,7 +54,8 @@
     background-color: transparent;
     border: 1px solid white;
     color: white;
-    border-radius: 28px;
+    // border-radius: 28px;
+    border-radius: 0;
     fill: white;
 
     &:is(:hover, :focus) {
