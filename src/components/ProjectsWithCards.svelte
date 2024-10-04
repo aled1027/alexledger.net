@@ -31,6 +31,7 @@
       videoUrl: "",
       imageUrl: "/images/knowportland-screenshot.png",
       label: "",
+      blogPost: "/posts/search-portland-on-know-portland",
     },
     {
       projectName: "Check-in Daily",
@@ -39,6 +40,8 @@
       url: "https://github.com/aled1027/check-in",
       linkLabel: "View code",
       videoUrl: "",
+      imageUrl: "/images/check-in-app-screenshot.png",
+      assetClasses: "object-fit-container",
       label: "",
       blogPost: "/posts/writing-a-check-in-app",
     },

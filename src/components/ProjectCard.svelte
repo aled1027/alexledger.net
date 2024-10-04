@@ -5,6 +5,7 @@
     url: string;
     videoUrl: string;
     imageUrl: string;
+    assetClasses?: string;
     label: string;
     linkLabel?: string;
     blogPost?: string;
@@ -50,7 +51,7 @@
     >
       <div class="project-card__asset-wrapper">
         <img
-          class="project-card__cover-asset"
+          class="project-card__cover-asset {project.assetClasses}"
           src={project.imageUrl}
           alt="{project.projectName} Image"
         />
@@ -59,7 +60,7 @@
   {/if}
   {#if project.videoUrl}
     <div
-      class=".project-card__middle-entry padding-4 project-card__scale-animation "
+      class=".project-card__middle-entry padding-4 project-card__scale-animation"
     >
       <div class="project-card__asset-wrapper">
         <iframe
