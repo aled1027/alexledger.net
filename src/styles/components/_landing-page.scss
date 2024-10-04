@@ -16,15 +16,15 @@
 }
 
 .landing-page .sentence1 {
-  animation-delay: 0.5s;
+  animation-delay: 0.3s;
 }
 
 .landing-page .sentence2 {
-  animation-delay: 1.5s;
+  animation-delay: 1.3s;
 }
 
 .landing-page .sentence3 {
-  animation-delay: 2.5s;
+  animation-delay: 2.3s;
 }
 
 @keyframes fadeIn {
@@ -52,7 +52,7 @@
     bottom 0.5s ease-in-out,
     height 0.5s ease-in-out,
     background-color 0.3s ease-in-out;
-  animation-delay: 3.5s;
+  animation-delay: 3.2s;
 
   @include mq(medium) {
     bottom: 2px;
