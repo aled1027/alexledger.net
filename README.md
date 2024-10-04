@@ -38,3 +38,8 @@ If using a svelte component, remember to add `client:load` when invoking the com
 - Convert projectcard to an astro component
 - Address TODOs
 - Check all posts and pages and make sure they look good
+
+## Notes for rewrite
+
+- Inspo: https://pudding.cool/
+- Bento boxes
