@@ -11,7 +11,7 @@ tags:
   - accessibility
 ---
 
-Making good forms isn't easy. It's always looks like it's going to be straightforward, but there's so many things to consider, like accessibility, validation, user experience, prettiness and more.
+Making good forms isn't easy. It always looks like it's going to be straightforward, but there's so many things to consider, like accessibility, validation, user experience, prettiness and more.
 
 I was making forms for one of my Svelte projects and after some digging, I found Josh Collinsworth's [contact page code](<https://github.com/josh-collinsworth/joco-sveltekit/blob/main/src/routes/(site)/contact/%2Bpage.svelte>), which is a fantastically implemented svelte form.
 
