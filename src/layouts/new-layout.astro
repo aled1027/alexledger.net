@@ -31,7 +31,14 @@ import { ViewTransitions } from "astro:transitions";
     <div class="primary-layout">
       <div class="site-header | border-bottom">
         <div class="site-header__inner">
-          <a href="/">Home</a>
+          <div>
+            <a href="/">Home</a>
+          </div>
+          <div class="site-header__inner-right">
+            <a href="/posts">Posts</a>
+            <a href="/#featured-projects">Projects</a>
+            <a href="/search">Search</a>
+          </div>
         </div>
       </div>
       <!-- Main content -->
