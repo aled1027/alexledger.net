@@ -26,15 +26,7 @@ If using a svelte component, remember to add `client:load` when invoking the com
 ## TODO:
 
 - Remove default.astro
-- /posts page doesn't look centered on mobile
-  - I think this could be related to overflow on the munich blog post
-  - Hmm something is weird is happening with the sizing.
-  - Coupled/complicated by view transitions
-  - To repro:
-    - Home -> Posts -> Munich Page -> Refresh Munich Page
-- footer isn't centered on mobile
 - update tag links in landing page top text
-- I think move up Alex Ledger on mobile, so it's slightly higher.
 - Convert projectcard to an astro component
 - Deal with guides
 - Deal with fermentation section
