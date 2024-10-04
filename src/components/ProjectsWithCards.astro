@@ -1,5 +1,5 @@
 ---
-import ProjectCard from "./ProjectCard.svelte";
+import ProjectCard from "./ProjectCard.astro";
 
 // TODO: one issue with the masonry is that my best projects and newest projects aren't necessarily on top
 // Maybe a top projects section?
@@ -166,7 +166,7 @@ let moreProjects = [
       recentProjects.map((project) => {
         return (
           <div class="masonry-item">
-            <ProjectCard {project} client:load />
+            <ProjectCard {project} />
           </div>
         );
       })
@@ -182,7 +182,7 @@ let moreProjects = [
       moreProjects.map((project) => {
         return (
           <div class="masonry-item">
-            <ProjectCard {project} client:load />
+            <ProjectCard {project} />
           </div>
         );
       })
