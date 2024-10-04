@@ -1,11 +1,12 @@
 <script>
 </script>
 
-<div class="container">
+<div class="email-signup-wrapper">
   <form action="" method="POST" class="signup__form">
     <div class="form-inputs">
-      <label for="email">Email Address</label>
+      <label class="signup-label" for="email">Email Address</label>
       <input
+        class="signup-input"
         type="email"
         name="email"
         id="email"
@@ -15,7 +16,7 @@
         pattern="[^@]+@[^\.]+\..+"
       />
     </div>
-    <button type="submit">
+    <button class="signup-button" type="submit">
       <!-- This pattern is from the piccalil solution -->
       <span class="visually-hidden">Submit email</span>
       <svg
@@ -48,12 +49,13 @@
     --color-error-bg: #fdeff3;
   }
 
-  .container {
-    margin: 4rem 2rem;
+  .email-signup-wrapper {
+    margin: 4rem auto;
     padding: 2rem;
     display: grid;
     place-items: center;
     border: 1px solid var(--color-primary);
+    max-width: 400px;
   }
 
   .signup__form {
@@ -67,20 +69,20 @@
     gap: 0.375rem;
   }
 
-  label {
+  .signup-label {
     text-transform: uppercase;
     font-weight: 600;
     color: var(--color-primary);
   }
 
-  input {
+  .signup-input {
     border: 1px solid var(--color-primary);
     height: 2.75rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 0.5rem 0.75rem 0.5rem 0.75rem;
   }
 
-  button {
+  .signup-button {
     height: 2.75rem;
     width: 2.75rem;
     background: var(--color-secondary);
@@ -93,21 +95,5 @@
     display: flex;
     justify-content: center;
     place-items: center;
-  }
-
-  /**
- * VISUALLY HIDDEN UTILITY
- */
-  .visually-hidden {
-    /* Copied from https://piccalil.li/tutorial/solution-001-email-sign-up-form/ */
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: auto;
-    margin: 0;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-    white-space: nowrap;
   }
 </style>
