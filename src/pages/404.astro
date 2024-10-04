@@ -1,21 +1,13 @@
 ---
-import Layout from "@layouts/default.astro";
+import Layout from "@layouts/new-layout.astro";
 ---
 
 <Layout>
-  <h1>Page Not Found</h1>
-  <section>
-    <p>Unfortunately, there's nothing to see here.</p>
-    <a href="/" class="link-button">Go home</a>
+  <section
+    class="section prose mx-auto flex-group flex-col justify-center items-center w-full gap-8">
+    <h1>Page Not Found</h1>
+    <a href="/">Go home</a>
   </section>
 </Layout>
 
-<style>
-  section {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-</style>
+<style></style>

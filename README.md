@@ -36,6 +36,8 @@ If using a svelte component, remember to add `client:load` when invoking the com
 - update tag links in landing page top text
 - I think move up Alex Ledger on mobile, so it's slightly higher.
 - Convert projectcard to an astro component
+- Deal with guides
+- Deal with fermentation section
 - Address TODOs
 - Check all posts and pages and make sure they look good
 
@@ -43,3 +45,4 @@ If using a svelte component, remember to add `client:load` when invoking the com
 
 - Inspo: https://pudding.cool/
 - Bento boxes
+-
