@@ -21,55 +21,56 @@ And here's the code for reading:
 
 ```svelte
 <script>
-	let formData = {
-		name: '',
-		favoriteLetter: ''
-	};
+  let formData = {
+    name: '',
+    favoriteLetter: ''
+  };
 
-	let hasSubmitted = false;
-	let showError = false;
+  let hasSubmitted = false;
+  let showError = false;
 
-	async function handleSubmit(e) {
-		let badName = formData.name === '';
-		let badLetter = formData.favoriteLetter === '';
+  async function handleSubmit(e) {
+    let badName = formData.name === '';
+    let badLetter = formData.favoriteLetter === '';
 
-		if (badName || badLetter) {
-			showError = true;
-			return;
-		}
+    if (badName || badLetter) {
+      showError = true;
+      return;
+    }
 
-		console.log('Submitting', formData);
-	}
+    console.log('Submitting', formData);
+  }
 </script>
 
 <h1>Form Demo!</h1>
 
 {#if !hasSubmitted}
-	<form on:submit|preventDefault={handleSubmit}>
+  <form on:submit|preventDefault={handleSubmit}>
     <!-- Pressing enter or pressing the submit button calls handleSubmit-->
-		<div>
-			<label for="name">Name:</label>
-			<input type="text" id="name" bind:value={formData.name} placeholder="Billy" required />
-		</div>
-		<div>
-			<label for="letter">Favorite letter:</label>
-			<input
-				type="text"
-				id="letter"
-				bind:value={formData.favoriteLetter}
-				placeholder="z"
-				maxlength="1"
-				minlength="1"
-				required
-			/>
-		</div>
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" bind:value={formData.name} placeholder="Billy" required />
+    </div>
+    <div>
+      <label for="letter">Favorite letter:</label>
+      <input
+        type="text"
+        id="letter"
+        bind:value={formData.favoriteLetter}
+        placeholder="z"
+        maxlength="1"
+        minlength="1"
+        required
+      />
+    </div>
 
-		{#if showError}
-			<div class="error">Please be sure all above fields are filled out. Thanks!</div>
-		{/if}
-		<button type="submit">Submit</button>
-	</form>
+    {#if showError}
+      <div class="error">Please be sure all above fields are filled out. Thanks!</div>
+    {/if}
+
+    <button type="submit">Submit</button>
+  </form>
 {:else}
-	<h3>Thanks for your form!</h3>
+  <h3>Thanks for your form!</h3>
 {/if}
 ```

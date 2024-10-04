@@ -10,7 +10,7 @@
     position: relative;
     display: flex;
     text-align: center;
-    gap: $size-6;
+    gap: $size-5;
     align-items: $site-header-alignment;
     justify-content: $site-header-justification-small-screens;
     font-size: $size-5;
@@ -22,7 +22,7 @@
 
   &__inner-right {
     display: flex;
-    gap: $size-6;
+    gap: $size-5;
     align-items: center;
   }
 
