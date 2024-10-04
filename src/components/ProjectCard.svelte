@@ -1,17 +1,17 @@
-<script lang="ts">
-  interface Project {
-    projectName: string;
-    description: string;
-    url: string;
-    videoUrl: string;
-    imageUrl: string;
-    assetClasses?: string;
-    label: string;
-    linkLabel?: string;
-    blogPost?: string;
-    youtube?: string;
-  }
-  export let project: Project;
+<script>
+  // interface Project {
+  //   projectName: string;
+  //   description: string;
+  //   url: string;
+  //   videoUrl: string;
+  //   imageUrl: string;
+  //   assetClasses?: string;
+  //   label: string;
+  //   linkLabel?: string;
+  //   blogPost?: string;
+  //   youtube?: string;
+  // }
+  export let project;
 
   // TODO: figure out what goes in the label section
   // TODO: on hover, could do a diagonal animation sheen across the whole card, in the background
