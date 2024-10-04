@@ -1,7 +1,9 @@
 ---
+// import Layout from "@layouts/default.astro";
+// import AutoToc from "@components/AutoToc.astro";
+
 import { getCollection } from "astro:content";
-import Layout from "@layouts/default.astro";
-import AutoToc from "@components/AutoToc.astro";
+import Layout from "@layouts/new-layout.astro";
 
 export const prerender = true;
 
@@ -23,25 +25,28 @@ const { Content } = await post.render();
 ---
 
 <Layout>
-  <div class="content-wrapper">
+  <div class="content-wrapper prose padding-block-11">
     <h1>{post.data.title}</h1>
-    <span>Date:</span>
-    <span>{post.data.date.toLocaleDateString()}</span>
-    <div class="tags">
-      <span>Tags:</span>
-      {
-        post.data.tags.map((tag) => {
-          return (
-            <>
-              <span>
-                <a href={`/tags/${tag}`}>{tag}</a>
-              </span>
-            </>
-          );
-        })
-      }
+    <div class="padding-block-end-2">
+      <span>Date:</span>
+      <span>{post.data.date.toLocaleDateString()}</span>
+      <div class="tags">
+        <span>Tags:</span>
+        {
+          post.data.tags.map((tag) => {
+            return (
+              <>
+                <span>
+                  <a href={`/tags/${tag}`}>{tag}</a>
+                </span>
+              </>
+            );
+          })
+        }
+      </div>
     </div>
-    {post.data.includeToc && <AutoToc />}
+    <!-- TODO: hiding the table of contents -->
+    <!-- {post.data.includeToc && <AutoToc />} -->
     <Content />
   </div>
 </Layout>

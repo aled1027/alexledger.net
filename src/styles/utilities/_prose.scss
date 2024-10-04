@@ -1,0 +1,36 @@
+@use "../abstracts/" as *;
+@use "headings/" as *;
+
+.prose {
+  & > *:where(:not(:first-child)) {
+    margin-top: var(--flow-spacer, 1em);
+  }
+
+  h1 {
+    @extend .heading-2;
+    font-size: calc($font-size-800 * 1.25);
+  }
+
+  h2 {
+    @extend .heading-2;
+  }
+
+  h3 {
+    @extend .heading-3;
+  }
+
+  h4 {
+    @extend .heading-3;
+    font-size: calc($heading-3-font-size * 0.8);
+  }
+
+  li > p,
+  ol > p {
+    margin-block: 0;
+  }
+
+  li,
+  ol {
+    margin-block: 0.75rem;
+  }
+}
