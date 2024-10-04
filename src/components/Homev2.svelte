@@ -16,7 +16,7 @@
         Alex loves building cool and useful things about <a
           href="#know-portland">traveling</a
         >,
-        <a href="/">language learning tools</a>
+        <a href="#incontext">language learning tools</a>
         leveraging the latest AI developments, and community tools to support Portland,
         OR.
       </span>
@@ -35,74 +35,5 @@
 </div>
 
 <style>
-  .heading-1 {
-    letter-spacing: -0.05em;
-  }
-
-  .landing-page {
-    /* border-left: 2px solid rgba(0, 0, 0, 1); */
-    /* padding-left: 2rem; */
-  }
-
-  .landing-page-text {
-    text-wrap: pretty;
-    font-size: clamp(1.25rem, 3.25vw, 3.25rem);
-    line-height: 1.6;
-  }
-
-  .sentence {
-    opacity: 0;
-    animation: fadeIn 2s forwards;
-  }
-
-  .sentence1 {
-    animation-delay: 0.5s;
-  }
-
-  .sentence2 {
-    animation-delay: 1.5s;
-  }
-
-  .sentence3 {
-    animation-delay: 2.5s;
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-
-  .sentence a {
-    text-decoration: none;
-    position: relative;
-  }
-
-  .sentence a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 2px;
-    width: 0;
-    height: 4px;
-    background-color: hsl(255.65, 81.3%, 62.35%);
-    animation: drawUnderline 2s forwards;
-    z-index: -1;
-    transition:
-      height 0.5s ease-in-out,
-      background-color 0.3s ease-in-out;
-    animation-delay: 3.5s;
-  }
-
-  .sentence a:hover::after {
-    height: 80%;
-    background-color: hsl(255.65, 81.3%, 82.35%);
-  }
-
-  @keyframes drawUnderline {
-    to {
-      width: 100%;
-      opacity: 1;
-    }
-  }
+ 
 </style>

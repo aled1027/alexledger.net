@@ -1,0 +1,74 @@
+@use "../abstracts" as *;
+
+.landing-page .heading-1 {
+  letter-spacing: -0.05em;
+}
+
+.landing-page-text {
+  text-wrap: pretty;
+  font-size: clamp(1.25rem, 3.25vw, 3.25rem);
+  line-height: 1.6;
+}
+
+.landing-page .sentence {
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+}
+
+.landing-page .sentence1 {
+  animation-delay: 0.5s;
+}
+
+.landing-page .sentence2 {
+  animation-delay: 1.5s;
+}
+
+.landing-page .sentence3 {
+  animation-delay: 2.5s;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.landing-page .sentence a {
+  text-decoration: none;
+  position: relative;
+}
+
+.landing-page .sentence a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+  width: 0;
+  height: 2px;
+  background-color: hsl(255.65, 81.3%, 62.35%);
+  animation: drawUnderline 2s forwards;
+  z-index: -1;
+  transition:
+    bottom 0.5s ease-in-out,
+    height 0.5s ease-in-out,
+    background-color 0.3s ease-in-out;
+  animation-delay: 3.5s;
+
+  @include mq(medium) {
+    bottom: 2px;
+    height: 4px;
+  }
+}
+
+.landing-page .sentence a:hover::after {
+  bottom: 0;
+  height: 85%;
+  background-color: hsl(255.65, 81.3%, 82.35%);
+}
+
+@keyframes drawUnderline {
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
