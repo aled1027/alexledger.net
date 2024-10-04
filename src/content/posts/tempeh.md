@@ -2,7 +2,7 @@
 title: "Tempeh"
 date: 2024-02-12T08:00:00.000Z
 draft: false
-tags: [tempeh]
+tags: [tempeh, guides]
 dateStart: 2024-02-12T08:00:00.000Z
 dateEnd: 2024-02-14T08:00:00.000Z
 fermentType: Tempeh

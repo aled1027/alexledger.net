@@ -27,8 +27,7 @@ If using a svelte component, remember to add `client:load` when invoking the com
 
 - Remove default.astro
 - update tag links in landing page top text
-- Deal with guides
-- Deal with fermentation section
+- Update tables (see http://localhost:4321/posts/electric_vehicles )
 - Address TODOs
 - Check all posts and pages and make sure they look good
 

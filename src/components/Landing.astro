@@ -1,6 +1,5 @@
 ---
-import Projects from "./Projects.svelte";
-import ProjectsWithCards from "./ProjectsWithCards.astro";
+import Projects from "./Projects.astro";
 // TODO: to support the tags, might want to support multiple tags in the url so /tags/foo+bar
 ---
 
@@ -27,7 +26,5 @@ import ProjectsWithCards from "./ProjectsWithCards.astro";
     </p>
   </section>
 
-  <section class="section">
-    <ProjectsWithCards />
-  </section>
+  <Projects />
 </div>
