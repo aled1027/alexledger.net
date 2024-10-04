@@ -8,13 +8,27 @@ import lit from "@astrojs/lit";
 // https://astro.build/config
 export default defineConfig({
   markdown: {
-    smartypants: false
+    // https://docs.astro.build/en/guides/markdown-content/
+    smartypants: false,
+    shikiConfig: {
+      // https://shiki.style/themes
+      theme: "solarized-dark",
+      defaultColor: false,
+      langs: [],
+      wrap: true,
+      transformers: [],
+    },
   },
   build: {
-    format: "file"
+    format: "file",
   },
   site: "https://alexledger.net",
-  integrations: [sitemap({
-    // filter: (page) => page !== 'https://stargazers.club/secret-vip-lounge/',
-  }), mdx(), svelte(), lit()]
+  integrations: [
+    sitemap({
+      // filter: (page) => page !== 'https://stargazers.club/secret-vip-lounge/',
+    }),
+    mdx(),
+    svelte(),
+    lit(),
+  ],
 });

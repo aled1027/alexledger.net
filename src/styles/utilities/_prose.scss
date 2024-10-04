@@ -33,4 +33,23 @@
   ol {
     margin-block: 0.75rem;
   }
+
+  pre {
+    // Check out astro.config.mjs for the themes and other configuration
+    padding: 1rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+.copy-code {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: hsl(192.45, 96.36%, 40%);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.copy-code:hover {
+  background-color: hsl(192.45, 96.36%, 30%);
 }
