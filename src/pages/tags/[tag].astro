@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "@layouts/default.astro";
+import Layout from "@layouts/new-layout.astro";
 import BlogList from "@components/BlogList.astro";
 
 export async function getStaticPaths() {
@@ -26,14 +26,8 @@ const { posts } = Astro.props;
 ---
 
 <Layout>
-  <h1>Tag: {tag}</h1>
-  <main class="content">
+  <section class="section container" data-type="regular">
+    <h1 class="heading-1 padding-block-end-4">Tag: {tag}</h1>
     <BlogList blogs={posts} />
-  </main>
-  <style>
-    .content {
-      display: flex;
-      flex-direction: column;
-    }
-  </style>
+  </section>
 </Layout>
