@@ -31,12 +31,14 @@
 
   let hasLinks = project.blogPost || project.youtube;
 
+  let slug = project.projectName.toLowerCase().replace(" ", "-");
+
   // Ideas: add role
 </script>
 
 <div class="project-card">
   <div class="project-card__title-wrapper">
-    <h3 class="heading-3">
+    <h3 class="heading-3" id={slug}>
       <a class="text-decoration-none" href={project.url} target="_blank"
         >{project.projectName}</a
       >

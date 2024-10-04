@@ -2,6 +2,7 @@
   import Projects from "./Projects.svelte";
   import ProjectsWithCards from "./ProjectsWithCards.svelte";
   // Inspo: https://pudding.cool/
+  // TODO: to support the tags, might want to support multiple tags in the url so /tags/foo+bar
 </script>
 
 <div class="landing-page">
@@ -12,8 +13,8 @@
         is a software developer with skills spanning the full stack.
       </span>
       <span class="sentence sentence2">
-        Alex loves building cool and useful things about <a href="/"
-          >traveling</a
+        Alex loves building cool and useful things about <a
+          href="#know-portland">traveling</a
         >,
         <a href="/">language learning tools</a>
         leveraging the latest AI developments, and community tools to support Portland,
@@ -22,7 +23,7 @@
       <span class="sentence sentence3">
         Alex writes on his <a href="/posts">blog</a> about
         <a href="/tags/foo">tech</a>, <a href="/tags/foo">community</a>, and
-        <a href="/tags/foo">more</a>.
+        <a href="/tags">more</a>.
       </span>
     </p>
   </section>
