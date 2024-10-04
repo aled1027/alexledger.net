@@ -1,5 +1,5 @@
 @use "../abstracts/" as *;
-@use "headings/" as *;
+@use "./headings" as *;
 
 .prose {
   & > *:where(:not(:first-child)) {

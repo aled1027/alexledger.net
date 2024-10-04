@@ -26,8 +26,10 @@ const { posts } = Astro.props;
 ---
 
 <Layout>
-  <section class="section container" data-type="regular">
-    <h1 class="heading-1 padding-block-end-4">Tag: {tag}</h1>
+  <section class="section">
+    <h1 class="heading-1 padding-block-end-4">
+      Tag: {tag}
+    </h1>
     <BlogList blogs={posts} />
   </section>
 </Layout>

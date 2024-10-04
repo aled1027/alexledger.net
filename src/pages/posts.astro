@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-// import Layout from "@layouts/default.astro";
 import BlogList from "@components/BlogList.astro";
 import Layout from "@layouts/new-layout.astro";
 
@@ -14,7 +13,7 @@ const posts = postsCollection
 ---
 
 <Layout>
-  <section class="section container" data-type="regular">
+  <section class="section">
     <h1 class="heading-1 padding-block-end-4">Posts</h1>
     <BlogList blogs={posts} />
   </section>
