@@ -45,7 +45,8 @@
 
     {
       projectName: "alexledger.net",
-      description: "Personal website built with astro.",
+      description:
+        "This site! alexledger.net is my personal website built with Astro as the meta-framework, with Svelte, mdx, and markdown under the hood.",
       url: "https://alexledger.net",
       videoUrl: "",
       label: "",
@@ -155,7 +156,7 @@
 </script>
 
 <section class="section">
-  <h2 class="heading-2">Recent Projects</h2>
+  <h2 class="heading-2">Featured Projects</h2>
 
   <div class="project-cards masonry">
     {#each recentProjects as project}

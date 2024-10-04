@@ -64,12 +64,13 @@
 }
 
 .project-card__scale-animation {
-  transform: scale(0.65);
-  transition: transform 1s ease;
+  transform: scale(0.8);
+  transition: transform 1s ease-in-out;
 }
 
 .project-card:hover .project-card__scale-animation {
-  transform: scale(1);
+  // Disabling for now because it kind of looks better at 0.8
+  //   transform: scale(1);
 }
 
 .project-card__cover-asset {

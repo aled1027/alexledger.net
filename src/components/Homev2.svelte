@@ -63,7 +63,7 @@
   }
 
   .sentence3 {
-    animation-delay: 3.5s;
+    animation-delay: 2.5s;
   }
 
   @keyframes fadeIn {
@@ -86,7 +86,7 @@
     height: 3px;
     background-color: hsl(255.65, 81.3%, 62.35%);
     animation: drawUnderline 2s forwards;
-    animation-delay: 4s;
+    animation-delay: 3.5s;
   }
 
   @keyframes drawUnderline {
