@@ -1,5 +1,5 @@
 ---
-title: "TIL How To Make Better Forms In Svelte"
+title: "How To Make Better Forms In Svelte"
 date: 2024-09-29T08:00:00.000Z
 draft: false
 includeToc: false
