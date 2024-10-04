@@ -40,6 +40,10 @@
   border-top: 0.5px solid var(--card-border-color);
 }
 
+.project-card__bottom[data-cols="1"] {
+  grid-template-columns: 1fr;
+}
+
 .project-card__bottom-left {
   padding: 1rem;
   text-align: center;
