@@ -1,7 +1,9 @@
 ---
 // import AutoToc from "@components/AutoToc.astro";
 import { getCollection } from "astro:content";
-import Layout from "@layouts/new-layout.astro";
+import Layout from "@layouts/default.astro";
+
+// TODO: is this needed?
 export const prerender = true;
 
 export async function getStaticPaths() {

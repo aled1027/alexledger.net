@@ -50,15 +50,10 @@
   }
 }
 
-.copy-code {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: hsl(192.45, 96.36%, 40%);
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
-}
-
-.copy-code:hover {
-  background-color: hsl(192.45, 96.36%, 30%);
+.youtube-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
 }

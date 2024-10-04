@@ -12,9 +12,11 @@ I couldn't be more excited to announce the public release of my newest project, 
 
 **inContext** is a language-learning browser extension that builds tailored, context-informed definitions of words and displays them in the webpage.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ncwV3cJinC8?si=CAY9FaDqG431jPYf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
 tl;dr: Learning a language? Try **[inContext](https://incontext.fun)** for free!
+
+<div class="youtube-wrapper">
+  <iframe width="100%" height="100%" src="https://www.youtube.com/embed/ncwV3cJinC8?si=CAY9FaDqG431jPYf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 
 ## Why We Built inContext
 

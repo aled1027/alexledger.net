@@ -23,6 +23,24 @@ They follow [CUBE](https://cube.fyi/).
 
 If using a svelte component, remember to add `client:load` when invoking the component so that it appropriately runs client-side.
 
+## Adding a youtube video or iframe?
+
+Use this structure:
+
+```html
+<div class="youtube-wrapper">
+  <iframe
+    width="100%"
+    height="100%"
+    src="https://www.youtube.com/embed/ncwV3cJinC8?si=CAY9FaDqG431jPYf"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen></iframe>
+</div>
+```
+
 ## TODO:
 
 - Remove default.astro
