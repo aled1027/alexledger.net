@@ -97,6 +97,16 @@ import { ViewTransitions } from "astro:transitions";
         });
       });
 
+      // Make all external links open in a new tab
+      // But ony update with the prose tag to avoid breaking
+      // something intentional.
+      document.querySelectorAll(".prose a").forEach((link) => {
+        if (link.hostname !== window.location.hostname) {
+          link.target = "_blank";
+          link.rel = "noopener";
+        }
+      });
+
       // Add a copy button to all code blocks
       // Styling is in prose
       // https://timneubauer.dev/blog/copy-code-button-in-astro/
