@@ -14,8 +14,17 @@
   // TODO: figure out what goes in the label section
   // TODO: on hover, could do a diagonal animation sheen across the whole card, in the background
   // TODO: could incorporate the brand colors somewhere
+  // TODO: could have video pop-outable like https://cleanshot.com/
 
   let label = "";
+
+  let videoUrl = project.videoUrl;
+  if (videoUrl !== "") {
+    let youtubeId = project.videoUrl.split("/").pop();
+    let videoPostfix =
+      "?showinfo=0&autoplay=1&mute=1&loop=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&controls=0&disablekb=1";
+    videoUrl = `https://www.youtube.com/embed/${youtubeId}${videoPostfix}&playlist=${youtubeId}`;
+  }
 
   // Ideas: add role
 </script>
@@ -37,7 +46,7 @@
     <div class=".project-card__middle-entry padding-4">
       <div class="project-card__video-wrapper">
         <iframe
-          src={project.videoUrl}
+          src={videoUrl}
           width="100%"
           height="100%"
           title="{project.projectName} Video"
