@@ -1,9 +1,9 @@
-<script lang="ts">
-  import Projects from "./Projects.svelte";
-  import ProjectsWithCards from "./ProjectsWithCards.svelte";
-  // Inspo: https://pudding.cool/
-  // TODO: to support the tags, might want to support multiple tags in the url so /tags/foo+bar
-</script>
+---
+import Projects from "./Projects.svelte";
+import ProjectsWithCards from "./ProjectsWithCards.astro";
+// Inspo: https://pudding.cool/
+// TODO: to support the tags, might want to support multiple tags in the url so /tags/foo+bar
+---
 
 <div class="landing-page">
   <section class="top-section | section">
@@ -33,7 +33,3 @@
     <ProjectsWithCards />
   </section>
 </div>
-
-<style>
- 
-</style>
