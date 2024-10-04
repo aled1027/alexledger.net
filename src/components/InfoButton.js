@@ -3,7 +3,6 @@ import { LitElement, html, css } from "lit";
 class InfoButton extends LitElement {
   constructor() {
     super();
-    // TODO: probably dont need id anymore
     this.id = Math.random().toString(36).slice(2, 11);
   }
 

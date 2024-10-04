@@ -18,3 +18,36 @@ All commands are run from the root of the project, from a terminal:
 Styles were copied from https://github.com/kevin-powell/astro-sass-template-no-scoped-styles, and modified were from there.
 
 They follow [CUBE](https://cube.fyi/).
+
+## Svelte
+
+If using a svelte component, remember to add `client:load` when invoking the component so that it appropriately runs client-side.
+
+## Adding a youtube video or iframe?
+
+Use this structure:
+
+```html
+<div class="youtube-wrapper">
+  <iframe
+    width="100%"
+    height="100%"
+    src="https://www.youtube.com/embed/ncwV3cJinC8?si=CAY9FaDqG431jPYf"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen></iframe>
+</div>
+```
+
+## TODOs:
+
+- Address TODOs
+- Check all posts and pages and make sure they look good
+
+## Notes for rewrite
+
+- Inspo: https://pudding.cool/
+- Bento boxes
+-

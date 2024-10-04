@@ -10,7 +10,7 @@ $color-text-default: $color-neutral-800;
 $color-background-default: $color-neutral-100;
 $color-text-interactive-default: $color-text-default;
 // $color-text-interactive-default: $color-accent-400;
-$color-text-interactive-hover: $color-neutral-600;
+$color-text-interactive-hover: $color-neutral-900;
 // $color-text-interactive-hover: $color-accent-500;
 
 // set to 0 to disable
@@ -19,19 +19,29 @@ $letter-spacing-loose: 0;
 $border-radius-1: $size-2;
 $border-radius-2: $size-4;
 
-$box-shadow-1: 0px 6px 5px rgb(0, 0, 0, 0.012),
-  0px 22px 18px rgb(0, 0, 0, 0.018), 0px 100px 80px rgb(0, 0, 0, 0.03);
+$box-shadow-1:
+  0px 6px 5px rgb(0, 0, 0, 0.012),
+  0px 22px 18px rgb(0, 0, 0, 0.018),
+  0px 100px 80px rgb(0, 0, 0, 0.03);
 
-$box-shadow-2: 0px 6px 5px rgb(0, 0, 0, 0.016),
-  0px 22px 18px rgb(0, 0, 0, 0.024), 0px 100px 80px rgb(0, 0, 0, 0.04);
+$box-shadow-2:
+  0px 6px 5px rgb(0, 0, 0, 0.016),
+  0px 22px 18px rgb(0, 0, 0, 0.024),
+  0px 100px 80px rgb(0, 0, 0, 0.04);
 
-$box-shadow-3: 0px 6px 5px rgb(0, 0, 0, 0.02), 0px 22px 18px rgb(0, 0, 0, 0.03),
+$box-shadow-3:
+  0px 6px 5px rgb(0, 0, 0, 0.02),
+  0px 22px 18px rgb(0, 0, 0, 0.03),
   0px 100px 80px rgb(0, 0, 0, 0.05);
 
-$box-shadow-4: 0px 6px 5px rgb(0, 0, 0, 0.03), 0px 22px 18px rgb(0, 0, 0, 0.042),
+$box-shadow-4:
+  0px 6px 5px rgb(0, 0, 0, 0.03),
+  0px 22px 18px rgb(0, 0, 0, 0.042),
   0px 100px 80px rgb(0, 0, 0, 0.07);
 
-$box-shadow-5: 0px 6px 5px rgb(0, 0, 0, 0.04), 0px 22px 18px rgb(0, 0, 0, 0.06),
+$box-shadow-5:
+  0px 6px 5px rgb(0, 0, 0, 0.04),
+  0px 22px 18px rgb(0, 0, 0, 0.06),
   0px 100px 80px rgb(0, 0, 0, 0.1);
 
 // body
@@ -51,13 +61,13 @@ $heading-color-default: $color-neutral-900;
 $heading-font-weight: $font-weight-bold;
 $heading-letter-spacing: $letter-spacing-loose;
 $heading-line-height: 1.1;
-$heading-text-transform: uppercase;
+$heading-text-transform: none;
 
-$heading-1-font-size: $font-size-900;
+$heading-1-font-size: $font-size-800;
 $heading-1-color: $heading-color-default;
-$heading-2-font-size: $font-size-800;
+$heading-2-font-size: $font-size-700;
 $heading-2-color: $heading-color-default;
-$heading-3-font-size: $font-size-700;
+$heading-3-font-size: $font-size-600;
 $heading-3-color: $heading-color-default;
 
 // layout
@@ -67,19 +77,19 @@ $flex-group-gap: $size-4;
 $hero-padding-block: clamp(15rem, 15vh, 20rem);
 $section-padding-block: clamp(5rem, 10vh, 6rem);
 
-$container-min-margin-inline: 0px;  // was $size-4
+$container-min-margin-inline: $size-4;
 $container-max-width: 64rem;
 $container-max-width-narrow: 40rem;
-$container-max-width-wide: 125rem;  // was 75rem in og template
+$container-max-width-wide: 125rem; // was 75rem in og template
 $container-min-height: 100vh;
 
 // site header
 $site-header-background-color: $color-primary-200;
 $site-header-color: $color-neutral-900;
-$site-header-padding: $size-4 0;
+$site-header-padding: $size-4 $size-7;
 $site-header-margin: 0;
 $site-header-justification-small-screens: center;
-$site-header-justification-large-screens: center;
+$site-header-justification-large-screens: space-between;
 $site-header-alignment: center;
 
 // // skip navigation
@@ -106,15 +116,15 @@ $footer-text-color: $color-neutral-900;
 $footer-link-color: $color-neutral-900;
 $footer-link-color-hover: $color-neutral-900;
 $footer-link-font-family: $body-font-family;
-$footer-link-text-decoration: none;
+$footer-link-text-decoration: underline;
 $footer-min-height: 20vh;
 $footer-padding: $size-4;
 
 // buttons
 $button-font-family: $body-font-family;
 $button-font-size: $font-size-400;
-$button-font-weight: $font-weight-bold;
-$button-text-transform: uppercase;
+$button-font-weight: $font-weight-default;
+$button-text-transform: none;
 $button-padding: 0.75em 2em;
 $button-border: 0;
 $button-border-radius: $border-radius-1;

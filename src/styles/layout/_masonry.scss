@@ -1,0 +1,23 @@
+@use "../abstracts/" as *;
+
+.masonry {
+  // Masonry container
+  // Based on https://dev.to/ryandsouza13/creating-a-responsive-masonry-layout-using-the-css-column-count-property-4kf7
+  column-count: 1;
+  column-gap: 1.5rem;
+
+  @include mq(medium) {
+    column-count: 2;
+  }
+
+  @include mq(large) {
+    column-count: 2;
+  }
+}
+
+.masonry-item {
+  margin: 0 0 1.5rem;
+  width: 100%;
+  min-width: 280px;
+  // overflow: auto;
+}

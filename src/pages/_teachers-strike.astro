@@ -1,0 +1,134 @@
+---
+import Layout from "@layouts/default.astro";
+
+// TODO: figure out where this goes
+---
+
+<Layout>
+  <section class="section prose">
+    <h1>A Brief Review of the 2023 Portland Teachers Strike</h1>
+    <p>
+      This is a presentation I gave at <a href="https://catnesh.net">Cat's</a>
+      presentation birthday party. I'm interested in local events and wanted to learn
+      more about the Portland teachers strike.
+    </p>
+    <!-- https://simonwillison.net/2023/Aug/6/annotated-presentations/ -->
+    <!-- https://til.simonwillison.net/tools/annotated-presentations -->
+    <!-- 
+  The template used on https://til.simonwillison.net/tools/annotated-presentations:
+
+  <div class="slide">
+    <img loading="lazy" src="/images/pat-strike/${filename}" alt="${escapeHtml(alt)}" width="450">
+    <div>
+      ${markdownAsHtml}
+    </div>
+  </div>
+  -->
+    <h2>The Presentation</h2>
+    <div class="slide">
+      <img
+        loading="lazy"
+        src="/images/pat-strike/2023 portland teachers strike.001.jpeg"
+        alt="Title slide"
+        width="450"
+      />
+      <div>
+        <p>
+          The Portland Assocation of Teachers (PAT) strike began on November 1,
+          2023. (My name is Alex, and I'm not a teacher.)
+        </p>
+      </div>
+    </div>
+    <div class="slide">
+      <img
+        loading="lazy"
+        src="/images/pat-strike/2023 portland teachers strike.002.jpeg"
+        alt=""
+        width="450"
+      />
+      <div></div>
+    </div>
+    <div class="slide">
+      <img
+        loading="lazy"
+        src="/images/pat-strike/2023 portland teachers strike.003.jpeg"
+        alt=""
+        width="450"
+      />
+      <div></div>
+    </div>
+    <div class="slide">
+      <img
+        loading="lazy"
+        src="/images/pat-strike/2023 portland teachers strike.004.jpeg"
+        alt=""
+        width="450"
+      />
+      <div></div>
+    </div>
+    <div class="slide">
+      <img
+        loading="lazy"
+        src="/images/pat-strike/2023 portland teachers strike.005.jpeg"
+        alt=""
+        width="450"
+      />
+      <div></div>
+    </div>
+    <div class="slide">
+      <img
+        loading="lazy"
+        src="/images/pat-strike/2023 portland teachers strike.006.jpeg"
+        alt=""
+        width="450"
+      />
+      <div></div>
+    </div>
+    <h2>Endnotes</h2>
+    <p>
+      This was built using <a href="https://simonwillison.net"
+        >Simon Willison's</a
+      >
+      <a href="https://til.simonwillison.net/tools/annotated-presentations"
+        >annotated presentation</a
+      > tool, using styling informed by his <a
+        href="https://simonwillison.net/2022/Nov/26/productivity/"
+        >Coping strategies for the serial project hoarder</a
+      > presentation.
+    </p>
+    <p>
+      While I like this method of presenting information, and I think that talks
+      should be shared like this in a readable, skimmable, searchable format, I
+      want to improve the accessiblity of this page so that it's not too
+      image-oriented. Updates to come!
+    </p>
+  </section>
+</Layout>
+
+<style>
+  /* Following the style with big inspiration
+  from https://simonwillison.net/2022/Nov/26/productivity/ */
+  .slide {
+    display: flex;
+    border-top: 3px solid #666;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0.3rem;
+  }
+
+  .slide img {
+    margin: 5px auto 0 auto;
+    max-width: 100%;
+  }
+
+  .slide div {
+    width: calc(100% - 480px);
+    min-width: 300px;
+    margin: 0 auto;
+  }
+
+  .slide p {
+    margin: 0.5rem 0 1rem 0;
+  }
+</style>

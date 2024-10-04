@@ -11,20 +11,24 @@ const tags = [
 ---
 
 <Layout>
-  <h1>Tags</h1>
-  <main class="content">
-    <div class="tags-list">
-      {
-        tags.map((tag) => {
-          return (
-            <p>
-              <a href={`/tags/${tag}`}>{tag}</a>
-            </p>
-          );
-        })
-      }
-    </div>
-  </main>
+  <section class="section">
+    <h1 class="heading-1 border-bottom padding-block-end-3 margin-block-end-8">
+      Tags
+    </h1>
+    <main class="content">
+      <div class="tags-list">
+        {
+          tags.map((tag) => {
+            return (
+              <p>
+                <a href={`/tags/${tag}`}>{tag}</a>
+              </p>
+            );
+          })
+        }
+      </div>
+    </main>
+  </section>
 </Layout>
 <style>
   .content {

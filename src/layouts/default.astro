@@ -1,6 +1,10 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import "../styles/main.scss";
 import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
+import { ViewTransitions } from "astro:transitions";
+
+const { containerType = "narrow" } = Astro.props;
 ---
 
 <html lang="en">
@@ -17,83 +21,29 @@ import Footer from "@components/Footer.astro";
 
     <script src="@components/InfoButton.js"></script>
     <script
-      type="module"
-      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/shoelace-autoloader.js"
-    ></script>
-    <script
       defer
       data-domain="alexledger.net"
       src="https://plausible.io/js/script.js"></script>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link
-      rel="webmention"
-      href="https://webmention.io/www.alexledger.net/webmention"
-    />
-
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Alex Ledger</title>
     <ViewTransitions />
   </head>
+
   <body>
-    <div class="content">
-      <!-- This i s a little theme cycler button that 
-    cycles through different css themes on the root.
-  -->
-      <!-- TODO: before going live with this, make sure that it's skipped in accessibility, or whatever is correct -->
-      <button id="theme-cycler">Cycle theme</button>
-      <script>
-        let curTheme = 0;
-        const themeMapping = {
-          0: "light",
-          1: "purple",
-          2: "blue",
-        };
-
-        const tgt = document.querySelector("#theme-cycler");
-        tgt.addEventListener("click", () => {
-          curTheme = (curTheme + 1) % Object.keys(themeMapping).length;
-          console.log(curTheme);
-
-          const element = document.querySelector(":root");
-          if (element instanceof HTMLElement) {
-            element.dataset.theme = themeMapping[curTheme];
-            console.log("Now on theme: ", themeMapping[curTheme]);
-          }
-        });
-      </script>
-
-      <header>
-        <!--
-        As noted in the codepen below,the nav is set up with ul and li for
-        accessibility purposes.  https://codepen.io/aled1027/pen/PoLoWwj
-      -->
-        <nav>
-          <ul>
-            <li><a href="/" rel="home">Home</a></li>
-            <li><a href="/posts">Posts</a></li>
-            <li><a href="/guides">Guides</a></li>
-            <li><a href="/projects">Projects</a></li>
-            <li><a href="/ferments">Ferments</a></li>
-            <li><a href="/lists">Lists</a></li>
-            <li><a href="/tags">Tags</a></li>
-            <li><a href="/rss.xml">RSS</a></li>
-            <li><a href="/search">Search</a></li>
-          </ul>
-        </nav>
-      </header>
-
-      <div class="page-content">
+    <div class="primary-layout">
+      <Header />
+      <div class="slot-wrapper container" data-type={containerType}>
         <slot />
       </div>
+      <Footer />
     </div>
-    <Footer />
 
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       // Add event handlers for the opening of the modals. This should automatically work
       // across components as long as they have the right classes and data values.
       // See GroceryStoreCard.astro for a particular implementation for reference.
-
       const openButtons = document.querySelectorAll(".register-open-modal");
       openButtons.forEach((button) => {
         const targetId = button.dataset.target;
@@ -130,360 +80,16 @@ import Footer from "@components/Footer.astro";
           }
         });
       });
+
+      // Make all external links open in a new tab
+      // But ony update with the prose tag to avoid breaking
+      // something intentional.
+      document.querySelectorAll(".prose a").forEach((link) => {
+        if (link.hostname !== window.location.hostname) {
+          link.target = "_blank";
+          link.rel = "noopener";
+        }
+      });
     </script>
-
-    <style is:global>
-      /* Global Styles */
-      /* Inspired by https://chriscoyier.net/2023/10/03/being-picky-about-a-css-reset-for-fun-pleasure/ */
-
-      @import "/open-props";
-
-      :root {
-        /* See Creating adaptive color schemes at https://open-props.style/#getting-started  */
-        --color-text-primary: var(--gray-9);
-        --color-surface-primary: white;
-        --color-surface-secondary: var(--stone-2);
-        /* --color-surface-primary: var(--gradient-28); */
-        --color-primary: #0073cf;
-        --color-primary-rgb: 0, 115, 207;
-        --color-secondary: #73cf00;
-      }
-
-      /* Purple theme */
-      :root[data-theme="purple"] {
-        --color-text-primary: var(--purple-9);
-        --color-surface-primary: var(--purple-0);
-        --color-surface-secondary: var(--purple-0);
-        --color-primary: var(--purple-3);
-        --color-secondary: var(--purple-6);
-      }
-
-      /* Blue theme */
-      :root[data-theme="blue"] {
-        --color-text-primary: var(--blue-9);
-        --color-surface-primary: var(--blue-0);
-        --color-surface-secondary: var(--blue-0);
-        --color-primary: var(--blue-3);
-        --color-secondary: var(--blue-6);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --color-text-primary: var(--gray-3);
-          --color-surface-primary: var(--gray-9);
-          --color-surface-secondary: var(--stone-10);
-          --color-primary: #0073cf;
-          --color-secondary: #73cf00;
-        }
-      }
-
-      /* Box sizing rules */
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-
-      /* Remove default margin */
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      p,
-      figure,
-      dl,
-      dd {
-        margin-block: 1.25rem;
-        margin-inline: 0;
-      }
-
-      h1 {
-        margin-block: 3rem;
-        display: flex;
-        justify-content: center;
-        text-align: center;
-      }
-
-      ul[role="list"],
-      ol[role="list"] {
-        list-style: none;
-      }
-
-      /* Set core root defaults */
-      html:focus-within {
-        scroll-behavior: smooth;
-      }
-
-      html {
-        line-height: 1.5;
-        color: var(--color-text-primary);
-      }
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      button,
-      input,
-      label {
-        line-height: 1.1;
-        color: inherit;
-      }
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        text-wrap: balance;
-      }
-
-      /* Set core body defaults */
-      body {
-        margin-block: 0;
-        min-height: 100dvh;
-        margin: 0 auto;
-        background: var(--color-surface-primary);
-        color: var(--color-text-primary);
-
-        /* See https://css-tricks.com/snippets/css/system-font-stack/ */
-        font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-          "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-      }
-
-      /* A elements that don't have a class get default styles */
-      a:not([class]) {
-        text-decoration-skip-ink: auto;
-      }
-
-      /* Make images easier to work with */
-      img,
-      picture {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        padding-inline: clamp(0.5rem, 5vw, 5rem);
-        padding-block: 1rem 1.5rem;
-      }
-
-      /* Inherit fonts for inputs and buttons */
-      input,
-      button,
-      textarea,
-      select {
-        font: inherit;
-      }
-
-      /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
-      @media (prefers-reduced-motion: reduce) {
-        html:focus-within {
-          scroll-behavior: auto;
-        }
-
-        *,
-        *::before,
-        *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-          scroll-behavior: auto !important;
-        }
-      }
-
-      /* Tables */
-      table {
-        margin: 0 auto;
-        background: inherit;
-        border: 1px solid grey;
-        font-size: var(--font-size-1);
-        border-collapse: collapse;
-        width: 100%; /* I added */
-      }
-      table thead th,
-      table tfoot th {
-        background: rgba(0, 0, 0, 0.1);
-      }
-      table caption {
-        padding: 0.5em;
-      }
-      table th,
-      table td {
-        padding: 0.5em;
-        border: 1px solid var(--gray-4);
-      }
-
-      pre {
-        padding: 1rem;
-      }
-
-      /* Inspired by https://codepen.io/radoslavdurac/pen/VwqVvgL */
-      blockquote {
-        max-width: 600px;
-        padding: 0.1rem 1rem;
-        border-left: 3px solid var(--color-secondary);
-        background-color: inherit;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-        margin: 16px 40px;
-
-        @media only screen and (max-width: 600px) {
-          margin: 16px 0px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-      }
-
-      blockquote p {
-        font-size: var(--font-size-0);
-      }
-
-      a {
-        color: inherit;
-        text-decoration: underline;
-        text-decoration-color: var(--color-primary);
-        text-decoration-thickness: 1px;
-        text-underline-offset: 3px;
-        text-decoration-skip-ink: skip;
-      }
-
-      a:hover {
-        text-decoration-thickness: 2px;
-        text-decoration-color: var(--color-secondary);
-      }
-
-      sup > a {
-        /* Used primarily for footnotes */
-        text-decoration: none;
-        color: var(--color-primary);
-        font-size: 0.75em;
-
-        &:before {
-          content: "[";
-        }
-
-        &:after {
-          content: "]";
-        }
-      }
-
-      button {
-        color: var(--color-text-primary);
-        background-color: var(--color-surface-primary);
-        border: 1px solid var(--color-text-primary);
-        border-radius: var(--radius-2);
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-      }
-
-      ul,
-      ol {
-        /* A nice codepen outlining some options: https://codepen.io/jordanthornquest/pen/VEQBWG */
-        /* Browsers default padding-inline-start to 40px */
-        padding-inline-start: 2rem;
-        line-height: 1.625;
-        list-style-position: outside;
-      }
-
-      /* Make p tags that are inside of ul have margin-block of 0 */
-      /* This makes lists look better, like the footnotes */
-      li > p {
-        margin-block: 0;
-      }
-
-      li {
-        margin-block: 0.75rem;
-      }
-    </style>
-    <style is:global>
-      /* COMPONENTS */
-      a.link-button {
-        /* A link that looks like a button */
-        /* This should be used when there's a link to another page that
-      should look like a button. In general, buttons should be used for actions
-      on the page and a tags should be used for navigating to other pages. */
-        color: var(--color-text-primary);
-        background-color: var(--color-surface-primary);
-        border: 1px solid var(--color-text-primary);
-        border-radius: var(--radius-2);
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-      }
-
-      .text-button {
-        border: none;
-        padding: 0;
-      }
-
-      /* Make Youtube iframes look better on small screens*/
-      iframe[src*="youtube"] {
-        display: block;
-        margin: 0 auto;
-        max-width: 100%;
-        padding-bottom: 10px;
-      }
-
-      /* UTILITIES */
-      .m-block-0 {
-        margin-block: 0;
-      }
-    </style>
-
-    <style>
-      /* Styles specific to this page */
-      header {
-        padding-block-start: 2.75rem;
-        padding-inline: 0.35rem;
-      }
-
-      nav ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.6rem 1.5rem;
-        padding: 0;
-        width: 100%;
-        margin-block: 0;
-      }
-
-      nav li {
-        display: inline;
-      }
-
-      nav a {
-        color: inherit;
-        font-size: 1.25rem;
-        font-weight: 400;
-        text-decoration: none;
-      }
-
-      .content {
-        margin: 0 3rem 3rem 3rem;
-        /* Min height should be everything but the size of the footer:
-        - 88vh for the footer,
-        - 3rem for the margin-bottom
-        */
-        min-height: calc(88vh - 3rem);
-        @media only screen and (max-width: 600px) {
-          margin: 0 1rem 3rem 1rem;
-        }
-      }
-
-      .page-content {
-        max-inline-size: 1000px;
-        margin-inline: auto;
-      }
-
-      #theme-cycler {
-        /* TODO: commenting out until i figure out how to show this */
-        display: none;
-        position: absolute;
-        right: 0;
-      }
-    </style>
   </body>
 </html>

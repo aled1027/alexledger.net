@@ -26,14 +26,10 @@ const { posts } = Astro.props;
 ---
 
 <Layout>
-  <h1>Tag: {tag}</h1>
-  <main class="content">
+  <section class="section">
+    <h1 class="heading-1 padding-block-end-4">
+      Tag: {tag}
+    </h1>
     <BlogList blogs={posts} />
-  </main>
-  <style>
-    .content {
-      display: flex;
-      flex-direction: column;
-    }
-  </style>
+  </section>
 </Layout>

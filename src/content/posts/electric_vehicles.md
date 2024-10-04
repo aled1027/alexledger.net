@@ -47,7 +47,7 @@ The app is built by and the data is source from the [Trancik Lab](http://trancik
 
 ### EV Release Database
 
-Link: https://docs.google.com/spreadsheets/d/1in2HoppoZxOHcHS1Hu6liMG1MpwxJOr7bO4KumA8sQ4/edit#gid=0
+[Google doc Link](https://docs.google.com/spreadsheets/d/1in2HoppoZxOHcHS1Hu6liMG1MpwxJOr7bO4KumA8sQ4/edit#gid=0)
 
 This is a crowd-source google sheet with information about electric vehicles that have some out and are coming out over the coming years. It's a great resource for comparing different cars and planning purchases.
 

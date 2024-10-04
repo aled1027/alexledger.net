@@ -10,22 +10,27 @@
     position: relative;
     display: flex;
     text-align: center;
-    gap: $size-4;
+    gap: $size-5;
     align-items: $site-header-alignment;
     justify-content: $site-header-justification-small-screens;
+    font-size: $size-5;
 
     @include mq(medium) {
       justify-content: $site-header-justification-large-screens;
     }
   }
 
-  .right-side {
-    position: absolute;
-    right: 1.75rem;
-    display: none;
+  &__inner-right {
+    display: flex;
+    gap: $size-5;
+    align-items: center;
+  }
 
-    @include mq(medium) {
-      display: block;
-    }
+  & a {
+    text-decoration: none;
+  }
+
+  & a:hover {
+    text-decoration: underline;
   }
 }

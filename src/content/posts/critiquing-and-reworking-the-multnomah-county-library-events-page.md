@@ -34,7 +34,7 @@ A few things I dislike on the current [Multnomah County Library events](https://
 - The date graphic draws my attention more than the title of the event
 - The calendar graphic and image don't have rounded corners, but the buttons and text fields do, which confuses me.
 - I wish I could easily link to all tech help events, so it'd be nice if filters were encoded in the URL and shareable.
-- Clicking the register button doesn't always take me somewhere to register. For example, clicking Register for a Goodwill Industries class on Google Docs takes me here: https://events.multcolib.org/event/11374898&registration=true, which seems to be a page with event information.
+- Clicking the register button doesn't always take me somewhere to register. For example, clicking Register for a Goodwill Industries class on Google Docs takes me [here](https://events.multcolib.org/event/11374898&registration=true), which seems to be a page with event information.
 - Language and culture should be different filters - it's odd to conflate the two concepts.
 
 ![Screenshot of the current Multnomah County Library Events Page](../../assets/2024-08-current_events.png)
@@ -90,15 +90,17 @@ My demo[^2] is below. You can also try it directly at [https://multco-library-ev
 
 (Keep in mind it's a demo and none of the links work.)
 
-<iframe 
-    src="https://multco-library-events.netlify.app/" 
-    style="border: none; 
-           width: 100%; 
-           aspect-ratio: 1 / 1;
-           box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
-           border-radius: 2px; 
-           overflow: hidden;">
-</iframe>
+<div class="youtube-wrapper">
+  <iframe 
+      src="https://multco-library-events.netlify.app/" 
+      style="border: none; 
+             width: 100%; 
+             aspect-ratio: 1 / 1;
+             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+             border-radius: 2px; 
+             overflow: hidden;">
+  </iframe>
+</div>
 
 The [code](https://github.com/aled1027/multco-library-redesign/) is written in Svelte and publicly available.
 

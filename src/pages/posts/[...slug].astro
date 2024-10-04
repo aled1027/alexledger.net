@@ -1,8 +1,9 @@
 ---
+// import AutoToc from "@components/AutoToc.astro";
 import { getCollection } from "astro:content";
 import Layout from "@layouts/default.astro";
-import AutoToc from "@components/AutoToc.astro";
 
+// Turn on prerender for posts
 export const prerender = true;
 
 export async function getStaticPaths() {
@@ -23,45 +24,30 @@ const { Content } = await post.render();
 ---
 
 <Layout>
-  <div class="content-wrapper">
+  <div class="prose padding-block-11">
     <h1>{post.data.title}</h1>
-    <span>Date:</span>
-    <span>{post.data.date.toLocaleDateString()}</span>
-    <div class="tags">
-      <span>Tags:</span>
-      {
-        post.data.tags.map((tag) => {
-          return (
-            <>
-              <span>
-                <a href={`/tags/${tag}`}>{tag}</a>
-              </span>
-            </>
-          );
-        })
-      }
+    <div class="padding-block-end-2">
+      <span>Date:</span>
+      <span>{post.data.date.toLocaleDateString()}</span>
+      <!-- <div class="tags"> -->
+      <div class="flex-group row-gap-0 col-gap-2">
+        <span>Tags:</span>
+        {
+          post.data.tags.map((tag) => {
+            return (
+              <>
+                <span>
+                  <a href={`/tags/${tag}`}>{tag}</a>
+                </span>
+              </>
+            );
+          })
+        }
+      </div>
     </div>
-    {post.data.includeToc && <AutoToc />}
+    <!-- hiding the table of contents during theme update,
+     because I don't like the look of it. -->
+    <!-- {post.data.includeToc && <AutoToc />} -->
     <Content />
   </div>
 </Layout>
-
-<style>
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .content-wrapper {
-    max-width: 55ch;
-    margin-inline: auto;
-    text-wrap: pretty;
-  }
-</style>
-<style is:global>
-  body img {
-    margin-inline: auto;
-  }
-</style>
