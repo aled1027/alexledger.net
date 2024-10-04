@@ -18,11 +18,7 @@ Here it is:
 
 This is the reference image I used:
 
-<img
-  src="/images/munich-olympics-schedule.jpg"
-  alt="Munich Olympics Schedule"
-  style="margin-inline:auto;width:100%;"
-/>
+![Munich Olympics Schedule](../../assets/munich-olympics-schedule.jpg)
 
 And here's the source code:
 
