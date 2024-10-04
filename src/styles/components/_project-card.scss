@@ -17,7 +17,11 @@
   height: fit-content;
   text-wrap: pretty;
 
-  box-shadow: $box-shadow-2;
+  box-shadow: $box-shadow-1;
+
+  &:hover {
+    box-shadow: $box-shadow-4;
+  }
 }
 
 .project-card__title-wrapper {
@@ -57,6 +61,15 @@
   border-radius: 8px;
   overflow: hidden;
   position: relative;
+}
+
+.project-card__scale-animation {
+  transform: scale(0.65);
+  transition: transform 1s ease;
+}
+
+.project-card:hover .project-card__scale-animation {
+  transform: scale(1);
 }
 
 .project-card__cover-asset {

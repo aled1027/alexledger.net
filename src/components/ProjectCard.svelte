@@ -45,7 +45,9 @@
     </p>
   </div>
   {#if project.imageUrl}
-    <div class=".project-card__middle-entry padding-4">
+    <div
+      class=".project-card__middle-entry project-card__scale-animation padding-4"
+    >
       <div class="project-card__asset-wrapper">
         <img
           class="project-card__cover-asset"
@@ -56,7 +58,9 @@
     </div>
   {/if}
   {#if project.videoUrl}
-    <div class=".project-card__middle-entry padding-4">
+    <div
+      class=".project-card__middle-entry padding-4 project-card__scale-animation "
+    >
       <div class="project-card__asset-wrapper">
         <iframe
           src={videoUrl}
