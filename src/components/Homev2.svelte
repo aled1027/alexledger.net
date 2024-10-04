@@ -83,10 +83,19 @@
     left: 0;
     bottom: 2px;
     width: 0;
-    height: 3px;
+    height: 4px;
     background-color: hsl(255.65, 81.3%, 62.35%);
     animation: drawUnderline 2s forwards;
+    z-index: -1;
+    transition:
+      height 0.5s ease-in-out,
+      background-color 0.3s ease-in-out;
     animation-delay: 3.5s;
+  }
+
+  .sentence a:hover::after {
+    height: 80%;
+    background-color: hsl(255.65, 81.3%, 82.35%);
   }
 
   @keyframes drawUnderline {
