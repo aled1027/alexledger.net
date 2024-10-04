@@ -64,4 +64,5 @@ I assume so but don't know how to do it. It seems that a lot of folks online str
 This [video](https://www.youtube.com/watch?v=xUYRLg41VpA) from Yvonne Brilhart describes how to make Tempeh starter, so that'd be fun to try.
 
 [^1]: Price from [Amazon](https://www.amazon.com/Soymerica-Non-GMO-Soybeans-Identity-Preserved/dp/B0763GC8SB?crid=RE14YQSNJYW4&keywords=soy+beans+dry&qid=1707888612&sprefix=soy+beans,aps,133&sr=8-4)
+
 [^2]: The starter I'm currently using is not very budget friendly, and I'm going to move to buying in more bulk.
