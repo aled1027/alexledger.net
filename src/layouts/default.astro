@@ -33,18 +33,14 @@ const { containerType = "narrow" } = Astro.props;
 
   <body>
     <div class="primary-layout">
-      <!-- Header -->
-       <Header />
-
-      <!-- Main content -->
+      <Header />
       <div class="slot-wrapper container" data-type={containerType}>
         <slot />
       </div>
-      <!-- <Footer /> -->
       <Footer />
     </div>
 
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       // Add event handlers for the opening of the modals. This should automatically work
       // across components as long as they have the right classes and data values.
       // See GroceryStoreCard.astro for a particular implementation for reference.
