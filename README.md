@@ -43,8 +43,6 @@ Use this structure:
 
 ## TODOs:
 
-- update tag links in landing page top text
-- Update tables (see http://localhost:4321/posts/electric_vehicles )
 - Address TODOs
 - Check all posts and pages and make sure they look good
 

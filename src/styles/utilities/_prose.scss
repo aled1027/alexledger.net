@@ -48,6 +48,50 @@
     font-size: 0.875rem;
     max-width: 95vw;
   }
+
+  /* Tables */
+  table {
+    margin-inline: auto;
+    background: inherit;
+    border: 1px solid grey;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+    width: 100%; /* I added */
+  }
+  table thead th,
+  table tfoot th {
+    background: var(--neutral-200);
+  }
+  table caption {
+    padding: 0.5em;
+  }
+  table th,
+  table td {
+    padding: 0.5em;
+    border: 1px solid var(--neutral-300);
+  }
+
+  /* Inspired by https://codepen.io/radoslavdurac/pen/VwqVvgL */
+  blockquote {
+    max-width: 600px;
+    margin-inline-end: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-left: 3px solid var(--primary-200);
+    background-color: inherit;
+    box-shadow: 0 0 15px var(--neutral-200);
+
+    @media only screen and (max-width: 600px) {
+      margin: 16px 0px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  blockquote * {
+    font-size: 0.875rem;
+  }
 }
 
 .youtube-wrapper {
