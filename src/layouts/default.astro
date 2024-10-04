@@ -1,5 +1,7 @@
 ---
 import "../styles/main.scss";
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
 import { ViewTransitions } from "astro:transitions";
 
 const { containerType = "narrow" } = Astro.props;
@@ -32,31 +34,14 @@ const { containerType = "narrow" } = Astro.props;
   <body>
     <div class="primary-layout">
       <!-- Header -->
-      <div class="site-header | border-bottom">
-        <div class="site-header__inner">
-          <div>
-            <a href="/">Home</a>
-          </div>
-          <div class="site-header__inner-right">
-            <a href="/posts">Posts</a>
-            <a href="/#featured-projects">Projects</a>
-            <a href="/search">Search</a>
-          </div>
-        </div>
-      </div>
+       <Header />
+
       <!-- Main content -->
       <div class="slot-wrapper container" data-type={containerType}>
         <slot />
       </div>
       <!-- <Footer /> -->
-      <footer class="site-footer
-        |
-        border-bottom">
-        <ul role="list">
-          <li>Built by Alex Ledger</li>
-          <li><a href="/">Home</a></li>
-        </ul>
-      </footer>
+      <Footer />
     </div>
 
     <script is:inline>

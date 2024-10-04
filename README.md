@@ -41,9 +41,8 @@ Use this structure:
 </div>
 ```
 
-## TODO:
+## TODOs:
 
-- Remove default.astro
 - update tag links in landing page top text
 - Update tables (see http://localhost:4321/posts/electric_vehicles )
 - Address TODOs
