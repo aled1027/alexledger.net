@@ -4,6 +4,7 @@
     description: string;
     url: string;
     videoUrl: string;
+    imageUrl: string;
     label: string;
     linkLabel?: string;
     blogPost?: string;
@@ -15,6 +16,7 @@
   // TODO: on hover, could do a diagonal animation sheen across the whole card, in the background
   // TODO: could incorporate the brand colors somewhere
   // TODO: could have video pop-outable like https://cleanshot.com/
+  // TODO: improvements could include tags of technology used
 
   let label = "";
 
@@ -42,9 +44,20 @@
       {project.description}
     </p>
   </div>
+  {#if project.imageUrl}
+    <div class=".project-card__middle-entry padding-4">
+      <div class="project-card__asset-wrapper">
+        <img
+          class="project-card__cover-asset"
+          src={project.imageUrl}
+          alt="{project.projectName} Image"
+        />
+      </div>
+    </div>
+  {/if}
   {#if project.videoUrl}
     <div class=".project-card__middle-entry padding-4">
-      <div class="project-card__video-wrapper">
+      <div class="project-card__asset-wrapper">
         <iframe
           src={videoUrl}
           width="100%"

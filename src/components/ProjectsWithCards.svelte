@@ -4,7 +4,7 @@
   // TODO: one issue with the masonry is that my best projects and newest projects aren't necessarily on top
   // Maybe a top projects section?
 
-  let projects = [
+  let recentProjects = [
     {
       projectName: "inContext",
       description:
@@ -29,6 +29,7 @@
         "A living project providing residents of Portland with more information about what's happening, including a news page that aggregates local Portland news into an easy-to-read feed.",
       url: "https://knowportland.org",
       videoUrl: "",
+      imageUrl: "/images/knowportland-screenshot.png",
       label: "",
     },
     {
@@ -39,7 +40,27 @@
       linkLabel: "View code",
       videoUrl: "",
       label: "",
+      blogPost: "/posts/writing-a-check-in-app",
     },
+
+    {
+      projectName: "alexledger.net",
+      description: "Personal website built with astro.",
+      url: "https://alexledger.net",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "catnesh.net",
+      description:
+        "My partner's Hugo site that uses the CSS from pandoc as the basis of the theme. The site showcases Cat's writings and prioritizes accessibility.",
+      url: "https://catnesh.net",
+      videoUrl: "",
+      label: "",
+    },
+  ];
+
+  let moreProjects = [
     {
       projectName: "The Hub",
       description:
@@ -54,6 +75,15 @@
       description:
         "A version of the CSS Zen Garden inspired by Blast, which is a yellow-hued theme with fun, futuristic, computer vibes.",
       url: "https://aled1027.github.io/csszengarden-blast/",
+      videoUrl: "",
+      label: "",
+    },
+    {
+      projectName: "Blondel Communities",
+      description:
+        "An implementation of Blondel et al.'s community detection algorithm in python.",
+      url: "https://github.com/aled1027/blondel_communities",
+      linkLabel: "View code",
       videoUrl: "",
       label: "",
     },
@@ -74,30 +104,6 @@
       label: "",
     },
     {
-      projectName: "alexledger.net",
-      description: "Personal website built with astro.",
-      url: "https://alexledger.net",
-      videoUrl: "",
-      label: "",
-    },
-    {
-      projectName: "catnesh.net",
-      description:
-        "Partner's Hugo site that uses the CSS from pandoc as the basis of the theme. The site prioritizes accessibility as well as showcasing Cat's work.",
-      url: "https://catnesh.net",
-      videoUrl: "",
-      label: "",
-    },
-    {
-      projectName: "Blondel Communities",
-      description:
-        "An implementation of Blondel et al.'s community detection algorithm in python.",
-      url: "https://github.com/aled1027/blondel_communities",
-      linkLabel: "View code",
-      videoUrl: "",
-      label: "",
-    },
-    {
       projectName: "Tiny Ped Com",
       description:
         "A small Rust library for Pedersen commitments over elliptic curves.",
@@ -111,8 +117,6 @@
       description:
         "Project exploring chaos and emergent properties in Schelling's Bounded Neighborhood model.",
       url: "https://github.com/aled1027/chaos_in_schellings_model",
-      linkLabel: "View code",
-
       videoUrl: "",
       label: "",
     },
@@ -120,12 +124,12 @@
       projectName:
         "The Looming Threat of China: An Analysis of Chinese Influence on Bitcoin",
       description:
-        "A paper published on arXiv, presented at CESC 2018, in collaboration with Ben Kaiser and Mireya Jurado.",
+        "A paper published on arXiv, presented at CESC 2018, in collaboration with Ben Kaiser and Mireya Jurado. The linked video is a talk by colleague Ben Kaiser.",
       url: "https://arxiv.org/abs/1810.02466",
       linkLabel: "View paper",
       //   TODO:
-      //   videoUrl: "https://www.youtube.com/watch?v=ylhCVZPhdNw",
       videoUrl: "",
+      youtube: "https://www.youtube.com/watch?v=ylhCVZPhdNw",
       label: "",
     },
     {
@@ -150,24 +154,29 @@
   ];
 </script>
 
-<h2 class="heading-2">Projects</h2>
+<section class="section">
+  <h2 class="heading-2">Recent Projects</h2>
 
-<div class="project-cards masonry">
-  {#each projects.slice(0, 6) as project}
-    <div class="masonry-item">
-      <ProjectCard {project} />
-    </div>
-  {/each}
-</div>
+  <div class="project-cards masonry">
+    {#each recentProjects as project}
+      <div class="masonry-item">
+        <ProjectCard {project} />
+      </div>
+    {/each}
+  </div>
+</section>
 
-<h3 class="heading-2 padding-block-start-14">More Projects</h3>
-<div class="project-cards masonry">
-  {#each projects.slice(6) as project}
-    <div class="masonry-item">
-      <ProjectCard {project} />
-    </div>
-  {/each}
-</div>
+<section class="section">
+  <h2 class="heading-2">More Projects</h2>
+
+  <div class="project-cards masonry">
+    {#each moreProjects as project}
+      <div class="masonry-item">
+        <ProjectCard {project} />
+      </div>
+    {/each}
+  </div>
+</section>
 
 <style>
   .project-cards {
