@@ -3,7 +3,7 @@
 import { getCollection } from "astro:content";
 import Layout from "@layouts/default.astro";
 
-// TODO: is this needed?
+// Turn on prerender for posts
 export const prerender = true;
 
 export async function getStaticPaths() {
@@ -45,7 +45,8 @@ const { Content } = await post.render();
         }
       </div>
     </div>
-    <!-- TODO: hiding the table of contents -->
+    <!-- hiding the table of contents during theme update,
+     because I don't like the look of it. -->
     <!-- {post.data.includeToc && <AutoToc />} -->
     <Content />
   </div>

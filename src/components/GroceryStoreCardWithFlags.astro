@@ -51,7 +51,6 @@ grocery.flags.sort((f1, f2) => colorOrderMap[f1.color] - colorOrderMap[f2.color]
     <div class="right">
       {
         grocery.flags.map((flag) => {
-          // TODO: this can be moved out into a GroceryFlag component
           return (
             <dialog id=`dialog${grocery.id}-flag${flag.id}`>
               <h4>{flag.description}</h4>
