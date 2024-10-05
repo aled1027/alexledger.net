@@ -24,41 +24,26 @@
 }
 
 .landing-page-text a {
-  text-decoration: none;
-  position: relative;
-}
+  text-decoration: underline;
+  animation: textDecorationColorChange 3s forwards;
+  transition: transform 0.5s ease-in-out;
 
-.landing-page-text a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0px;
-  width: 0;
-  height: 2px;
-  background-color: hsl(255.65, 81.3%, 62.35%);
-  animation: drawUnderline 2s forwards;
-  z-index: -1;
-  transition:
-    bottom 0.5s ease-in-out,
-    height 0.5s ease-in-out,
-    background-color 0.3s ease-in-out;
-  animation-delay: 1.3s;
-
-  @include mq(medium) {
-    bottom: 0px;
-    height: 4px;
+  &:hover {
+    text-decoration-thickness: 0.25em;
+    @include mq(small) {
+      text-decoration-thickness: 0.125em;
+    }
   }
 }
 
-.landing-page-text a:hover::after {
-  bottom: 0;
-  height: 85%;
-  background-color: hsl(255.65, 81.3%, 82.35%);
-}
-
-@keyframes drawUnderline {
-  to {
-    width: 100%;
-    opacity: 1;
+@keyframes textDecorationColorChange {
+  0% {
+    text-decoration-color: rgba(0, 0, 0, 0);
+  }
+  50% {
+    text-decoration-color: hsl(255.65, 81.3%, 82.35%);
+  }
+  100% {
+    text-decoration-color: hsl(255.65, 81.3%, 62.35%);
   }
 }
