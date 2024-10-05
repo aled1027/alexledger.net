@@ -10,35 +10,25 @@
   line-height: 1.6;
 }
 
-.landing-page .sentence {
+.landing-page-text {
   opacity: 0;
-  animation: fadeIn 2s forwards;
-}
-
-.landing-page .sentence1 {
-  animation-delay: 0.3s;
-}
-
-.landing-page .sentence2 {
-  animation-delay: 1.3s;
-}
-
-.landing-page .sentence3 {
-  animation-delay: 2.3s;
+  animation: fadeIn 1s forwards;
+  transform: translateY(100px);
 }
 
 @keyframes fadeIn {
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.landing-page .sentence a {
+.landing-page-text a {
   text-decoration: none;
   position: relative;
 }
 
-.landing-page .sentence a::after {
+.landing-page-text a::after {
   content: "";
   position: absolute;
   left: 0;
@@ -52,15 +42,15 @@
     bottom 0.5s ease-in-out,
     height 0.5s ease-in-out,
     background-color 0.3s ease-in-out;
-  animation-delay: 3.3s;
+  animation-delay: 1.3s;
 
   @include mq(medium) {
-    bottom: 2px;
+    bottom: 0px;
     height: 4px;
   }
 }
 
-.landing-page .sentence a:hover::after {
+.landing-page-text a:hover::after {
   bottom: 0;
   height: 85%;
   background-color: hsl(255.65, 81.3%, 82.35%);
