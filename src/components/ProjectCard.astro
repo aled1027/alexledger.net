@@ -1,17 +1,21 @@
 ---
-// interface Project {
-//   projectName: string;
-//   description: string;
-//   url: string;
-//   videoUrl: string;
-//   imageUrl: string;
-//   assetClasses?: string;
-//   label: string;
-//   linkLabel?: string;
-//   blogPost?: string;
-//   youtube?: string;
-// }
-const { project } = Astro.props;
+interface Project {
+  projectName: string;
+  description: string;
+  url: string;
+  videoUrl: string;
+  imageUrl: string;
+  label: string;
+  linkLabel?: string;
+  blogPost?: string;
+  youtube?: string;
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project }: Props = Astro.props;
 
 // Ideas for improvements
 // - on hover, could do a diagonal animation sheen across the whole card, in the background
@@ -53,7 +57,7 @@ let slug = project.projectName.toLowerCase().replace(" ", "-");
       <div class=".project-card__middle-entry project-card__scale-animation padding-4">
         <div class="project-card__asset-wrapper">
           <img
-            class="project-card__cover-asset {project.assetClasses}"
+            class="project-card__cover-asset"
             src={project.imageUrl}
             alt="{project.projectName} Image"
           />
