@@ -7,6 +7,7 @@ tags:
   - archiving
   - civic-tech
   - community
+  - datasette
   - data
   - news
   - open-source
