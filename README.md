@@ -51,3 +51,5 @@ Use this structure:
 - Inspo: https://pudding.cool/
 - Bento boxes
 -
+
+https://docs.google.com/document/d/1RRvqZYiexaDH1LJ3R_MyJKK5jCrauX0IRY6JOS70wfg/edit?tab=t.0
