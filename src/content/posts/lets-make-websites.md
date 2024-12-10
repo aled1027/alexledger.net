@@ -72,3 +72,5 @@ Together, we’ll figure out what your audience wants and how to best deliver th
 Does that get you excited? Want to build a website together?
 
 <a class="button" data-type="primary" href="mailto:hello@alexledger.net">Let's Talk!</a>
+
+https://docs.google.com/document/d/1RRvqZYiexaDH1LJ3R_MyJKK5jCrauX0IRY6JOS70wfg/edit?tab=t.0
