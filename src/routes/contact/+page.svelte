@@ -8,11 +8,8 @@
 		You can book an initial call by filling out the form below or emailing me at
 		hello@alexledger.net.
 	</p>
-	<form class="mt-l" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+	<form class="mt-l" name="contact" method="POST" data-netlify="true">
 		<input type="hidden" name="form-name" value="contact" />
-		<p class="hidden">
-			<label>Don't fill this out if you're human: <input name="bot-field" /></label>
-		</p>
 		<div class="input-group">
 			<label for="name">Name</label>
 			<input type="text" id="name" name="name" required />
@@ -40,9 +37,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-2xs);
-	}
-
-	.hidden {
-		display: none;
 	}
 </style>
