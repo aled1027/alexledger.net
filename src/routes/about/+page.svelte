@@ -8,7 +8,7 @@
 		build websites.
 	</p>
 	<p>
-		I have worked in software development for over 10 years. In that time, I've worked with great
+		I have worked in software development for over 10 years. In that time, I've worked with
 		institutions like the Food and Drug Administration, the Department of Homeland Security, MIT
 		Lincoln Laboratory, IBM Watson Health, Point72, and Bank of New York Mellon.
 	</p>
