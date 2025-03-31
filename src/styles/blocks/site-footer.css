@@ -1,0 +1,28 @@
+.site-footer {
+    min-height: 25vh;
+    background: var(--footer-bg);
+    color: var(--footer-color-text, var(--color-text));
+    font-size: var(--size-step--1);
+    margin: 0;
+    margin-block-start: 6rem;
+}
+
+.site-footer__inner {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding-block-start: var(--space-2xl);
+    padding-block-end: var(--space-l);
+    font-size: var(--size-step--1);
+}
+
+.site-footer__inner ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0;
+}
+
+.site-footer__inner ul li {
+    list-style: none;
+    padding: 0;
+}

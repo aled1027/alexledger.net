@@ -1,4 +1,4 @@
-src/content/posts/Toolbox.md
-src/pages/lists.mdx
-src/content/guides/portland-grocery-stores.mdx
-tina/tina-lock.json
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

@@ -1,55 +1,42 @@
-# alexledger.net
+# Alex Ledger
 
-## 🧞 Commands
+## TODO:
 
-All commands are run from the root of the project, from a terminal:
+- Copy posts over
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Checklist
 
-## SCSS
+- [ ] Add <title>
+- [ ] Include meta description
+- [ ] Update favicons
+- [ ] Check sitemap.xml
+- [ ] Check robots.txt
+- [ ] Run lighthouse
 
-Styles were copied from https://github.com/kevin-powell/astro-sass-template-no-scoped-styles, and modified were from there.
+## Quick reminders about this structure:
 
-They follow [CUBE](https://cube.fyi/).
+1. This repo uses CSS vars, not SCSS vars
+2. utilities.scss should have most tailwind-style utilities that are needed, like:
+  - margins: mt-s, mx-s, 
+  - padding: 
+  - font-sizes: size-step-s
+  - font styles: bold, etc.
+3. For client websites, just toss styles right into the page/component because we don't need to worry too much about re-use and organization
+4. If you want anything like a grid or flex, and it's weird at all, just go ahead and make it specific and in the file.
+5. Videos & images
+  - Put images and videos in src/lib/assets. Vite should handle them from there.
+  - Then use enhanced:img and basic video
+6. Icons: Use @lucide/svelte. See below.
+7. Components are built out in src/lib/components
 
-## Svelte
+## Icons
 
-If using a svelte component, remember to add `client:load` when invoking the component so that it appropriately runs client-side.
+Using Lucide
 
-## Adding a youtube video or iframe?
-
-Use this structure:
-
-```html
-<div class="youtube-wrapper">
-  <iframe
-    width="100%"
-    height="100%"
-    src="https://www.youtube.com/embed/ncwV3cJinC8?si=CAY9FaDqG431jPYf"
-    title="YouTube video player"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allowfullscreen></iframe>
-</div>
 ```
+<script>
+  import { Camera } from '@lucide/svelte';
+</script>
 
-## TODOs:
-
-- Address TODOs
-- Check all posts and pages and make sure they look good
-
-## Notes for rewrite
-
-- Inspo: https://pudding.cool/
-- Bento boxes
--
-
-https://docs.google.com/document/d/1RRvqZYiexaDH1LJ3R_MyJKK5jCrauX0IRY6JOS70wfg/edit?tab=t.0
+<Camera color="#ff3e98" />
+```
