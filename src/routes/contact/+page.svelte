@@ -7,7 +7,7 @@
 	<p>
 		You can book an initial call by filling out the form below or email me: hello@alexledger.net.
 	</p>
-	<form class="mt-l">
+	<form class="mt-l" name="contact" data-netlify="true">
 		<div class="input-group">
 			<label for="name">Name</label>
 			<input type="text" id="name" name="name" />
