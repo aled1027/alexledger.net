@@ -5,7 +5,8 @@
 	<h1 class="font-decorative">Contact</h1>
 	<p>I'd love to chat with you about how I can help you grow your business.</p>
 	<p>
-		You can book an initial call by filling out the form below or email me: hello@alexledger.net.
+		You can book an initial call by filling out the form below or emailing me at
+		hello@alexledger.net.
 	</p>
 	<form class="mt-l" name="contact" data-netlify="true">
 		<div class="input-group">
