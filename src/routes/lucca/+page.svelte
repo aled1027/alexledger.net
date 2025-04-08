@@ -82,22 +82,17 @@
 			did it the four of us.
 		</p>
 		<p>
-			It took Cat and and a while to realize a fundamental truth: Lucca is always right. When Lucca
-			refused to eat his food, and we would try everything we could to get him to eat, he was the
-			one who was right in the end: the food was utter crap and bad for him. When a new person came
-			over and on inspection, he'd indicate, very subtly, a coldness to them, we'd eventually find
-			them to leave us wanting. And even at the end, Lucca knew well before we did what was
-			happening.
+			It took Cat and I a while to realize a fundamental truth: <em>Lucca is always right</em>.
+			When Lucca refused to eat his food, and we would try everything we could to get him to eat, he
+			was the one who was right in the end: the food was utter crap and bad for him. When a new
+			person came over and on inspection, he'd indicate, very subtly, a coldness to them, we'd
+			eventually find them to leave us wanting. And even at the end, Lucca knew well before we did
+			what was happening.
 		</p>
 		<p>
 			Lucca lived to be over 17 years old. In his final days, he suffered from irritable bowel
 			disease and a cancerous growth on the bridge of his nose. He continued to do many of the
 			things that made him happiest until his final days.
-		</p>
-		<p>
-			In his last afternoon, Lucca sat on Cat's lap for a few hours, his head hanging off the side,
-			which seemed to the most comfortable position for his body at the time. Right before 7pm on
-			April 7, 2025, Lucca took his final breaths.
 		</p>
 		<figure>
 			<video controls muted>
@@ -105,6 +100,12 @@
 			</video>
 			<figcaption>In Lucca's final afternoon, he lied on Cat's legs</figcaption>
 		</figure>
+		<p>
+			In his last afternoon, Lucca sat on Cat's lap for a few hours, his head hanging off the side,
+			which seemed to the most comfortable position for his body at the time. Right before 7pm on
+			April 7, 2025, Lucca took his final breaths.
+		</p>
+
 		<p>
 			It's a needless detail for an obituary like this, but: He was lying on his rectangular
 			cardboard in front of the couch when the vet arrived. He got up, greeted her, and then
@@ -189,5 +190,10 @@
 
 	.story video {
 		max-width: 600px;
+	}
+
+	figcaption {
+		font: inherit;
+		font-size: 0.875em;
 	}
 </style>
