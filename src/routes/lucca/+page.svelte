@@ -71,6 +71,16 @@
 			>trrl trrrl</em
 		> until he returned to the apartment.
 	</p>
+	<p>
+		When Lucca was young, he got into a scuffle with some neighborhood cats and ended up with a claw
+		in his eyeball. His owner at the time opted to have his eye surgically corrected instead of
+		enucleated (removed). His owner says:
+	</p>
+	<blockquote>
+		The former option would have meant no more outdoor time for him which, as y'all well know, would
+		not have worked well with Lucca's adventurous spirit (very glad we opted for surgery and that it
+		went as well as it did).
+	</blockquote>
 	<div class="grid mt-xl">
 		{#each imageNames as imageName}
 			<button onclick={() => (curImage = imageName)}>
@@ -81,9 +91,15 @@
 </section>
 
 <style>
-	p {
+	p,
+	blockquote {
 		max-width: 65ch;
 		text-wrap: pretty;
+	}
+
+	blockquote {
+		padding-inline-start: 1em;
+		border-inline-start: 2px solid black;
 	}
 	button {
 		border: none;
