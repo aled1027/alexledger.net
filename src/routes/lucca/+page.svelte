@@ -65,7 +65,7 @@
 		</figure>
 
 		<p>
-			One of my favorite Lucca memories was from 2022. We lived in the second floor of an apartment
+			One of my favorite Lucca memories is from 2022. We lived in the second floor of an apartment
 			building near east Burnside in Portland, Oregon. One evening Lucca made it past our backdoor
 			and found himself in the stairwell. He ran down the stairs with his trademark trill
 			rhythmically bouncing up and down when step as he took. He reached bottom of the stairwell and
