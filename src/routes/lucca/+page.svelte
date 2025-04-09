@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Family from '$lib/assets/family.jpg';
+	import LuccaAndRilke from '$lib/assets/lucca-and-rilke.png';
+	import Lucca from '$lib/assets/lucca.png';
 	import { onDestroy, onMount } from 'svelte';
 
 	// - Use maine coon color palette
@@ -43,10 +46,11 @@
 	</dialog>
 {/if}
 
+<!-- TODO: add when lucca came into our lives and his years somewhere -->
 <svelte:window onkeydown={handleKeyDown} />
 <section class="flow">
 	<div class="story flow">
-		<h1>Lucca</h1>
+		<h1>Lucca<span class="small-h1">(2007 to 2025)</span></h1>
 		<span class="sub-heading">Lucca is always right</span>
 		<p>
 			Lucca was a Maine coon mix with an explorer's energy. He would wander the halls of the house,
@@ -55,15 +59,23 @@
 			scent so all knew of his presence. When happy, he would lie in the sun in his cat tree, eat
 			until he could eat no more, and groom his younger brother Rilke.
 		</p>
+		<figure>
+			<img src={Lucca} alt="Lucca on his cat tree bathing in the sun" />
+			<figcaption>Lucca on his cat tree bathing in the sun.</figcaption>
+		</figure>
 
 		<p>
 			One of my favorite Lucca memories was from 2022. We lived in the second floor of an apartment
 			building near east Burnside in Portland, Oregon. One evening Lucca made it past our backdoor
 			and found himself in the stairwell. He ran down the stairs with his trademark trill
-			rhythmically moving up and down when step as he took. He reached bottom of the stairwell and
+			rhythmically bouncing up and down when step as he took. He reached bottom of the stairwell and
 			encountered a door. With nowhere else to go, he ran back up the stairs, trilling the whole way
 			back up, <em>trrl trrrl</em> until he returned to the apartment.
 		</p>
+		<figure>
+			<img src={LuccaAndRilke} alt="Lucca and Rilke lying on a bed" />
+			<figcaption>Lucca (left) and his brother Rilke (right) in September 2023.</figcaption>
+		</figure>
 		<p>
 			When Lucca was young, he got into a scuffle with some neighborhood cats and ended up with a
 			claw in his eyeball. His owner at the time opted to have his eye surgically corrected instead
@@ -81,39 +93,49 @@
 			surgeries, moving cross country, depression, anxiety, and everything life throws at you, we
 			did it the four of us.
 		</p>
+		<figure>
+			<img src={Family} alt="Lucca, Rilke,Cat, and me" />
+			<figcaption>Lucca, Rilke, Cat, and me (Alex) on our couch in December 2018.</figcaption>
+		</figure>
 		<p>
-			It took Cat and I a while to realize a fundamental truth: <em>Lucca is always right</em>.
+			It took Cat and me a while to realize a fundamental truth: <em>Lucca is always right</em>.
 			When Lucca refused to eat his food, and we would try everything we could to get him to eat, he
-			was the one who was right in the end: the food was utter crap and bad for him. When a new
-			person came over and on inspection, he'd indicate, very subtly, a coldness to them, we'd
-			eventually find them to leave us wanting. And even at the end, Lucca knew well before we did
-			what was happening.
+			was the one who was right: the food was utter crap and bad for him. Lucca had an instinct for
+			people; when he'd warm to someone quickly, we knew they were kind and careful and someone we
+			could trust. And even at the end, Lucca knew well before we did what was happening.
 		</p>
 		<p>
 			Lucca lived to be over 17 years old. In his final days, he suffered from irritable bowel
 			disease and a cancerous growth on the bridge of his nose. He continued to do many of the
-			things that made him happiest until his final days.
+			things that made him happiest until his last moments.
 		</p>
 		<figure>
 			<video controls muted>
 				<source src="/lucca-on-cats-legs.webm" type="video/webm" />
 			</video>
-			<figcaption>In Lucca's final afternoon, he lied on Cat's legs</figcaption>
+			<figcaption>In Lucca's final afternoon, he lied on Cat's legs.</figcaption>
 		</figure>
 		<p>
 			In his last afternoon, Lucca sat on Cat's lap for a few hours, his head hanging off the side,
 			which seemed to the most comfortable position for his body at the time. Right before 7pm on
 			April 7, 2025, Lucca took his final breaths.
 		</p>
-
 		<p>
 			It's a needless detail for an obituary like this, but: He was lying on his rectangular
 			cardboard in front of the couch when the vet arrived. He got up, greeted her, and then
 			returned to his cardboard to lie down. Those were his last steps, his last greeting. Exploring
 			until the very end.
 		</p>
+		<!-- Footnotes -->
+		<p>
+			Cat and I learned so much from Lucca. We learned how to be confident in ourselves, our
+			feelings, and our situation. We learned how it's okay to feel anxious but still engage with
+			the situation. We learned that it's good to express our anxieties and frustrations in way's
+			that are natural to us. And we learned how to work with and interpret someone with such a
+			strong sense of self and self-interest.
+		</p>
 	</div>
-	<div class="grid mt-xl">
+	<div class="gallery grid mt-xl">
 		{#each imageNames as imageName}
 			<button onclick={() => (curImage = imageName)}>
 				<img src={imageName} alt="Lucca" />
@@ -123,8 +145,7 @@
 </section>
 
 <style>
-	p,
-	blockquote {
+	.story {
 		max-width: 65ch;
 		text-wrap: pretty;
 	}
@@ -178,7 +199,14 @@
 		border-radius: 2px;
 	}
 
-	:not(dialog) img:hover {
+	.story img {
+		width: auto;
+		max-height: 450px;
+		margin-inline: auto;
+		object-fit: contain;
+	}
+
+	.gallery img:hover {
 		scale: 1.05;
 	}
 
@@ -189,11 +217,19 @@
 	}
 
 	.story video {
+		margin-inline: auto;
 		max-width: 600px;
 	}
 
 	figcaption {
 		font: inherit;
 		font-size: 0.875em;
+		text-align: center;
+		margin-inline: auto;
+	}
+
+	.small-h1 {
+		font-size: 1.5rem;
+		margin-inline-start: 1ch;
 	}
 </style>
