@@ -9,10 +9,8 @@
 	// 2. Stack rows vertically
 	// 3. On click, see photos in a gallery
 	// 4. Annotate notable events with popover api
-	const baseImageUrl = 'https://assets.knowportland.org/lucca-2025/';
-	const imageNames = Array.from({ length: 52 }, (_, i) => `${i + 9}.webp`).map(
-		(name) => `${baseImageUrl}${name}`
-	);
+	const baseImageUrl = 'https://assets.knowportland.org/Lucca/';
+	const imageNames = Array.from({ length: 37 }, (_, i) => `${i}.webp`).map((name) => `${name}`);
 
 	let curImage: string | null = $state(null);
 
@@ -37,11 +35,20 @@
 	// onDestroy(() => {
 	// 	window.removeEventListener('keydown', handleKeyDown);
 	// });
+
+	const transformations = {
+		'2.webp': 'transform: rotate(180deg)',
+		'3.webp': 'transform: rotate(90deg)',
+		'5.webp': 'transform: rotate(-90deg)',
+		'8.webp': 'transform: rotate(180deg)',
+		'9.webp': 'transform: rotate(180deg)',
+		'28.webp': 'transform: rotate(90deg)'
+	};
 </script>
 
 {#if curImage}
 	<dialog open>
-		<img src={curImage} alt="Lucca" />
+		<img src={baseImageUrl + curImage} alt="Lucca" style={transformations[curImage] ?? {}} />
 		<button onclick={() => (curImage = null)}>Close</button>
 	</dialog>
 {/if}
@@ -137,8 +144,8 @@
 	</div>
 	<div class="gallery grid mt-xl">
 		{#each imageNames as imageName}
-			<button onclick={() => (curImage = imageName)}>
-				<img src={imageName} alt="Lucca" />
+			<button class="image-container" onclick={() => (curImage = imageName)}>
+				<img src={baseImageUrl + imageName} alt="Lucca" style={transformations[imageName] ?? {}} />
 			</button>
 		{/each}
 	</div>
@@ -195,7 +202,7 @@
 	}
 
 	img {
-		transition: 0.3s all;
+		transition: 0.3s scale;
 		border-radius: 2px;
 	}
 
@@ -206,7 +213,23 @@
 		object-fit: contain;
 	}
 
-	.gallery img:hover {
+	.gallery .image-container {
+		overflow: hidden;
+		transition: 0.3s all;
+		width: 100%;
+		height: 100%;
+		aspect-ratio: 1.2/1;
+	}
+
+	.gallery img {
+		width: 100%;
+		height: 100%;
+		aspect-ratio: 1.2/1;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.gallery .image-container:hover {
 		scale: 1.05;
 	}
 
