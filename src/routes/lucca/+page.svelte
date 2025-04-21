@@ -42,7 +42,9 @@
 		'5.webp': 'transform: rotate(-90deg)',
 		'8.webp': 'transform: rotate(180deg)',
 		'9.webp': 'transform: rotate(180deg)',
-		'28.webp': 'transform: rotate(90deg)'
+		'28.webp': 'transform: rotate(90deg)',
+		'29.webp': 'transform: rotate(90deg)',
+		'34.webp': 'transform: rotate(180deg)'
 	};
 </script>
 
