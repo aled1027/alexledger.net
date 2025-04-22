@@ -3,8 +3,8 @@
 	import LuccaAndRilke from '$lib/assets/lucca-and-rilke.png';
 	import Lucca from '$lib/assets/lucca.png';
 
-	const baseImageUrl = 'https://assets.knowportland.org/Lucca/';
-	let imageNames = Array.from({ length: 37 }, (_, i) => `${i}.webp`).map((name) => `${name}`);
+	const baseImageUrl = 'https://assets.knowportland.org/lucca/';
+	let imageNames = Array.from({ length: 37 }, (_, i) => `${i}.jpg`).map((name) => `${name}`);
 	let curImage: string | null = $state(null);
 
 	function handleKeyDown(event: KeyboardEvent) {
