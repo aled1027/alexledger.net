@@ -48,6 +48,13 @@
 	};
 </script>
 
+<link rel="preload" as="image" href={LuccaAndRilke} fetchpriority="high" />
+<link rel="preload" as="image" href={Family} fetchpriority="high" />
+<link rel="preload" as="image" href={Lucca} fetchpriority="high" />
+{#each imageNames as imageName}
+	<link rel="preload" as="image" href={baseImageUrl + imageName} fetchpriority="low" />
+{/each}
+
 {#if curImage}
 	<dialog open>
 		<img src={baseImageUrl + curImage} alt="Lucca" style={transformations[curImage] ?? {}} />
@@ -144,10 +151,16 @@
 			strong sense of self and self-interest.
 		</p>
 	</div>
-	<div class="gallery grid mt-xl">
+	<div class="gallery masonry mt-xl">
 		{#each imageNames as imageName}
 			<button class="image-container" onclick={() => (curImage = imageName)}>
-				<img src={baseImageUrl + imageName} alt="Lucca" style={transformations[imageName] ?? {}} />
+				<img
+					src={baseImageUrl + imageName}
+					alt="Lucca"
+					style={transformations[imageName] ?? {}}
+					loading="lazy"
+					decoding="async"
+				/>
 			</button>
 		{/each}
 	</div>
@@ -217,21 +230,17 @@
 
 	.gallery .image-container {
 		overflow: hidden;
-		transition: 0.3s all;
-		width: 100%;
-		height: 100%;
-		aspect-ratio: 1.2/1;
 	}
 
 	.gallery img {
 		width: 100%;
 		height: 100%;
-		aspect-ratio: 1.2/1;
-		object-fit: cover;
+		object-fit: contain;
 		object-position: center;
+		transition: 0.3s scale;
 	}
 
-	.gallery .image-container:hover {
+	.gallery img:hover {
 		scale: 1.05;
 	}
 
@@ -256,5 +265,20 @@
 	.small-h1 {
 		font-size: 1.5rem;
 		margin-inline-start: 1ch;
+	}
+
+	.masonry {
+		/* display: grid; */
+		/* grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); */
+		/* grid-template-rows: masonry; */
+		/* gap: 1rem; */
+
+		column-count: 2;
+		column-gap: 1rem;
+	}
+	@media (min-width: 768px) {
+		.masonry {
+			column-count: 3;
+		}
 	}
 </style>
