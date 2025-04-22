@@ -20,17 +20,6 @@
 			curImage = null;
 		}
 	}
-
-	const transformations = {
-		'2.webp': 'transform: rotate(180deg)',
-		'3.webp': 'transform: rotate(90deg)',
-		'5.webp': 'transform: rotate(-90deg)',
-		'8.webp': 'transform: rotate(180deg)',
-		'9.webp': 'transform: rotate(180deg)',
-		'28.webp': 'transform: rotate(90deg)',
-		'29.webp': 'transform: rotate(90deg)',
-		'34.webp': 'transform: rotate(180deg)'
-	};
 </script>
 
 <link rel="preload" as="image" href={LuccaAndRilke} fetchpriority="high" />
@@ -42,7 +31,7 @@
 
 {#if curImage}
 	<dialog open>
-		<img src={baseImageUrl + curImage} alt="Lucca" style={transformations[curImage] ?? ''} />
+		<img src={baseImageUrl + curImage} alt="Lucca" />
 		<button onclick={() => (curImage = null)}>Close</button>
 	</dialog>
 {/if}
@@ -139,13 +128,7 @@
 	<div class="gallery masonry mt-xl">
 		{#each imageNames as imageName}
 			<button class="image-container" onclick={() => (curImage = imageName)}>
-				<img
-					src={baseImageUrl + imageName}
-					alt="Lucca"
-					style={transformations[imageName] ?? ''}
-					loading="lazy"
-					decoding="async"
-				/>
+				<img src={baseImageUrl + imageName} alt="Lucca" loading="lazy" decoding="async" />
 			</button>
 		{/each}
 	</div>
