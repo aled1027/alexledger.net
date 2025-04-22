@@ -10,8 +10,7 @@
 	// 3. On click, see photos in a gallery
 	// 4. Annotate notable events with popover api
 	const baseImageUrl = 'https://assets.knowportland.org/Lucca/';
-	const imageNames = Array.from({ length: 37 }, (_, i) => `${i}.webp`).map((name) => `${name}`);
-
+	let imageNames = Array.from({ length: 37 }, (_, i) => `${i}.webp`).map((name) => `${name}`);
 	let curImage: string | null = $state(null);
 
 	function handleKeyDown(event: KeyboardEvent) {
@@ -27,14 +26,6 @@
 			curImage = null;
 		}
 	}
-
-	// onMount(() => {
-	// 	window.addEventListener('keydown', handleKeyDown);
-	// });
-
-	// onDestroy(() => {
-	// 	window.removeEventListener('keydown', handleKeyDown);
-	// });
 
 	const transformations = {
 		'2.webp': 'transform: rotate(180deg)',
@@ -57,7 +48,7 @@
 
 {#if curImage}
 	<dialog open>
-		<img src={baseImageUrl + curImage} alt="Lucca" style={transformations[curImage] ?? {}} />
+		<img src={baseImageUrl + curImage} alt="Lucca" style={transformations[curImage] ?? ''} />
 		<button onclick={() => (curImage = null)}>Close</button>
 	</dialog>
 {/if}
@@ -77,16 +68,16 @@
 		</p>
 		<figure>
 			<img src={Lucca} alt="Lucca on his cat tree bathing in the sun" />
-			<figcaption>Lucca on his cat tree bathing in the sun.</figcaption>
+			<figcaption>Lucca on his cat tree bathing in the sun (2025).</figcaption>
 		</figure>
 
 		<p>
-			One of my favorite Lucca memories is from 2022. We lived in the second floor of an apartment
+			One of my favorite Lucca memories is from 2022. We lived on the second floor of an apartment
 			building near east Burnside in Portland, Oregon. One evening Lucca made it past our backdoor
 			and found himself in the stairwell. He ran down the stairs with his trademark trill
-			rhythmically bouncing up and down when step as he took. He reached bottom of the stairwell and
-			encountered a door. With nowhere else to go, he ran back up the stairs, trilling the whole way
-			back up, <em>trrl trrrl</em> until he returned to the apartment.
+			rhythmically bouncing up and down with each step he took. He reached the bottom of the
+			stairwell and encountered a door. With nowhere else to go, he ran back up the stairs, trilling
+			the whole way back up, <em>trrl trrrl</em> until he returned to the apartment.
 		</p>
 		<figure>
 			<img src={LuccaAndRilke} alt="Lucca and Rilke lying on a bed" />
@@ -129,11 +120,11 @@
 			<video controls muted>
 				<source src="/lucca-on-cats-legs.webm" type="video/webm" />
 			</video>
-			<figcaption>In Lucca's final afternoon, he lied on Cat's legs.</figcaption>
+			<figcaption>In Lucca's final afternoon, he lay on Cat's lap.</figcaption>
 		</figure>
 		<p>
 			In his last afternoon, Lucca sat on Cat's lap for a few hours, his head hanging off the side,
-			which seemed to the most comfortable position for his body at the time. Right before 7pm on
+			which seemed to be the most comfortable position for his body at the time. Right before 7pm on
 			April 7, 2025, Lucca took his final breaths.
 		</p>
 		<p>
@@ -146,7 +137,7 @@
 		<p>
 			Cat and I learned so much from Lucca. We learned how to be confident in ourselves, our
 			feelings, and our situation. We learned how it's okay to feel anxious but still engage with
-			the situation. We learned that it's good to express our anxieties and frustrations in way's
+			the situation. We learned that it's good to express our anxieties and frustrations in ways
 			that are natural to us. And we learned how to work with and interpret someone with such a
 			strong sense of self and self-interest.
 		</p>
@@ -157,7 +148,7 @@
 				<img
 					src={baseImageUrl + imageName}
 					alt="Lucca"
-					style={transformations[imageName] ?? {}}
+					style={transformations[imageName] ?? ''}
 					loading="lazy"
 					decoding="async"
 				/>
