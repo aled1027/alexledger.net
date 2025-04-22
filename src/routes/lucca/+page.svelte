@@ -2,13 +2,7 @@
 	import Family from '$lib/assets/family.jpg';
 	import LuccaAndRilke from '$lib/assets/lucca-and-rilke.png';
 	import Lucca from '$lib/assets/lucca.png';
-	import { onDestroy, onMount } from 'svelte';
 
-	// - Use maine coon color palette
-	// 1. Each row is a week in Lucca's life
-	// 2. Stack rows vertically
-	// 3. On click, see photos in a gallery
-	// 4. Annotate notable events with popover api
 	const baseImageUrl = 'https://assets.knowportland.org/Lucca/';
 	let imageNames = Array.from({ length: 37 }, (_, i) => `${i}.webp`).map((name) => `${name}`);
 	let curImage: string | null = $state(null);
