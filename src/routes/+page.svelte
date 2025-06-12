@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount, onDestroy } from 'svelte';
 	import type { Project } from '$lib/types';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	// @ts-ignore -- Image imports with query parameters
@@ -36,6 +37,21 @@
 			cardColor: '#AAB199'
 		}
 	];
+	let substackSection: HTMLElement;
+	let iframeWidth = $state(200);
+	function updateIFrameWidth() {
+		if (substackSection) {
+			iframeWidth = substackSection.offsetWidth;
+		}
+	}
+	onMount(() => {
+		window.addEventListener('resize', updateIFrameWidth);
+		updateIFrameWidth();
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('resize', updateIFrameWidth);
+	});
 </script>
 
 <section class="hero">
@@ -60,13 +76,16 @@
 		{/each}
 	</div>
 </section>
-<section class="center-children mt-3xl">
-	<!-- TODO: maybe write in web component so it doesn't inherit css -->
-	<script
-		async
-		data-uid="da73872bd8"
-		src="https://alex-ledger.kit.com/da73872bd8/index.js"
-	></script>
+<section class="center-children mt-3xl" bind:this={substackSection}>
+	<iframe
+		title="Alex Ledger's Substack Newsletter"
+		src="https://alexledger.substack.com/embed"
+		width={iframeWidth}
+		height="320"
+		style="border:1px solid #EEE; background:white;"
+		frameborder="0"
+		scrolling="no"
+	></iframe>
 </section>
 
 <style>
