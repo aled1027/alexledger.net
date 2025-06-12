@@ -23,8 +23,13 @@
 		experience fun and attention-grabbing.
 	</p>
 	<p>
-		You can read my professional <a href="#">newsletter</a>, check out my
-		<a href="https://alexledger.substack.com">personal substack</a>, or follow me on
+		My web design business is
+		<a href="fuzzyrabbitlabs.com">Fuzzy Rabbit Labs</a>, where I work with clients to create custom
+		websites that meet their business needs.
+	</p>
+	<p>
+		You can read me on my
+		<a href="https://alexledger.substack.com">substack</a> or follow me on
 		<a href="https://bsky.app/profile/alexledger.bsky.social">bluesky</a>.
 	</p>
 </section>
