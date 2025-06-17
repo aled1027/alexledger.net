@@ -19,9 +19,17 @@
 	let eyeModel: THREE.Group;
 	let stats: Stats;
 	let eyeGroup: THREE.Group = new THREE.Group();
+	let frustum = new THREE.Frustum();
+	let frustumMatrix = new THREE.Matrix4();
 
 	const earthRadius: number = 5; // Radius of the Earth sphere
 	const eyeRadius: number = 1; // Radius of the eye model
+	const numEyes: number = 20;
+	const LOD_DISTANCES = {
+		HIGH: 10,
+		MEDIUM: 20,
+		LOW: 30
+	};
 
 	const earthTextureUrl: string = '/textures/earthmap.jpg';
 	const eyeModelUrl: string = '/textures/blue_eye.glb';
@@ -32,6 +40,20 @@
 			const loader: GLTFLoader = new GLTFLoader();
 			loader.load(eyeModelUrl, (gltf) => {
 				eyeModel = gltf.scene;
+
+				// Optimize the geometry
+				eyeModel.traverse((child) => {
+					if (child instanceof THREE.Mesh) {
+						if (child.geometry) {
+							child.geometry.setDrawRange(0, Infinity);
+							child.geometry.computeBoundingSphere();
+							child.frustumCulled = true;
+						}
+						if (child.material) {
+							child.material.side = THREE.FrontSide; // Only render front faces
+						}
+					}
+				});
 
 				// Compute the bounding sphere to get current radius
 				const boundingBox: THREE.Box3 = new THREE.Box3().setFromObject(eyeModel);
@@ -60,7 +82,13 @@
 		);
 		camera.position.z = 25;
 
-		renderer = new THREE.WebGLRenderer({ antialias: true });
+		// Optimize renderer
+		renderer = new THREE.WebGLRenderer({
+			antialias: true,
+			powerPreference: 'high-performance',
+			precision: 'mediump'
+		});
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
 
@@ -73,6 +101,8 @@
 
 		// Controls
 		controls = new OrbitControls(camera, renderer.domElement);
+		controls.enableDamping = true;
+		controls.dampingFactor = 0.05;
 
 		// Lighting
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -81,42 +111,80 @@
 		pointLight.position.set(10, 10, 10);
 		scene.add(pointLight);
 
-		// Earth
-		const earthTexture = new THREE.TextureLoader().load(earthTextureUrl);
-		const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
-		const earthGeometry = new THREE.SphereGeometry(earthRadius, 64, 64);
-		earth = new THREE.Mesh(earthGeometry, earthMaterial);
-		scene.add(earth);
+		// Earth - optimize geometry
+		const earthGeometry = new THREE.SphereGeometry(earthRadius, 32, 32); // Reduced segments
+		const textureLoader = new THREE.TextureLoader();
+		textureLoader.load(earthTextureUrl, (texture) => {
+			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+			const earthMaterial = new THREE.MeshStandardMaterial({
+				map: texture,
+				side: THREE.FrontSide
+			});
+			earth = new THREE.Mesh(earthGeometry, earthMaterial);
+			earth.geometry.computeBoundingSphere();
+			earth.frustumCulled = true;
+			scene.add(earth);
 
-		// Eyes
+			// Add eyes after Earth is loaded
+			addEyes();
+		});
 
-		for (let i = 0; i < 10; i++) {
+		animate();
+	}
+
+	function addEyes(): void {
+		for (let i = 0; i < numEyes; i++) {
 			const theta = Math.random() * 2 * Math.PI;
 			const phi = Math.acos(2 * Math.random() - 1);
 			const x = Math.sin(phi) * Math.cos(theta);
 			const y = Math.sin(phi) * Math.sin(theta);
 			const z = -1 * Math.cos(phi);
 
-			const eyeDistance = earthRadius + 2 * eyeRadius; // Position eyes 0.5 units above earth's surface
+			const eyeDistance = earthRadius + 2 * eyeRadius;
 			const direction = new THREE.Vector3(x, y, z);
 			const position = direction.clone().multiplyScalar(eyeDistance);
 
-			// Create a copy of the eye model for this position
 			const eye = eyeModel.clone();
 			eye.position.copy(position);
 			eye.lookAt(0, 0, 0);
+			eye.userData.originalScale = eye.scale.clone();
 
 			eyeGroup.add(eye);
 		}
 		earth.add(eyeGroup);
+	}
 
-		animate();
+	function updateLOD(): void {
+		eyeGroup.children.forEach((eye) => {
+			const distance = camera.position.distanceTo(eye.getWorldPosition(new THREE.Vector3()));
+
+			if (distance < LOD_DISTANCES.HIGH) {
+				eye.scale.copy(eye.userData.originalScale);
+			} else if (distance < LOD_DISTANCES.MEDIUM) {
+				eye.scale.copy(eye.userData.originalScale).multiplyScalar(0.75);
+			} else {
+				eye.scale.copy(eye.userData.originalScale).multiplyScalar(0.5);
+			}
+		});
 	}
 
 	function animate(): void {
 		requestAnimationFrame(animate);
 		stats.begin();
-		earth.rotation.y += 0.001;
+
+		// Update frustum for culling
+		frustumMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+		frustum.setFromProjectionMatrix(frustumMatrix);
+
+		// Update controls if enabled
+		if (controls) controls.update();
+
+		// Rotate earth
+		if (earth) earth.rotation.y += 0.001;
+
+		// Update LOD
+		updateLOD();
+
 		renderer.render(scene, camera);
 		stats.end();
 	}
