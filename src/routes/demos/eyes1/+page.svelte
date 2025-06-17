@@ -77,14 +77,31 @@
 			const y = radius * Math.sin(phi) * Math.sin(theta);
 			const z = radius * Math.cos(phi);
 
+			// Position for both meshes
+			const position = direction.clone().multiplyScalar(eyeDistance);
+			
+			// Create white eye background
+			const whiteEye = new THREE.Mesh(whiteEyeGeometry, whiteEyeMaterial);
+			whiteEye.position.copy(position);
+			// Make it face outward (away from center)
+			whiteEye.up.set(0, 1, 0);
+			whiteEye.lookAt(position.clone().multiplyScalar(2));
+			eyeGroup.add(whiteEye);
+
+			// Create textured eye on top
 			const eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-			eye.position.set(x, y, z);
-			eye.lookAt(0, 0, 0);
+			eye.position.copy(position);
+			// Make it face outward (away from center)
+			eye.up.set(0, 1, 0);
+			eye.lookAt(position.clone().multiplyScalar(2));
+			// Small offset to prevent z-fighting
+			eye.position.add(direction.multiplyScalar(0.01));
 
 			eyeGroup.add(eye);
 		}
 
-		scene.add(eyeGroup);
+		// Add eyeGroup as a child of earth instead of scene
+		earth.add(eyeGroup);
 
 		animate();
 	}
@@ -92,7 +109,6 @@
 	function animate() {
 		requestAnimationFrame(animate);
 		earth.rotation.y += 0.001;
-		eyeGroup.rotation.y += 0.0005;
 		renderer.render(scene, camera);
 	}
 
