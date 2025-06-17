@@ -40,7 +40,9 @@
 		</div>
 
 		<div class="bottom">
-			<p class="m-0">Layout of this page inspired by <a href="https://ebisu.money/">ebisu</a></p>
+			<p class="m-0">
+				Layout of this page inspired by <a target="_blank" href="https://ebisu.money/">ebisu</a>
+			</p>
 		</div>
 	</div>
 </div>
