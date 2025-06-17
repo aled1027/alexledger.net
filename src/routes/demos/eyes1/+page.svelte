@@ -23,6 +23,7 @@
 	let frustum = new THREE.Frustum();
 	let frustumMatrix = new THREE.Matrix4();
 	let lastBlinkTime = 0; // Track when we last blinked
+	const cameraPositionZ: number = 50; // Initial camera position on Z axis
 
 	const earthRadius: number = 5; // Radius of the Earth sphere
 	const eyeRadius: number = 1; // Radius of the eye model
@@ -88,7 +89,7 @@
 			0.1,
 			1000
 		);
-		camera.position.z = 25;
+		camera.position.z = cameraPositionZ;
 
 		// Optimize renderer
 		renderer = new THREE.WebGLRenderer({
@@ -224,32 +225,37 @@
 
 	function blinkEyes(): void {
 		const currentTime = performance.now();
-		if (currentTime - lastBlinkTime < 4000 && !isBlinking) {
-			return;
-		}
-		lastBlinkTime = currentTime;
-		console.log('About to start blinking eyes');
-		if (!isBlinking) {
-			isBlinking = true;
-			blinkStartTime = performance.now();
+		const timeSinceLastBlink = currentTime - lastBlinkTime;
+		const isTimeToBlink = timeSinceLastBlink >= 4000;
 
-			// Start the blink
-			for (const eye of eyeGroup.children) {
-				const originalScale = eye.userData.originalScale.clone();
-				eye.scale.set(originalScale.x, originalScale.y * 0.1, originalScale.z); // "squish"
-			}
+		if (!isTimeToBlink && !isBlinking) return;
+
+		if (!isBlinking) {
+			startBlink(currentTime);
 		} else {
-			// Check if blink duration has passed
-			const currentTime = performance.now();
-			if (currentTime - blinkStartTime >= BLINK_DURATION) {
-				// End the blink
-				for (const eye of eyeGroup.children) {
-					const originalScale = eye.userData.originalScale.clone();
-					eye.scale.copy(originalScale); // back to normal
-				}
-				isBlinking = false;
-			}
+			updateBlink(currentTime);
 		}
+	}
+
+	function startBlink(currentTime: number): void {
+		isBlinking = true;
+		lastBlinkTime = currentTime;
+		blinkStartTime = currentTime;
+		setEyeScales(0.1);
+	}
+
+	function updateBlink(currentTime: number): void {
+		if (currentTime - blinkStartTime >= BLINK_DURATION) {
+			isBlinking = false;
+			setEyeScales(1);
+		}
+	}
+
+	function setEyeScales(yScaleFactor: number): void {
+		eyeGroup.children.forEach((eye) => {
+			const originalScale = eye.userData.originalScale;
+			eye.scale.set(originalScale.x, originalScale.y * yScaleFactor, originalScale.z);
+		});
 	}
 
 	function resizeRenderer(): void {
