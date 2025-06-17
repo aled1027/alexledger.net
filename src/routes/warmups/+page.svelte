@@ -21,7 +21,7 @@
 		</nav>
 
 		<div class="launch">
-			<a class="warmup-button" href={randomLink}>Random warmup</a>
+			<a class="warmup-button" href={randomLink}>Goto random</a>
 		</div>
 
 		<div class="marquee">
@@ -113,18 +113,31 @@
 		border-left: var(--border);
 	}
 
-	.launch .warmup-button {
-		background: var(--accent);
-		color: white;
+	.warmup-button {
+		/* background: var(--accent); */
 		border: none;
 		padding: 8px 13px;
 		border-radius: 3px;
 		cursor: pointer;
-		font-size: 1rem;
 		text-decoration: none;
+		font-weight: 300;
+		display: inline-flex;
+		align-items: center;
+		white-space: nowrap;
 	}
 
-	.launch .warmup-button:hover {
+	.warmup-button::after {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		width: 1.5em;
+		height: 1.5em;
+		margin-left: 0.25em;
+		background: no-repeat center/contain
+			url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M10 5l3 3-3 3"/></svg>');
+	}
+
+	.warmup-button:hover {
 		opacity: 0.9;
 	}
 
