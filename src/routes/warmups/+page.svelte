@@ -3,63 +3,68 @@
 	 *
 	 * */
 	// https://ebisu.money/
+	let randomLink = '/warmups';
 </script>
 
 <div class="full-bleed warmup-wrapper full-bleed pt-xl">
 	<div class="warmup">
-		<div class="top">
-			<p>Welcome to Warmups</p>
-		</div>
-
 		<div class="logo">
-			<h1>W</h1>
+			<h1>Warmups</h1>
 		</div>
 
 		<nav class="menu">
 			<ul>
-				<li><a href="#exercises">Exercises</a></li>
-				<li><a href="#routines">Routines</a></li>
-				<li><a href="#progress">Progress</a></li>
+				<!-- <li><a href="#exercises">Exercises</a></li> -->
+				<!-- <li><a href="#routines">Routines</a></li> -->
+				<!-- <li><a href="#progress">Progress</a></li> -->
 			</ul>
 		</nav>
 
 		<div class="launch">
-			<button>Start Workout</button>
+			<a class="warmup-button" href={randomLink}>Random warmup</a>
 		</div>
 
 		<div class="marquee">
-			<p class="m-0">Daily motivation • Stay consistent • Build strength • Feel great</p>
+			<p class="m-0">
+				These are coding warmups that I've done before I start working to get myself in the right
+				headspace.
+			</p>
 		</div>
 
-		<main class="main">
-			<h2>Featured Exercises</h2>
-		</main>
+		<div class="main">
+			<ol>
+				<li>
+					June 17, 2025: <a href="/warmups">Setting up this page</a>
+				</li>
+			</ol>
+		</div>
 
 		<div class="bottom">
-			<p class="m-0">© 2025 Warmups</p>
+			<p class="m-0">Layout of this page inspired by <a href="https://ebisu.money/">ebisu</a></p>
 		</div>
 	</div>
 </div>
 
-<style lang="scss">
+<style>
 	.warmup-wrapper {
 		--accent: #ed4e9b;
 		--bg: #fcf7f3;
-		--border: 1px solid rgba(0, 0, 0, 1);
+		--border: 1px solid rgba(0, 0, 0, 0.6);
 		background: var(--bg);
 		min-height: 100vh;
+		border-collapse: collapse;
+		font-weight: 300;
 	}
 
 	.warmup {
 		display: grid;
 		grid-template-areas:
-			'top top top top top'
 			'logo menu menu menu launch'
 			'marquee marquee marquee marquee marquee'
 			'main main main main main'
-			'main main main main main'
-			'main main main main main'
 			'bottom bottom bottom bottom bottom';
+		grid-template-rows: auto auto auto auto;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 		width: var(--content-width);
 		margin-inline: auto;
 		border: var(--border);
@@ -71,28 +76,16 @@
 		color: var(--accent);
 	}
 
-	h3 {
-		color: var(--accent);
-		margin-bottom: 0.5rem;
-	}
-
-	.top {
-		grid-area: top;
-		padding: 1rem;
-		text-align: center;
-		border-bottom: var(--border);
-	}
-
 	.logo {
 		grid-area: logo;
 		display: flex;
 		align-items: center;
-		padding: 1rem;
+		padding-block: 1rem;
+		padding-inline: 2rem;
 	}
 
 	.menu {
 		grid-area: menu;
-		padding: 1rem;
 	}
 
 	.menu ul {
@@ -100,12 +93,14 @@
 		gap: 2rem;
 		list-style: none;
 		justify-content: flex-end;
+		padding-inline: 2rem;
 	}
 
 	.menu ul a {
 		color: #333;
 		text-decoration: none;
 	}
+
 	.menu ul a:hover {
 		opacity: 0.8;
 	}
@@ -115,43 +110,52 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border-left: var(--border);
 	}
-	.launch button {
+
+	.launch .warmup-button {
 		background: var(--accent);
 		color: white;
 		border: none;
-		padding: 0.5rem 1rem;
-		border-radius: 4px;
+		padding: 8px 13px;
+		border-radius: 3px;
 		cursor: pointer;
+		font-size: 1rem;
+		text-decoration: none;
 	}
 
-	.launch button:hover {
+	.launch .warmup-button:hover {
 		opacity: 0.9;
 	}
 
 	.marquee {
 		grid-area: marquee;
 		padding: 1rem;
-		background: var(--accent);
-		color: white;
 		overflow: hidden;
 		white-space: nowrap;
+		border-top: var(--border);
+		border-bottom: var(--border);
 	}
 
 	.marquee p {
-		animation: scroll 20s linear infinite;
+		animation: scroll 40s linear infinite;
 	}
 
 	.main {
 		grid-area: main;
 		padding: 2rem;
+		min-height: 50vh;
+	}
+
+	.main li {
+		padding-inline-start: 1ch;
 	}
 
 	.bottom {
 		grid-area: bottom;
 		padding: 1rem;
 		text-align: center;
-		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-top: var(--border);
 	}
 
 	@keyframes scroll {
@@ -161,5 +165,9 @@
 		100% {
 			transform: translateX(-100%);
 		}
+	}
+
+	.m-0 {
+		margin: 0;
 	}
 </style>
