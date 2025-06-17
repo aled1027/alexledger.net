@@ -3,6 +3,7 @@
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+	import Stats from 'three/examples/jsm/libs/stats.module';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
@@ -11,8 +12,11 @@
 
 	let container;
 	let renderer, scene, camera, controls;
-	let earth, eyeGroup;
+	let earth;
 	let eyeModel;
+	let stats;
+	const earthRadius = 5; // Radius of the Earth sphere
+	const eyeRadius = 0.1; // Radius of the eye model
 
 	const earthTextureUrl = '/textures/earthmap.jpg';
 	const eyeModelUrl = '/textures/blue_eye.glb';
@@ -23,8 +27,8 @@
 			const loader = new GLTFLoader();
 			loader.load(eyeModelUrl, (gltf) => {
 				eyeModel = gltf.scene;
-				// Make the model small enough to work with our scene
-				eyeModel.scale.set(0.3, 0.3, 0.3);
+				// Make the model much smaller
+				eyeModel.scale.set(0.1, 0.1, 0.1);
 				resolve();
 			});
 		});
@@ -47,6 +51,13 @@
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
 
+		// Initialize Stats
+		stats = new Stats();
+		stats.dom.style.position = 'absolute';
+		stats.dom.style.top = '0px';
+		stats.dom.style.left = '0px';
+		container.appendChild(stats.dom);
+
 		// Controls
 		controls = new OrbitControls(camera, renderer.domElement);
 
@@ -61,30 +72,19 @@
 		// Earth
 		const earthTexture = new THREE.TextureLoader().load(earthTextureUrl);
 		const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
-		const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
+		const earthGeometry = new THREE.SphereGeometry(earthRadius, 64, 64);
 		earth = new THREE.Mesh(earthGeometry, earthMaterial);
-		// scene.add(earth);
+		scene.add(earth);
 
 		// Eyes
-		const earthRadius = 5;
 		const eyeDistance = earthRadius + 0.5; // Position eyes 0.5 units above earth's surface
-		eyeGroup = new THREE.Group();
-
 		const theta = Math.random() * 2 * Math.PI;
 		const phi = Math.acos(2 * Math.random() - 1);
-
-		// Calculate position on sphere
 		const x = Math.sin(phi) * Math.cos(theta);
 		const y = Math.sin(phi) * Math.sin(theta);
 		const z = Math.cos(phi);
-
-		// Create normalized direction vector for this position
 		const direction = new THREE.Vector3(x, y, z);
-
-		// Position for the eye
 		const position = direction.clone().multiplyScalar(eyeDistance);
-
-		// Clone the eye model for each instance
 		const eye = eyeModel.clone();
 		eye.position.copy(position);
 
@@ -98,8 +98,12 @@
 
 	function animate() {
 		requestAnimationFrame(animate);
+		stats.begin();
+
 		earth.rotation.y += 0.001;
 		renderer.render(scene, camera);
+
+		stats.end();
 	}
 
 	function resizeRenderer() {
@@ -114,6 +118,9 @@
 
 	$effect(() => {
 		init();
+		stats = new Stats();
+		stats.showPanel(0); // 0: fps, 1: ms
+		container.appendChild(stats.dom);
 		window.addEventListener('resize', resizeRenderer);
 		return () => {
 			window.removeEventListener('resize', resizeRenderer);
