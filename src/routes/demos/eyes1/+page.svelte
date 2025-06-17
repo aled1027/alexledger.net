@@ -2,6 +2,7 @@
 <script>
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
@@ -11,13 +12,27 @@
 	let container;
 	let renderer, scene, camera, controls;
 	let earth, eyeGroup;
+	let eyeModel;
 
-	// const earthTexture = new THREE.TextureLoader().load('/textures/earth.jpg');
-	// const earthTexture = new THREE.TextureLoader().load('/textures/earth.png');
 	const earthTextureUrl = '/textures/earthmap.jpg';
-	const eyeTextureUrl = '/textures/eye-sphere.png';
+	const eyeModelUrl = '/textures/blue_eye.glb';
 
-	function init() {
+	// Load the eye model once and reuse it
+	const loadEyeModel = () => {
+		return new Promise((resolve) => {
+			const loader = new GLTFLoader();
+			loader.load(eyeModelUrl, (gltf) => {
+				eyeModel = gltf.scene;
+				// Make the model small enough to work with our scene
+				eyeModel.scale.set(0.3, 0.3, 0.3);
+				resolve();
+			});
+		});
+	};
+
+	async function init() {
+		await loadEyeModel();
+
 		// Scene setup
 		scene = new THREE.Scene();
 		camera = new THREE.PerspectiveCamera(
@@ -48,69 +63,36 @@
 		const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
 		const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
 		earth = new THREE.Mesh(earthGeometry, earthMaterial);
-		scene.add(earth);
+		// scene.add(earth);
 
 		// Eyes
-		const eyeTexture = new THREE.TextureLoader().load(eyeTextureUrl);
-		const eyeMaterial = new THREE.MeshStandardMaterial({
-			map: eyeTexture,
-			transparent: true,
-			opacity: 1,
-			side: THREE.FrontSide,
-			alphaTest: 0.5
-		});
-		const whiteEyeMaterial = new THREE.MeshBasicMaterial({
-			color: 0xffffff,
-			side: THREE.FrontSide
-		});
-
-		const eyeGeometry = new THREE.SphereGeometry(0.3, 64, 64);
-		const whiteEyeGeometry = new THREE.SphereGeometry(0.29, 64, 64);
-
-		const eyeCount = 30;
 		const earthRadius = 5;
 		const eyeDistance = earthRadius + 0.5; // Position eyes 0.5 units above earth's surface
-		const radius = earthRadius + eyeDistance;
 		eyeGroup = new THREE.Group();
 
-		for (let i = 0; i < eyeCount; i++) {
-			const theta = Math.random() * 2 * Math.PI;
-			const phi = Math.acos(2 * Math.random() - 1);
+		const theta = Math.random() * 2 * Math.PI;
+		const phi = Math.acos(2 * Math.random() - 1);
 
-			// Calculate position on sphere
-			const x = Math.sin(phi) * Math.cos(theta);
-			const y = Math.sin(phi) * Math.sin(theta);
-			const z = Math.cos(phi);
+		// Calculate position on sphere
+		const x = Math.sin(phi) * Math.cos(theta);
+		const y = Math.sin(phi) * Math.sin(theta);
+		const z = Math.cos(phi);
 
-			// Create normalized direction vector for this position
-			const direction = new THREE.Vector3(x, y, z);
+		// Create normalized direction vector for this position
+		const direction = new THREE.Vector3(x, y, z);
 
-			// Position for both meshes
-			const position = direction.clone().multiplyScalar(eyeDistance);
+		// Position for the eye
+		const position = direction.clone().multiplyScalar(eyeDistance);
 
-			// Create white eye background
-			const whiteEye = new THREE.Mesh(whiteEyeGeometry, whiteEyeMaterial);
-			whiteEye.position.copy(position);
-			// Make it face outward (away from center)
-			whiteEye.up.set(0, 1, 0);
-			whiteEye.lookAt(position.clone().multiplyScalar(2));
-			eyeGroup.add(whiteEye);
+		// Clone the eye model for each instance
+		const eye = eyeModel.clone();
+		eye.position.copy(position);
 
-			// Create textured eye on top
-			const eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-			eye.position.copy(position);
-			// Make it face outward (away from center)
-			eye.up.set(0, 1, 0);
-			eye.lookAt(position.clone().multiplyScalar(2));
-			// Small offset to prevent z-fighting
-			eye.position.add(direction.multiplyScalar(0.01));
+		// Make it face outward (away from center)
+		eye.up.set(0, 1, 0);
+		eye.lookAt(position.clone().multiplyScalar(2));
 
-			eyeGroup.add(eye);
-		}
-
-		// Add eyeGroup as a child of earth instead of scene
-		earth.add(eyeGroup);
-
+		scene.add(eye);
 		animate();
 	}
 
