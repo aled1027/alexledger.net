@@ -24,6 +24,10 @@
 				<li>
 					June 17, 2025: <a href="/demos">Setting up this page</a>
 				</li>
+
+				<li>
+					June 17, 2025: <a href="/demos/marquee">Marquee</a>
+				</li>
 			</ol>
 		</div>
 
@@ -143,6 +147,7 @@
 
 	.main li {
 		padding-inline-start: 1ch;
+		margin-block-start: 0.5ch;
 	}
 
 	.bottom {
