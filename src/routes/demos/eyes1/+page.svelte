@@ -24,7 +24,7 @@
 
 	const earthRadius: number = 5; // Radius of the Earth sphere
 	const eyeRadius: number = 1; // Radius of the eye model
-	const numEyes: number = 20;
+	const numEyes: number = 40;
 	const LOD_DISTANCES = {
 		HIGH: 10,
 		MEDIUM: 20,
