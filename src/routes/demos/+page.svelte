@@ -1,9 +1,24 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	/** Warm up ideas
 	 *
 	 * */
 	// https://ebisu.money/
-	let randomLink = '/demos';
+
+	const demos = [
+		{
+			title: 'Marquee',
+			date: 'June 17, 2025',
+			link: '/demos/marquee'
+		}
+	];
+
+	let randomLink = demos[0].link; // Default to the first demo link
+	onMount(() => {
+		const randomIndex = Math.floor(Math.random() * demos.length);
+		randomLink = demos[randomIndex].link;
+	});
 </script>
 
 <div class="full-bleed demo-wrapper full-bleed pt-xl">
@@ -16,18 +31,17 @@
 		</div>
 
 		<div class="marquee">
-			<p class="m-0">Fun demos to explore new ideas and technologies.</p>
+			<p class="m-0">Fun demos exploring new ideas and technologies.</p>
 		</div>
 
 		<div class="main">
 			<ol>
-				<li>
-					June 17, 2025: <a href="/demos">Setting up this page</a>
-				</li>
-
-				<li>
-					June 17, 2025: <a href="/demos/marquee">Marquee</a>
-				</li>
+				{#each demos as demo}
+					<li>
+						<a href={demo.link}>{demo.title}</a>
+						<span class="size-step--2">&nbsp;{demo.date}</span>
+					</li>
+				{/each}
 			</ol>
 		</div>
 
@@ -133,9 +147,10 @@
 	}
 
 	.marquee p {
-		animation: scroll 18s linear infinite;
-		width: max-content;
+		animation: scroll 30s linear infinite;
+		width: 100%;
 		font-size: 0.875rem;
+		white-space: nowrap;
 	}
 
 	.main {

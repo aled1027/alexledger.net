@@ -13,6 +13,11 @@
 			isCurrent: currentPage === '/'
 		},
 		{
+			label: 'Demos',
+			href: '/demos',
+			isCurrent: currentPage === '/demos'
+		},
+		{
 			label: 'About',
 			href: '/about',
 			isCurrent: currentPage === '/about'
