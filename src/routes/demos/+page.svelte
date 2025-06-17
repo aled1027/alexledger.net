@@ -9,7 +9,7 @@
 <div class="full-bleed demo-wrapper full-bleed pt-xl">
 	<div class="demo">
 		<div class="logo">
-			<h1>demos</h1>
+			<h1>Demos</h1>
 		</div>
 
 		<nav class="menu">
@@ -21,7 +21,7 @@
 		</nav>
 
 		<div class="launch">
-			<a class="demo-button" href={randomLink}>Goto random</a>
+			<a class="demo-button" href={randomLink}>Random</a>
 		</div>
 
 		<div class="marquee">
@@ -46,8 +46,8 @@
 
 <style>
 	.demo-wrapper {
-		--accent: #ed4e9b;
-		--bg: #fcf7f3;
+		--accent: #364b7c;
+		/* --bg: #fcf7f3; */
 		--border: 1px solid rgba(0, 0, 0, 0.6);
 		background: var(--bg);
 		min-height: 100vh;
@@ -67,6 +67,7 @@
 		width: var(--content-width);
 		margin-inline: auto;
 		border: var(--border);
+		overflow: auto;
 	}
 
 	h1 {
@@ -157,7 +158,8 @@
 
 	.main {
 		grid-area: main;
-		padding: 2rem;
+		padding-block-start: 1rem;
+		padding-inline-start: 1rem;
 		min-height: 50vh;
 	}
 
