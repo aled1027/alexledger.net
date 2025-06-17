@@ -142,4 +142,8 @@
 			transform: translateX(calc(-100% - var(--marquee-gutter)));
 		}
 	}
+
+	p {
+		max-width: 55rem;
+	}
 </style>
