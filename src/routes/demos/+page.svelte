@@ -11,15 +11,6 @@
 		<div class="logo">
 			<h1>Demos</h1>
 		</div>
-
-		<nav class="menu">
-			<ul>
-				<!-- <li><a href="#exercises">Exercises</a></li> -->
-				<!-- <li><a href="#routines">Routines</a></li> -->
-				<!-- <li><a href="#progress">Progress</a></li> -->
-			</ul>
-		</nav>
-
 		<div class="launch">
 			<a class="demo-button" href={randomLink}>Random</a>
 		</div>
@@ -36,9 +27,7 @@
 			</ol>
 		</div>
 
-		<div class="bottom">
-			<p class="m-0"></p>
-		</div>
+		<div class="bottom"></div>
 	</div>
 </div>
 
@@ -56,7 +45,7 @@
 	.demo {
 		display: grid;
 		grid-template-areas:
-			'logo menu menu menu launch'
+			'logo . . . launch'
 			'marquee marquee marquee marquee marquee'
 			'main main main main main'
 			'bottom bottom bottom bottom bottom';
@@ -72,6 +61,11 @@
 		font-size: 2rem;
 		font-weight: bold;
 		color: var(--accent);
+	}
+
+	h2 {
+		font-size: 1.5rem;
+		font-weight: bold;
 	}
 
 	.logo {
@@ -92,15 +86,6 @@
 		list-style: none;
 		justify-content: flex-end;
 		padding-inline: 2rem;
-	}
-
-	.menu ul a {
-		color: #333;
-		text-decoration: none;
-	}
-
-	.menu ul a:hover {
-		opacity: 0.8;
 	}
 
 	.launch {
