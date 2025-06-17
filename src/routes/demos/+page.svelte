@@ -3,13 +3,13 @@
 	 *
 	 * */
 	// https://ebisu.money/
-	let randomLink = '/warmups';
+	let randomLink = '/demos';
 </script>
 
-<div class="full-bleed warmup-wrapper full-bleed pt-xl">
-	<div class="warmup">
+<div class="full-bleed demo-wrapper full-bleed pt-xl">
+	<div class="demo">
 		<div class="logo">
-			<h1>Warmups</h1>
+			<h1>demos</h1>
 		</div>
 
 		<nav class="menu">
@@ -21,20 +21,17 @@
 		</nav>
 
 		<div class="launch">
-			<a class="warmup-button" href={randomLink}>Goto random</a>
+			<a class="demo-button" href={randomLink}>Goto random</a>
 		</div>
 
 		<div class="marquee">
-			<p class="m-0">
-				These are coding warmups that I've done before I start working to get myself in the right
-				headspace.
-			</p>
+			<p class="m-0">Fun demos to explore new ideas and technologies.</p>
 		</div>
 
 		<div class="main">
 			<ol>
 				<li>
-					June 17, 2025: <a href="/warmups">Setting up this page</a>
+					June 17, 2025: <a href="/demos">Setting up this page</a>
 				</li>
 			</ol>
 		</div>
@@ -48,7 +45,7 @@
 </div>
 
 <style>
-	.warmup-wrapper {
+	.demo-wrapper {
 		--accent: #ed4e9b;
 		--bg: #fcf7f3;
 		--border: 1px solid rgba(0, 0, 0, 0.6);
@@ -58,7 +55,7 @@
 		font-weight: 300;
 	}
 
-	.warmup {
+	.demo {
 		display: grid;
 		grid-template-areas:
 			'logo menu menu menu launch'
@@ -115,7 +112,7 @@
 		border-left: var(--border);
 	}
 
-	.warmup-button {
+	.demo-button {
 		/* background: var(--accent); */
 		border: none;
 		padding: 8px 13px;
@@ -128,7 +125,7 @@
 		white-space: nowrap;
 	}
 
-	.warmup-button::after {
+	.demo-button::after {
 		content: '';
 		display: inline-block;
 		vertical-align: middle;
@@ -139,7 +136,7 @@
 			url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M10 5l3 3-3 3"/></svg>');
 	}
 
-	.warmup-button:hover {
+	.demo-button:hover {
 		opacity: 0.9;
 	}
 
@@ -153,7 +150,9 @@
 	}
 
 	.marquee p {
-		animation: scroll 40s linear infinite;
+		animation: scroll 18s linear infinite;
+		width: max-content;
+		font-size: 0.875rem;
 	}
 
 	.main {
