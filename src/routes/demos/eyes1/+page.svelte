@@ -25,6 +25,10 @@
 	const earthRadius: number = 5; // Radius of the Earth sphere
 	const eyeRadius: number = 1; // Radius of the eye model
 	const numEyes: number = 40;
+
+	// So num eyes is latitudeBands * longitudeBands
+	const latitudeBands = 8; // Number of latitude bands
+	const longitudeBands = 8; // Number of longitude bands
 	const LOD_DISTANCES = {
 		HIGH: 10,
 		MEDIUM: 20,
@@ -133,23 +137,34 @@
 	}
 
 	function addEyes(): void {
-		for (let i = 0; i < numEyes; i++) {
-			const theta = Math.random() * 2 * Math.PI;
-			const phi = Math.acos(2 * Math.random() - 1);
-			const x = Math.sin(phi) * Math.cos(theta);
-			const y = Math.sin(phi) * Math.sin(theta);
-			const z = -1 * Math.cos(phi);
+		for (let lat = 0; lat < latitudeBands; lat++) {
+			// Convert lat index to angle in radians (-π/2 to π/2)
+			const phi = (lat / (latitudeBands - 1)) * Math.PI - Math.PI / 2;
 
-			const eyeDistance = earthRadius + 2 * eyeRadius;
-			const direction = new THREE.Vector3(x, y, z);
-			const position = direction.clone().multiplyScalar(eyeDistance);
+			// Adjust number of eyes in each latitude band based on circumference
+			const circumference = Math.cos(phi) * 2 * Math.PI;
+			const eyesInBand = Math.max(1, Math.floor(longitudeBands * Math.cos(phi)));
 
-			const eye = eyeModel.clone();
-			eye.position.copy(position);
-			eye.lookAt(0, 0, 0);
-			eye.userData.originalScale = eye.scale.clone();
+			for (let lon = 0; lon < eyesInBand; lon++) {
+				// Convert lon index to angle in radians (0 to 2π)
+				const theta = (lon / eyesInBand) * 2 * Math.PI;
 
-			eyeGroup.add(eye);
+				// Convert spherical coordinates to Cartesian
+				const x = Math.cos(phi) * Math.cos(theta);
+				const y = Math.sin(phi);
+				const z = Math.cos(phi) * Math.sin(theta);
+
+				const eyeDistance = earthRadius + 2 * eyeRadius;
+				const direction = new THREE.Vector3(x, y, z);
+				const position = direction.clone().multiplyScalar(eyeDistance);
+
+				const eye = eyeModel.clone();
+				eye.position.copy(position);
+				eye.lookAt(0, 0, 0);
+				eye.userData.originalScale = eye.scale.clone();
+
+				eyeGroup.add(eye);
+			}
 		}
 		earth.add(eyeGroup);
 	}
@@ -158,13 +173,19 @@
 		eyeGroup.children.forEach((eye) => {
 			const distance = camera.position.distanceTo(eye.getWorldPosition(new THREE.Vector3()));
 
-			if (distance < LOD_DISTANCES.HIGH) {
-				eye.scale.copy(eye.userData.originalScale);
-			} else if (distance < LOD_DISTANCES.MEDIUM) {
-				eye.scale.copy(eye.userData.originalScale).multiplyScalar(0.75);
+			// Calculate a smooth scale factor based on distance
+			let scaleFactor: number;
+			if (distance <= LOD_DISTANCES.HIGH) {
+				scaleFactor = 1.0;
+			} else if (distance >= LOD_DISTANCES.LOW) {
+				scaleFactor = 0.5;
 			} else {
-				eye.scale.copy(eye.userData.originalScale).multiplyScalar(0.5);
+				// Smooth interpolation between LOD levels
+				const t = (distance - LOD_DISTANCES.HIGH) / (LOD_DISTANCES.LOW - LOD_DISTANCES.HIGH);
+				scaleFactor = 1.0 - 0.5 * t; // Linearly interpolate from 1.0 to 0.5
 			}
+
+			eye.scale.copy(eye.userData.originalScale).multiplyScalar(scaleFactor);
 		});
 	}
 
