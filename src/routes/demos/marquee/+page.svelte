@@ -9,9 +9,16 @@
 
 <div class="mt-l">
 	<h1>Marquee</h1>
+	<p>
+		<a
+			target="_blank"
+			href="https://github.com/aled1027/alexledger.net/tree/main/src/routes/demos/marquee/%2Bpage.svelte"
+			>Demo code</a
+		>
+	</p>
 </div>
 
-<div class="marquee mt-l">
+<div class="marquee mt-xl">
 	<div class="marquee__content marquee__scroll">
 		<div>
 			<img src={logo1} alt="Logo 1" />
