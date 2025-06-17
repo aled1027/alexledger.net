@@ -21,6 +21,11 @@
 		version is built with only html and CSS. (It's in a svelte repo, but no svelte features are
 		used.) On hover, the images grow and rotate.
 	</p>
+	<p>
+		I used this marquee implementation in the <a target="_blank" href="https://metrion.space"
+			>metrion.space</a
+		> "TRUSTED BY" section.
+	</p>
 </div>
 
 <div class="marquee mt-xl">
@@ -81,9 +86,9 @@
 		grid-row-gap: var(--marquee-gutter);
 		width: 100%;
 		max-width: 100vw;
-		overflow-x: hidden;
+		overflow: hidden;
 		position: relative;
-		padding: 20px 0; /* Add padding to ensure hover effects don't get cut off */
+		padding: 40px 0; /* Add padding to ensure hover effects don't get cut off */
 	}
 
 	.marquee::after {
