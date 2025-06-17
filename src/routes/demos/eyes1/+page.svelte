@@ -7,6 +7,12 @@
 	let renderer, scene, camera, controls;
 	let earth, eyeGroup;
 
+	// const earthTexture = new THREE.TextureLoader().load('/textures/earth.jpg');
+	// const earthTexture = new THREE.TextureLoader().load('/textures/earth.png');
+	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
+	const earthTextureUrl = '/textures/earthmap.jpg';
+	const eyeTextureUrl = '/textures/eye2.png';
+
 	function init() {
 		// Scene setup
 		scene = new THREE.Scene();
@@ -34,10 +40,7 @@
 		scene.add(pointLight);
 
 		// Earth
-		// const earthTexture = new THREE.TextureLoader().load('/textures/earth.jpg');
-		// const earthTexture = new THREE.TextureLoader().load('/textures/earth.png');
-		// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
-		const earthTexture = new THREE.TextureLoader().load('/textures/earthmap.jpg');
+		const earthTexture = new THREE.TextureLoader().load(earthTextureUrl);
 
 		const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
 		const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
@@ -45,7 +48,7 @@
 		scene.add(earth);
 
 		// Eyes
-		const eyeTexture = new THREE.TextureLoader().load('/textures/eye.png');
+		const eyeTexture = new THREE.TextureLoader().load(eyeTextureUrl);
 		const eyeMaterial = new THREE.MeshStandardMaterial({ map: eyeTexture });
 		const eyeGeometry = new THREE.SphereGeometry(0.3, 32, 32);
 
