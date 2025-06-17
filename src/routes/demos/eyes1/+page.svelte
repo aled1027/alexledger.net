@@ -18,6 +18,7 @@
 	let earth: THREE.Mesh;
 	let eyeModel: THREE.Group;
 	let stats: Stats;
+	let eyeGroup: THREE.Group = new THREE.Group();
 
 	const earthRadius: number = 5; // Radius of the Earth sphere
 	const eyeRadius: number = 1; // Radius of the eye model
@@ -88,37 +89,35 @@
 		scene.add(earth);
 
 		// Eyes
-		const theta = Math.random() * 2 * Math.PI;
-		const phi = Math.acos(2 * Math.random() - 1);
-		const x = Math.sin(phi) * Math.cos(theta);
-		const y = Math.sin(phi) * Math.sin(theta);
-		const z = -1 * Math.cos(phi);
 
-		const eyeDistance = earthRadius + 2 * eyeRadius; // Position eyes 0.5 units above earth's surface
-		const direction = new THREE.Vector3(x, y, z);
-		const position = direction.clone().multiplyScalar(eyeDistance);
+		for (let i = 0; i < 10; i++) {
+			const theta = Math.random() * 2 * Math.PI;
+			const phi = Math.acos(2 * Math.random() - 1);
+			const x = Math.sin(phi) * Math.cos(theta);
+			const y = Math.sin(phi) * Math.sin(theta);
+			const z = -1 * Math.cos(phi);
 
-		// Create a copy of the eye model for this position
-		const eye = eyeModel.clone();
-		eye.position.copy(position);
+			const eyeDistance = earthRadius + 2 * eyeRadius; // Position eyes 0.5 units above earth's surface
+			const direction = new THREE.Vector3(x, y, z);
+			const position = direction.clone().multiplyScalar(eyeDistance);
 
-		// Make the eye look at the center of the Earth (0,0,0)
-		eye.lookAt(0, 0, 0);
+			// Create a copy of the eye model for this position
+			const eye = eyeModel.clone();
+			eye.position.copy(position);
+			eye.lookAt(0, 0, 0);
 
-		// Add a small random rotation around the eye's forward axis for variety
-		eye.rotateOnWorldAxis(direction, Math.random() * Math.PI * 2);
+			eyeGroup.add(eye);
+		}
+		earth.add(eyeGroup);
 
-		scene.add(eye);
 		animate();
 	}
 
 	function animate(): void {
 		requestAnimationFrame(animate);
 		stats.begin();
-
 		earth.rotation.y += 0.001;
 		renderer.render(scene, camera);
-
 		stats.end();
 	}
 
