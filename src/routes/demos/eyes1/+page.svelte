@@ -3,13 +3,17 @@
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
+	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
+	// TODO: can spin on tilt (in youtube video around minute 7)
+	// TODO: add background stars
+
 	let container;
 	let renderer, scene, camera, controls;
 	let earth, eyeGroup;
 
 	// const earthTexture = new THREE.TextureLoader().load('/textures/earth.jpg');
 	// const earthTexture = new THREE.TextureLoader().load('/textures/earth.png');
-	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	const earthTextureUrl = '/textures/earthmap.jpg';
 	const eyeTextureUrl = '/textures/eye-sphere.png';
 
@@ -73,13 +77,17 @@
 			const theta = Math.random() * 2 * Math.PI;
 			const phi = Math.acos(2 * Math.random() - 1);
 
-			const x = radius * Math.sin(phi) * Math.cos(theta);
-			const y = radius * Math.sin(phi) * Math.sin(theta);
-			const z = radius * Math.cos(phi);
+			// Calculate position on sphere
+			const x = Math.sin(phi) * Math.cos(theta);
+			const y = Math.sin(phi) * Math.sin(theta);
+			const z = Math.cos(phi);
+
+			// Create normalized direction vector for this position
+			const direction = new THREE.Vector3(x, y, z);
 
 			// Position for both meshes
 			const position = direction.clone().multiplyScalar(eyeDistance);
-			
+
 			// Create white eye background
 			const whiteEye = new THREE.Mesh(whiteEyeGeometry, whiteEyeMaterial);
 			whiteEye.position.copy(position);
