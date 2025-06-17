@@ -4,6 +4,7 @@
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 	import Stats from 'three/examples/jsm/libs/stats.module';
+	import { onMount } from 'svelte';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
@@ -21,10 +22,13 @@
 	let eyeGroup: THREE.Group = new THREE.Group();
 	let frustum = new THREE.Frustum();
 	let frustumMatrix = new THREE.Matrix4();
+	let lastBlinkTime = 0; // Track when we last blinked
 
 	const earthRadius: number = 5; // Radius of the Earth sphere
 	const eyeRadius: number = 1; // Radius of the eye model
-	const numEyes: number = 40;
+	let isBlinking = false;
+	let blinkStartTime = 0;
+	const BLINK_DURATION = 150; // Duration of blink in milliseconds
 
 	// So num eyes is latitudeBands * longitudeBands
 	const latitudeBands = 8; // Number of latitude bands
@@ -185,7 +189,12 @@
 				scaleFactor = 1.0 - 0.5 * t; // Linearly interpolate from 1.0 to 0.5
 			}
 
+			// Preserve Y scale during blinks
+			const currentYScale = eye.scale.y / eye.userData.originalScale.y;
 			eye.scale.copy(eye.userData.originalScale).multiplyScalar(scaleFactor);
+			if (isBlinking) {
+				eye.scale.y = eye.userData.originalScale.y * 0.1 * scaleFactor;
+			}
 		});
 	}
 
@@ -204,10 +213,43 @@
 		if (earth) earth.rotation.y += 0.001;
 
 		// Update LOD
-		updateLOD();
+		// updateLOD();
+
+		// Handle blinking every second - do this last to preserve blink state
+		blinkEyes();
 
 		renderer.render(scene, camera);
 		stats.end();
+	}
+
+	function blinkEyes(): void {
+		const currentTime = performance.now();
+		if (currentTime - lastBlinkTime < 4000 && !isBlinking) {
+			return;
+		}
+		lastBlinkTime = currentTime;
+		console.log('About to start blinking eyes');
+		if (!isBlinking) {
+			isBlinking = true;
+			blinkStartTime = performance.now();
+
+			// Start the blink
+			for (const eye of eyeGroup.children) {
+				const originalScale = eye.userData.originalScale.clone();
+				eye.scale.set(originalScale.x, originalScale.y * 0.1, originalScale.z); // "squish"
+			}
+		} else {
+			// Check if blink duration has passed
+			const currentTime = performance.now();
+			if (currentTime - blinkStartTime >= BLINK_DURATION) {
+				// End the blink
+				for (const eye of eyeGroup.children) {
+					const originalScale = eye.userData.originalScale.clone();
+					eye.scale.copy(originalScale); // back to normal
+				}
+				isBlinking = false;
+			}
+		}
 	}
 
 	function resizeRenderer(): void {
@@ -225,6 +267,7 @@
 		stats = new Stats();
 		stats.showPanel(0); // 0: fps, 1: ms
 		container.appendChild(stats.dom);
+
 		window.addEventListener('resize', resizeRenderer);
 		return () => {
 			window.removeEventListener('resize', resizeRenderer);
