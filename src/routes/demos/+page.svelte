@@ -63,11 +63,6 @@
 		color: var(--accent);
 	}
 
-	h2 {
-		font-size: 1.5rem;
-		font-weight: bold;
-	}
-
 	.logo {
 		grid-area: logo;
 		display: flex;
