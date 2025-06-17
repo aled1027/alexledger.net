@@ -89,18 +89,6 @@
 		padding-inline: 2rem;
 	}
 
-	.menu {
-		grid-area: menu;
-	}
-
-	.menu ul {
-		display: flex;
-		gap: 2rem;
-		list-style: none;
-		justify-content: flex-end;
-		padding-inline: 2rem;
-	}
-
 	.launch {
 		grid-area: launch;
 		display: flex;

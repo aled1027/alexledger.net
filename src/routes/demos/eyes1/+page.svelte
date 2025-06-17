@@ -1,5 +1,5 @@
 <!-- FloatingEyes.svelte -->
-<script>
+<script lang="ts">
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -10,31 +10,35 @@
 	// TODO: can spin on tilt (in youtube video around minute 7)
 	// TODO: add background stars
 
-	let container;
-	let renderer, scene, camera, controls;
-	let earth;
-	let eyeModel;
-	let stats;
-	const earthRadius = 5; // Radius of the Earth sphere
-	const eyeRadius = 1; // Radius of the eye model
+	let container: HTMLDivElement;
+	let renderer: THREE.WebGLRenderer;
+	let scene: THREE.Scene;
+	let camera: THREE.PerspectiveCamera;
+	let controls: OrbitControls;
+	let earth: THREE.Mesh;
+	let eyeModel: THREE.Group;
+	let stats: Stats;
 
-	const earthTextureUrl = '/textures/earthmap.jpg';
-	const eyeModelUrl = '/textures/blue_eye.glb';
+	const earthRadius: number = 5; // Radius of the Earth sphere
+	const eyeRadius: number = 1; // Radius of the eye model
+
+	const earthTextureUrl: string = '/textures/earthmap.jpg';
+	const eyeModelUrl: string = '/textures/blue_eye.glb';
 
 	// Load the eye model once and reuse it
-	const loadEyeModel = () => {
+	const loadEyeModel = (): Promise<void> => {
 		return new Promise((resolve) => {
-			const loader = new GLTFLoader();
+			const loader: GLTFLoader = new GLTFLoader();
 			loader.load(eyeModelUrl, (gltf) => {
 				eyeModel = gltf.scene;
 
 				// Compute the bounding sphere to get current radius
-				const boundingBox = new THREE.Box3().setFromObject(eyeModel);
-				const boundingSphere = new THREE.Sphere();
+				const boundingBox: THREE.Box3 = new THREE.Box3().setFromObject(eyeModel);
+				const boundingSphere: THREE.Sphere = new THREE.Sphere();
 				boundingBox.getBoundingSphere(boundingSphere);
 
 				// Scale the model to match desired radius
-				const scale = eyeRadius / boundingSphere.radius;
+				const scale: number = eyeRadius / boundingSphere.radius;
 				eyeModel.scale.set(scale, scale, scale);
 
 				resolve();
@@ -42,7 +46,7 @@
 		});
 	};
 
-	async function init() {
+	async function init(): Promise<void> {
 		await loadEyeModel();
 
 		// Scene setup
@@ -53,7 +57,7 @@
 			0.1,
 			1000
 		);
-		camera.position.z = 15;
+		camera.position.z = 25;
 
 		renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setSize(container.clientWidth, container.clientHeight);
@@ -72,7 +76,6 @@
 		// Lighting
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 		scene.add(ambientLight);
-
 		const pointLight = new THREE.PointLight(0xffffff, 1);
 		pointLight.position.set(10, 10, 10);
 		scene.add(pointLight);
@@ -94,15 +97,22 @@
 		const eyeDistance = earthRadius + 2 * eyeRadius; // Position eyes 0.5 units above earth's surface
 		const direction = new THREE.Vector3(x, y, z);
 		const position = direction.clone().multiplyScalar(eyeDistance);
+
+		// Create a copy of the eye model for this position
 		const eye = eyeModel.clone();
 		eye.position.copy(position);
 
+		// Make the eye look at the center of the Earth (0,0,0)
+		eye.lookAt(0, 0, 0);
 
-		earth.add(eye);
+		// Add a small random rotation around the eye's forward axis for variety
+		eye.rotateOnWorldAxis(direction, Math.random() * Math.PI * 2);
+
+		scene.add(eye);
 		animate();
 	}
 
-	function animate() {
+	function animate(): void {
 		requestAnimationFrame(animate);
 		stats.begin();
 
@@ -112,10 +122,10 @@
 		stats.end();
 	}
 
-	function resizeRenderer() {
+	function resizeRenderer(): void {
 		if (container && renderer) {
-			const width = container.clientWidth;
-			const height = container.clientHeight;
+			const width: number = container.clientWidth;
+			const height: number = container.clientHeight;
 			camera.aspect = width / height;
 			camera.updateProjectionMatrix();
 			renderer.setSize(width, height);
