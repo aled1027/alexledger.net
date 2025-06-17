@@ -16,6 +16,11 @@
 			>Demo code</a
 		>
 	</p>
+	<p>
+		This is a marquee effect that scrolls logos, or this demo images, from right to left. This
+		version is built with only html and CSS. (It's in a svelte repo, but no svelte features are
+		used.) On hover, the images grow and rotate.
+	</p>
 </div>
 
 <div class="marquee mt-xl">
@@ -76,8 +81,9 @@
 		grid-row-gap: var(--marquee-gutter);
 		width: 100%;
 		max-width: 100vw;
-		overflow: hidden;
+		overflow-x: hidden;
 		position: relative;
+		padding: 20px 0; /* Add padding to ensure hover effects don't get cut off */
 	}
 
 	.marquee::after {
@@ -107,12 +113,21 @@
 	.marquee__content > div {
 		width: var(--marquee-item-width);
 		height: var(--marquee-item-height);
+		transition: transform 0.3s ease;
+		position: relative; /* Ensure z-index works properly */
+	}
+
+	.marquee__content > div:hover {
+		transform: scale(1.1) rotate(5deg);
+		z-index: 1;
+		cursor: pointer;
 	}
 
 	.marquee__content img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		border-radius: 8px;
 	}
 
 	.marquee__scroll {
