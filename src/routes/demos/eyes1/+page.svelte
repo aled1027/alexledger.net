@@ -48,11 +48,24 @@
 
 		// Eyes
 		const eyeTexture = new THREE.TextureLoader().load(eyeTextureUrl);
-		const eyeMaterial = new THREE.MeshStandardMaterial({ map: eyeTexture });
+		const eyeMaterial = new THREE.MeshStandardMaterial({ 
+			map: eyeTexture,
+			transparent: true,
+			opacity: 1,
+			side: THREE.FrontSide,
+			alphaTest: 0.5
+		});
+		const whiteEyeMaterial = new THREE.MeshBasicMaterial({
+			color: 0xffffff,
+			side: THREE.FrontSide
+		});
+		
 		const eyeGeometry = new THREE.SphereGeometry(0.3, 64, 64);
+		const whiteEyeGeometry = new THREE.SphereGeometry(0.29, 64, 64);
 
 		const eyeCount = 30;
-		const radius = 6;
+		const earthRadius = 5;
+		const eyeDistance = earthRadius + 0.5; // Position eyes 0.5 units above earth's surface
 		eyeGroup = new THREE.Group();
 
 		for (let i = 0; i < eyeCount; i++) {
