@@ -16,7 +16,7 @@
 	let eyeModel;
 	let stats;
 	const earthRadius = 5; // Radius of the Earth sphere
-	const eyeRadius = 0.1; // Radius of the eye model
+	const eyeRadius = 1; // Radius of the eye model
 
 	const earthTextureUrl = '/textures/earthmap.jpg';
 	const eyeModelUrl = '/textures/blue_eye.glb';
@@ -27,8 +27,16 @@
 			const loader = new GLTFLoader();
 			loader.load(eyeModelUrl, (gltf) => {
 				eyeModel = gltf.scene;
-				// Make the model much smaller
-				eyeModel.scale.set(0.1, 0.1, 0.1);
+
+				// Compute the bounding sphere to get current radius
+				const boundingBox = new THREE.Box3().setFromObject(eyeModel);
+				const boundingSphere = new THREE.Sphere();
+				boundingBox.getBoundingSphere(boundingSphere);
+
+				// Scale the model to match desired radius
+				const scale = eyeRadius / boundingSphere.radius;
+				eyeModel.scale.set(scale, scale, scale);
+
 				resolve();
 			});
 		});
@@ -77,22 +85,20 @@
 		scene.add(earth);
 
 		// Eyes
-		const eyeDistance = earthRadius + 0.5; // Position eyes 0.5 units above earth's surface
 		const theta = Math.random() * 2 * Math.PI;
 		const phi = Math.acos(2 * Math.random() - 1);
 		const x = Math.sin(phi) * Math.cos(theta);
 		const y = Math.sin(phi) * Math.sin(theta);
-		const z = Math.cos(phi);
+		const z = -1 * Math.cos(phi);
+
+		const eyeDistance = earthRadius + 2 * eyeRadius; // Position eyes 0.5 units above earth's surface
 		const direction = new THREE.Vector3(x, y, z);
 		const position = direction.clone().multiplyScalar(eyeDistance);
 		const eye = eyeModel.clone();
 		eye.position.copy(position);
 
-		// Make it face outward (away from center)
-		eye.up.set(0, 1, 0);
-		eye.lookAt(position.clone().multiplyScalar(2));
 
-		scene.add(eye);
+		earth.add(eye);
 		animate();
 	}
 
