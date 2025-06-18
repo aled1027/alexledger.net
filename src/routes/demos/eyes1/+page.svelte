@@ -41,6 +41,19 @@
 	const GROUP_BLINK_RADIUS = 2; // Radius for grouping nearby eyes for synchronized blinking
 	const GROUP_BLINK_CHANCE = 0.5; // 50% chance to include nearby eyes in group blink
 
+	const earthRadius: number = 5; // Radius of the Earth sphere
+	const eyeRadius: number = 1; // Radius of the eye model
+	let isBlinking = false;
+
+	// So num eyes is latitudeBands * longitudeBands
+	const latitudeBands = 8; // Number of latitude bands
+	const longitudeBands = 8; // Number of longitude bands
+	const LOD_DISTANCES = {
+		HIGH: 10,
+		MEDIUM: 20,
+		LOW: 30
+	};
+
 	// Track blinking eyes
 	interface BlinkingEye {
 		eye: THREE.Object3D;
@@ -72,20 +85,6 @@
 			return eyePos.distanceTo(sourcePos) < radius;
 		});
 	}
-
-	const earthRadius: number = 5; // Radius of the Earth sphere
-	const eyeRadius: number = 1; // Radius of the eye model
-	let isBlinking = false;
-	let blinkStartTime = 0;
-
-	// So num eyes is latitudeBands * longitudeBands
-	const latitudeBands = 8; // Number of latitude bands
-	const longitudeBands = 8; // Number of longitude bands
-	const LOD_DISTANCES = {
-		HIGH: 10,
-		MEDIUM: 20,
-		LOW: 30
-	};
 
 	const earthTextureUrl: string = '/textures/earthmap.jpg';
 	const eyeModelUrl: string = '/textures/blue_eye.glb';
