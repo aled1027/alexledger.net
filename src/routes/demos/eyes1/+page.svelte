@@ -155,7 +155,7 @@
 				invert: false,
 				resolution: 0.45
 			});
-			asciiEffect.setSize(window.innerWidth, window.innerHeight);
+			asciiEffect.setSize(container.clientWidth, container.clientHeight);
 			asciiEffect.domElement.style.color = 'white';
 			asciiEffect.domElement.style.backgroundColor = 'black';
 			container.appendChild(asciiEffect.domElement);
@@ -436,5 +436,10 @@
 		height: 100vh;
 		display: block;
 		overflow: hidden;
+		margin: 0;
+		padding: 0;
+		position: fixed;
+		top: 0;
+		left: 0;
 	}
 </style>
