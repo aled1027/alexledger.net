@@ -149,8 +149,10 @@
 		// Initialize Stats
 		stats = new Stats();
 		stats.dom.style.position = 'absolute';
-		stats.dom.style.top = '0px';
-		stats.dom.style.left = '0px';
+		stats.dom.style.top = 'auto';
+		stats.dom.style.left = 'auto';
+		stats.dom.style.bottom = '0px';
+		stats.dom.style.right = '0px';
 		container.appendChild(stats.dom);
 
 		// Controls
@@ -398,12 +400,47 @@
 	});
 </script>
 
-<div bind:this={container} class="three-container"></div>
+<div class="my-l">
+	<h2>Eyes Watching the Universe</h2>
+
+	<p>
+		This is a demo I made for a project I'm working on for a space telescope organization. The
+		concept, which the organization conceived of, is that space telescopes are like eyeballs
+		orbiting the earth, watching the universe.
+	</p>
+	<p>
+		For the earth, I used <a href="https://github.com/bobbyroe/threejs-earth/tree/main"
+			>bobbyroe's approach</a
+		>, which used an earth texture map from
+		<a href="https://planetpixelemporium.com/earth.html">Planet Pixel Emporium</a>. The eye model I
+		downloaded from
+		<a href="https://sketchfab.com/3d-models/blue-eye-922ad6f1f6034ba3beded5b709fd3703">Sketchfab</a
+		>.
+	</p>
+	<p>
+		The eyes are laid out in a lattice structure around the Earth, each looking out into the
+		universe. The eyes blink at random intervals to give a sense of liveness.
+	</p>
+	<p>To build on this demo, I'd love to explore the following ideas:</p>
+	<ul>
+		<li>Tilt the Earth have it rotate around its tilted axis</li>
+		<li>Users could add and remove eyes, like launching a new space telescope</li>
+		<li>Have the eyes respond to events (e.g. a comet passing by)</li>
+		<li>Groups of eyes would look together interesting events</li>
+		<li>Give the eyes different colors and sizes, to reflect different types of telescopes.</li>
+		<li>
+			The current blinking implementation is quite crude, in that the eyes scale to flat
+			temporarily, so exploring better blinking would be fun.
+		</li>
+	</ul>
+
+	<div class="mt-xl three-container" bind:this={container}></div>
+</div>
 
 <style>
 	.three-container {
 		position: relative;
 		width: 100%;
-		height: 100vh;
+		height: 60vh;
 	}
 </style>
