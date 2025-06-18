@@ -510,6 +510,11 @@
 		The concept, which the organization conceived of, is that space telescopes are like eyeballs
 		orbiting the earth, watching the universe.
 	</p>
+
+	<p>
+		The eyes are laid out in a lattice structure around the Earth, each looking out into the
+		universe. The eyes blink at random intervals to give a sense of liveness.
+	</p>
 	<p>
 		For the earth, I used <a href="https://github.com/bobbyroe/threejs-earth/tree/main"
 			>bobbyroe's approach</a
@@ -518,10 +523,6 @@
 		downloaded from
 		<a href="https://sketchfab.com/3d-models/blue-eye-922ad6f1f6034ba3beded5b709fd3703">Sketchfab</a
 		>.
-	</p>
-	<p>
-		The eyes are laid out in a lattice structure around the Earth, each looking out into the
-		universe. The eyes blink at random intervals to give a sense of liveness.
 	</p>
 	<p>To build on this demo, I'd love to explore the following ideas:</p>
 	<ul>
