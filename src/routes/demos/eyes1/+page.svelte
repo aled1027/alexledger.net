@@ -5,8 +5,6 @@
 	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 	import Stats from 'three/examples/jsm/libs/stats.module';
 	import { AsciiEffect } from '$lib/asciiEffect';
-	import { onMount } from 'svelte';
-	import { color } from 'three/tsl';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
@@ -32,7 +30,7 @@
 	let lastBlinkTime = 0; // Track when we last blinked
 	const cameraPositionZ: number = 20; // Initial camera position on Z axis
 	let asciiEffect: AsciiEffect;
-	let USE_ASCII_EFFECT = true; // Flag to toggle ASCII effect
+	let useAsciiEffect = $state(true); // Flag to toggle ASCII effect
 
 	// Blinking configuration
 	const BASE_BLINK_INTERVAL = 2000; // Base time between blink cycles
@@ -150,9 +148,9 @@
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(container.clientWidth, container.clientHeight);
 
-		if (USE_ASCII_EFFECT) {
+		if (useAsciiEffect) {
 			asciiEffect = new AsciiEffect(renderer, ' .:-+*=%@#', {
-				invert: false,
+				invert: true,
 				resolution: 0.45
 			});
 			asciiEffect.setSize(container.clientWidth, container.clientHeight);
@@ -173,7 +171,7 @@
 		// Controls
 		controls = new OrbitControls(
 			camera,
-			USE_ASCII_EFFECT ? asciiEffect.domElement : renderer.domElement
+			useAsciiEffect ? asciiEffect.domElement : renderer.domElement
 		);
 		controls.enableDamping = true;
 		controls.dampingFactor = 0.05;
@@ -288,7 +286,7 @@
 		// Handle blinking every second - do this last to preserve blink state
 		blinkEyes();
 
-		if (USE_ASCII_EFFECT) {
+		if (useAsciiEffect) {
 			asciiEffect.render(scene, camera);
 		} else {
 			renderer.render(scene, camera);
@@ -408,10 +406,44 @@
 			camera.aspect = width / height;
 			camera.updateProjectionMatrix();
 			renderer.setSize(width, height);
-			if (USE_ASCII_EFFECT) {
+			if (useAsciiEffect) {
 				asciiEffect.setSize(width, height);
 			}
 		}
+	}
+
+	function toggleAsciiEffect(): void {
+		useAsciiEffect = !useAsciiEffect;
+
+		// Remove existing render element
+		while (container.firstChild) {
+			container.removeChild(container.firstChild);
+		}
+
+		// Add new render element based on current state
+		if (useAsciiEffect) {
+			asciiEffect = new AsciiEffect(renderer, ' .:-+*=%@#', {
+				invert: true,
+				resolution: 0.45
+			});
+			asciiEffect.setSize(container.clientWidth, container.clientHeight);
+			asciiEffect.domElement.style.color = 'white';
+			asciiEffect.domElement.style.backgroundColor = 'black';
+			container.appendChild(asciiEffect.domElement);
+		} else {
+			container.appendChild(renderer.domElement);
+		}
+
+		// Update controls target
+		controls = new OrbitControls(
+			camera,
+			useAsciiEffect ? asciiEffect.domElement : renderer.domElement
+		);
+		controls.enableDamping = true;
+		controls.dampingFactor = 0.05;
+
+		// Re-add stats
+		container.appendChild(stats.dom);
 	}
 
 	$effect(() => {
@@ -428,18 +460,29 @@
 	});
 </script>
 
+<button class="button toggle-button" onclick={toggleAsciiEffect}>
+	{useAsciiEffect ? 'Disable' : 'Enable'} ASCII Effect
+</button>
 <div bind:this={container} class="three-container"></div>
 
 <style>
 	.three-container {
+		position: relative;
 		width: 100%;
 		height: 100vh;
-		display: block;
-		overflow: hidden;
-		margin: 0;
-		padding: 0;
-		position: fixed;
-		top: 0;
-		left: 0;
+	}
+
+	.toggle-button {
+		padding: 8px 16px;
+		background-color: rgba(0, 0, 0, 0.7);
+		color: white;
+		border: 1px solid white;
+		border-radius: 4px;
+		cursor: pointer;
+		font-family: monospace;
+	}
+
+	.toggle-button:hover {
+		background-color: rgba(0, 0, 0, 0.9);
 	}
 </style>
