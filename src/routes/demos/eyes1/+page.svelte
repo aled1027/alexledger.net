@@ -4,7 +4,9 @@
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 	import Stats from 'three/examples/jsm/libs/stats.module';
+	import { AsciiEffect } from '$lib/asciiEffect';
 	import { onMount } from 'svelte';
+	import { color } from 'three/tsl';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
@@ -28,7 +30,9 @@
 	let frustum = new THREE.Frustum();
 	let frustumMatrix = new THREE.Matrix4();
 	let lastBlinkTime = 0; // Track when we last blinked
-	const cameraPositionZ: number = 50; // Initial camera position on Z axis
+	const cameraPositionZ: number = 20; // Initial camera position on Z axis
+	let asciiEffect: AsciiEffect;
+	let USE_ASCII_EFFECT = true; // Flag to toggle ASCII effect
 
 	// Blinking configuration
 	const BASE_BLINK_INTERVAL = 2000; // Base time between blink cycles
@@ -145,7 +149,19 @@
 		});
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(container.clientWidth, container.clientHeight);
-		container.appendChild(renderer.domElement);
+
+		if (USE_ASCII_EFFECT) {
+			asciiEffect = new AsciiEffect(renderer, ' .:-+*=%@#', {
+				invert: false,
+				resolution: 0.45
+			});
+			asciiEffect.setSize(window.innerWidth, window.innerHeight);
+			asciiEffect.domElement.style.color = 'white';
+			asciiEffect.domElement.style.backgroundColor = 'black';
+			container.appendChild(asciiEffect.domElement);
+		} else {
+			container.appendChild(renderer.domElement);
+		}
 
 		// Initialize Stats
 		stats = new Stats();
@@ -155,7 +171,10 @@
 		container.appendChild(stats.dom);
 
 		// Controls
-		controls = new OrbitControls(camera, renderer.domElement);
+		controls = new OrbitControls(
+			camera,
+			USE_ASCII_EFFECT ? asciiEffect.domElement : renderer.domElement
+		);
 		controls.enableDamping = true;
 		controls.dampingFactor = 0.05;
 
@@ -265,7 +284,11 @@
 		// Handle blinking every second - do this last to preserve blink state
 		blinkEyes();
 
-		renderer.render(scene, camera);
+		if (USE_ASCII_EFFECT) {
+			asciiEffect.render(scene, camera);
+		} else {
+			renderer.render(scene, camera);
+		}
 		stats.end();
 	}
 
@@ -381,6 +404,9 @@
 			camera.aspect = width / height;
 			camera.updateProjectionMatrix();
 			renderer.setSize(width, height);
+			if (USE_ASCII_EFFECT) {
+				asciiEffect.setSize(width, height);
+			}
 		}
 	}
 
