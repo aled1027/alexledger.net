@@ -129,6 +129,7 @@
 
 		// Scene setup
 		scene = new THREE.Scene();
+		scene.background = null; // Make scene background transparent
 		camera = new THREE.PerspectiveCamera(
 			75,
 			container.clientWidth / container.clientHeight,
@@ -142,7 +143,8 @@
 			antialias: true,
 			// powerPreference: 'high-performance',
 			powerPreference: 'default',
-			precision: 'mediump'
+			precision: 'mediump',
+			alpha: true // Enable transparency
 		});
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(container.clientWidth, container.clientHeight);
