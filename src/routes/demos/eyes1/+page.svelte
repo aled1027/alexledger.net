@@ -10,7 +10,10 @@
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
 	// TODO: can spin on tilt (in youtube video around minute 7)
 	// TODO: add background stars
-	// I believe i used I downloaded this model
+	// TODO: make the eyes different colors
+	// I believe i used I downloaded this model. Tried by traversing over the mesh, but I
+	// was only able to update the white parts, not the iris. I think because it's loaded in as a texture
+	// from the model. I imagine this might be easy to change around in blender.
 	// https://sketchfab.com/3d-models/blue-eye-922ad6f1f6034ba3beded5b709fd3703
 
 	let container: HTMLDivElement;
