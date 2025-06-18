@@ -240,28 +240,32 @@
 	}
 
 	function updateLOD(): void {
-		eyeGroup.children.forEach((eye) => {
-			const distance = camera.position.distanceTo(eye.getWorldPosition(new THREE.Vector3()));
+		eyeGroup.children
+			.filter((eye) => blinkingEyes.has(eyeGroup.children.indexOf(eye)))
+			.forEach((eye) => {
+				// Check if the eye is blinking
 
-			// Calculate a smooth scale factor based on distance
-			let scaleFactor: number;
-			if (distance <= LOD_DISTANCES.HIGH) {
-				scaleFactor = 1.0;
-			} else if (distance >= LOD_DISTANCES.LOW) {
-				scaleFactor = 0.5;
-			} else {
-				// Smooth interpolation between LOD levels
-				const t = (distance - LOD_DISTANCES.HIGH) / (LOD_DISTANCES.LOW - LOD_DISTANCES.HIGH);
-				scaleFactor = 1.0 - 0.5 * t; // Linearly interpolate from 1.0 to 0.5
-			}
+				const distance = camera.position.distanceTo(eye.getWorldPosition(new THREE.Vector3()));
 
-			// Preserve Y scale during blinks
-			const currentYScale = eye.scale.y / eye.userData.originalScale.y;
-			eye.scale.copy(eye.userData.originalScale).multiplyScalar(scaleFactor);
-			if (isBlinking) {
-				eye.scale.y = eye.userData.originalScale.y * 0.1 * scaleFactor;
-			}
-		});
+				// Calculate a smooth scale factor based on distance
+				let scaleFactor: number;
+				if (distance <= LOD_DISTANCES.HIGH) {
+					scaleFactor = 1.0;
+				} else if (distance >= LOD_DISTANCES.LOW) {
+					scaleFactor = 0.5;
+				} else {
+					// Smooth interpolation between LOD levels
+					const t = (distance - LOD_DISTANCES.HIGH) / (LOD_DISTANCES.LOW - LOD_DISTANCES.HIGH);
+					scaleFactor = 1.0 - 0.5 * t; // Linearly interpolate from 1.0 to 0.5
+				}
+
+				// Preserve Y scale during blinks
+				const currentYScale = eye.scale.y / eye.userData.originalScale.y;
+				eye.scale.copy(eye.userData.originalScale).multiplyScalar(scaleFactor);
+				if (isBlinking) {
+					eye.scale.y = eye.userData.originalScale.y * 0.1 * scaleFactor;
+				}
+			});
 	}
 
 	function animate(): void {
@@ -279,7 +283,7 @@
 		if (earth) earth.rotation.y += 0.001;
 
 		// Update LOD
-		// updateLOD();
+		updateLOD();
 
 		// Handle blinking every second - do this last to preserve blink state
 		blinkEyes();
