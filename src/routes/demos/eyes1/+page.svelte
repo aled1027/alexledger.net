@@ -423,9 +423,10 @@
 		// Add new render element based on current state
 		if (useAsciiEffect) {
 			asciiEffect = new AsciiEffect(renderer, ' .:-+*=%@#', {
-				invert: true,
-				resolution: 0.45
+				invert: true
+				// resolution: 0.45
 			});
+			// asciiEffect.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			asciiEffect.setSize(container.clientWidth, container.clientHeight);
 			asciiEffect.domElement.style.color = 'white';
 			asciiEffect.domElement.style.backgroundColor = 'black';
