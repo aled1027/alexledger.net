@@ -31,7 +31,7 @@
 	let isBlinking = false;
 
 	// Blinking configuration
-	const BASE_BLINK_INTERVAL = 2000; // Base time between blink cycles
+	const BASE_BLINK_INTERVAL = 1750; // Base time between blink cycles
 	const BLINK_INTERVAL_VARIANCE = 1500; // Random variance in blink timing
 	const MIN_EYES_PER_BLINK = 1; // Minimum eyes to blink at once
 	const MAX_EYES_PER_BLINK = 3; // Maximum eyes to blink at once
@@ -389,9 +389,6 @@
 
 	$effect(() => {
 		init();
-		stats = new Stats();
-		stats.showPanel(0); // 0: fps, 1: ms
-		container.appendChild(stats.dom);
 
 		window.addEventListener('resize', resizeRenderer);
 		return () => {
