@@ -10,6 +10,8 @@
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
 	// TODO: can spin on tilt (in youtube video around minute 7)
 	// TODO: add background stars
+	// I believe i used I downloaded this model
+	// https://sketchfab.com/3d-models/blue-eye-922ad6f1f6034ba3beded5b709fd3703
 
 	let container: HTMLDivElement;
 	let renderer: THREE.WebGLRenderer;
@@ -25,11 +27,53 @@
 	let lastBlinkTime = 0; // Track when we last blinked
 	const cameraPositionZ: number = 50; // Initial camera position on Z axis
 
+	// Blinking configuration
+	const BASE_BLINK_INTERVAL = 2000; // Base time between blink cycles
+	const BLINK_INTERVAL_VARIANCE = 1500; // Random variance in blink timing
+	const MIN_EYES_PER_BLINK = 1; // Minimum eyes to blink at once
+	const MAX_EYES_PER_BLINK = 3; // Maximum eyes to blink at once
+	const BASE_BLINK_DURATION = 150; // Base duration of a blink
+	const BLINK_DURATION_VARIANCE = 50; // Random variance in blink duration
+	const DOUBLE_BLINK_CHANCE = 0.2; // 20% chance of a double-blink
+	const GROUP_BLINK_RADIUS = 2; // Radius for grouping nearby eyes for synchronized blinking
+	const GROUP_BLINK_CHANCE = 0.5; // 50% chance to include nearby eyes in group blink
+
+	// Track blinking eyes
+	interface BlinkingEye {
+		eye: THREE.Object3D;
+		startTime: number;
+		duration: number;
+		isSecondBlink?: boolean;
+	}
+	let blinkingEyes: Map<number, BlinkingEye> = new Map();
+
+	// Easing function for natural blink animation
+	function easeInOutQuad(t: number): number {
+		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+	}
+
+	// Get random number between min and max
+	function getRandomInRange(min: number, max: number): number {
+		return min + Math.random() * (max - min);
+	}
+
+	// Find nearby eyes within radius
+	function findNearbyEyes(sourceEye: THREE.Object3D, radius: number): THREE.Object3D[] {
+		const sourcePos = new THREE.Vector3();
+		sourceEye.getWorldPosition(sourcePos);
+
+		return eyeGroup.children.filter((eye) => {
+			if (eye === sourceEye) return false;
+			const eyePos = new THREE.Vector3();
+			eye.getWorldPosition(eyePos);
+			return eyePos.distanceTo(sourcePos) < radius;
+		});
+	}
+
 	const earthRadius: number = 5; // Radius of the Earth sphere
 	const eyeRadius: number = 1; // Radius of the eye model
 	let isBlinking = false;
 	let blinkStartTime = 0;
-	const BLINK_DURATION = 150; // Duration of blink in milliseconds
 
 	// So num eyes is latitudeBands * longitudeBands
 	const latitudeBands = 8; // Number of latitude bands
@@ -226,36 +270,106 @@
 	function blinkEyes(): void {
 		const currentTime = performance.now();
 		const timeSinceLastBlink = currentTime - lastBlinkTime;
-		const isTimeToBlink = timeSinceLastBlink >= 4000;
+		const nextBlinkInterval = BASE_BLINK_INTERVAL + (Math.random() - 0.5) * BLINK_INTERVAL_VARIANCE;
 
-		if (!isTimeToBlink && !isBlinking) return;
-
-		if (!isBlinking) {
-			startBlink(currentTime);
-		} else {
-			updateBlink(currentTime);
+		// Check if it's time to start new blinks
+		if (timeSinceLastBlink >= nextBlinkInterval) {
+			lastBlinkTime = currentTime;
+			startNewBlinks(currentTime);
 		}
+
+		// Update all currently blinking eyes
+		updateBlinkingEyes(currentTime);
 	}
 
-	function startBlink(currentTime: number): void {
-		isBlinking = true;
-		lastBlinkTime = currentTime;
-		blinkStartTime = currentTime;
-		setEyeScales(0.1);
-	}
+	function startNewBlinks(currentTime: number): void {
+		// Get available eyes (those not currently blinking)
+		const availableEyes = Array.from(eyeGroup.children.entries()).filter(
+			([index]) => !blinkingEyes.has(index)
+		);
 
-	function updateBlink(currentTime: number): void {
-		if (currentTime - blinkStartTime >= BLINK_DURATION) {
-			isBlinking = false;
-			setEyeScales(1);
-		}
-	}
+		if (availableEyes.length === 0) return;
 
-	function setEyeScales(yScaleFactor: number): void {
-		eyeGroup.children.forEach((eye) => {
-			const originalScale = eye.userData.originalScale;
-			eye.scale.set(originalScale.x, originalScale.y * yScaleFactor, originalScale.z);
+		// Randomly select initial eyes to blink
+		const numEyes = Math.floor(getRandomInRange(MIN_EYES_PER_BLINK, MAX_EYES_PER_BLINK + 1));
+		const selectedEyes = shuffleArray(availableEyes).slice(0, numEyes);
+
+		// For each selected eye, possibly include nearby eyes
+		const allEyesToBlink = new Set<[number, THREE.Object3D]>();
+		selectedEyes.forEach((eyePair) => {
+			allEyesToBlink.add(eyePair);
+
+			// Randomly decide to include nearby eyes
+			if (Math.random() < GROUP_BLINK_CHANCE) {
+				const nearbyEyes = findNearbyEyes(eyePair[1], GROUP_BLINK_RADIUS);
+				nearbyEyes.forEach((nearbyEye) => {
+					const index = eyeGroup.children.indexOf(nearbyEye);
+					if (index !== -1 && !blinkingEyes.has(index)) {
+						allEyesToBlink.add([index, nearbyEye]);
+					}
+				});
+			}
 		});
+
+		// Start blinking for all selected eyes
+		Array.from(allEyesToBlink).forEach(([index, eye]) => {
+			const duration = getRandomInRange(
+				BASE_BLINK_DURATION - BLINK_DURATION_VARIANCE / 2,
+				BASE_BLINK_DURATION + BLINK_DURATION_VARIANCE / 2
+			);
+
+			blinkingEyes.set(index, {
+				eye,
+				startTime: currentTime,
+				duration,
+				isSecondBlink: false
+			});
+			setEyeScale(eye, 0.9); // Start with a slight closure
+		});
+	}
+
+	function updateBlinkingEyes(currentTime: number): void {
+		blinkingEyes.forEach((blinkData, index) => {
+			const blinkAge = currentTime - blinkData.startTime;
+
+			if (blinkAge >= blinkData.duration) {
+				// Finish blink
+				setEyeScale(blinkData.eye, 1);
+
+				// Check for double-blink
+				if (!blinkData.isSecondBlink && Math.random() < DOUBLE_BLINK_CHANCE) {
+					// Start second blink with slightly different timing
+					blinkingEyes.set(index, {
+						eye: blinkData.eye,
+						startTime: currentTime,
+						duration: blinkData.duration * 0.8, // Slightly faster second blink
+						isSecondBlink: true
+					});
+				} else {
+					blinkingEyes.delete(index);
+				}
+			} else {
+				// Apply more natural easing for blink animation
+				const t = Math.min(1, blinkAge / blinkData.duration);
+				const easedScale = 1 - 0.9 * easeInOutQuad(t) * (1 - easeInOutQuad(t)) * 4;
+				setEyeScale(blinkData.eye, easedScale);
+			}
+		});
+	}
+
+	function setEyeScale(eye: THREE.Object3D, yScaleFactor: number): void {
+		const originalScale = eye.userData.originalScale;
+		eye.scale.set(originalScale.x, originalScale.y * yScaleFactor, originalScale.z);
+	}
+
+	// Fisher-Yates shuffle algorithm
+	function shuffleArray<T>(array: Array<T>): Array<T> {
+		const shuffled = [...array];
+		for (let i = shuffled.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+		}
+		return shuffled;
 	}
 
 	function resizeRenderer(): void {
