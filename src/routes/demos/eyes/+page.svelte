@@ -140,7 +140,8 @@
 		// Optimize renderer
 		renderer = new THREE.WebGLRenderer({
 			antialias: true,
-			powerPreference: 'high-performance',
+			// powerPreference: 'high-performance',
+			powerPreference: 'default',
 			precision: 'mediump'
 		});
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -249,6 +250,64 @@
 					eye.scale.y = eye.userData.originalScale.y * 0.1 * scaleFactor;
 				}
 			});
+	}
+
+	function teardown(): void {
+		// Stop animation loop
+		if (renderer) {
+			renderer.setAnimationLoop(null);
+		}
+
+		// Clean up stats
+		if (stats && stats.dom && stats.dom.parentElement) {
+			stats.dom.parentElement.removeChild(stats.dom);
+		}
+
+		// Dispose of Earth resources
+		if (earth) {
+			if (earth.geometry) earth.geometry.dispose();
+			if (earth.material instanceof THREE.Material) {
+				if (earth.material.map) earth.material.map.dispose();
+				earth.material.dispose();
+			}
+		}
+
+		// Clean up eye models
+		if (eyeGroup) {
+			eyeGroup.traverse((child) => {
+				if (child instanceof THREE.Mesh) {
+					if (child.geometry) child.geometry.dispose();
+					if (child.material instanceof THREE.Material) {
+						if (child.material.map) child.material.map.dispose();
+						child.material.dispose();
+					}
+				}
+			});
+		}
+
+		// Clean up controls
+		if (controls) {
+			controls.dispose();
+		}
+
+		// Clean up renderer
+		if (renderer) {
+			renderer.dispose();
+			if (renderer.domElement && renderer.domElement.parentElement) {
+				renderer.domElement.parentElement.removeChild(renderer.domElement);
+			}
+		}
+
+		// Clear references
+		renderer = null;
+		scene = null;
+		camera = null;
+		controls = null;
+		earth = null;
+		eyeModel = null;
+		stats = null;
+		eyeGroup = new THREE.Group();
+		blinkingEyes.clear();
 	}
 
 	function animate(): void {
@@ -397,6 +456,7 @@
 
 		window.addEventListener('resize', resizeRenderer);
 		return () => {
+			teardown();
 			window.removeEventListener('resize', resizeRenderer);
 			container.innerHTML = '';
 		};
