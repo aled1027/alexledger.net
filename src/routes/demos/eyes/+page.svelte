@@ -4,6 +4,7 @@
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 	import Stats from 'three/examples/jsm/libs/stats.module';
+	import { onMount } from 'svelte';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
@@ -389,7 +390,9 @@
 		}
 	}
 
-	$effect(() => {
+	// $effect(() => {});
+
+	onMount(() => {
 		init();
 
 		window.addEventListener('resize', resizeRenderer);
