@@ -157,7 +157,7 @@
 		stats.dom.style.left = 'auto';
 		stats.dom.style.bottom = '0px';
 		stats.dom.style.right = '0px';
-		container.appendChild(stats.dom);
+		// container.appendChild(stats.dom);
 
 		// Controls
 		controls = new OrbitControls(camera, renderer.domElement);
@@ -544,5 +544,7 @@
 		position: relative;
 		width: 100%;
 		height: 60vh;
+		margin-inline: auto;
+		cursor: grab;
 	}
 </style>
