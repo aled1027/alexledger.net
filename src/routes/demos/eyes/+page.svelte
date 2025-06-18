@@ -165,11 +165,38 @@
 		controls.dampingFactor = 0.05;
 
 		// Lighting
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 3.0); // Even higher intensity
 		scene.add(ambientLight);
-		const pointLight = new THREE.PointLight(0xffffff, 1);
-		pointLight.position.set(10, 10, 10);
+
+		// Main point light
+		const pointLight = new THREE.PointLight(0xffffff, 4.0);
+		pointLight.position.set(5, 5, 5);
 		scene.add(pointLight);
+
+		// Secondary point light for better coverage
+		const pointLight2 = new THREE.PointLight(0xffffff, 3.0);
+		pointLight2.position.set(-5, -5, 5);
+		scene.add(pointLight2);
+
+		// Stronger front light
+		const frontLight = new THREE.PointLight(0xffffff, 3.0);
+		frontLight.position.set(0, 0, 10);
+		scene.add(frontLight);
+
+		// Add a hemisphere light for better ambient illumination
+		const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8888ff, 2.0);
+		scene.add(hemiLight);
+
+		// Create a light group that will follow the camera to ensure eyes are always well-lit
+		const cameraLights = new THREE.Group();
+		const rightEyeLight = new THREE.PointLight(0xffffff, 1.5, 15, 2);
+		rightEyeLight.position.set(3, 0, 2);
+		const leftEyeLight = new THREE.PointLight(0xffffff, 1.5, 15, 2);
+		leftEyeLight.position.set(-3, 0, 2);
+		cameraLights.add(rightEyeLight);
+		cameraLights.add(leftEyeLight);
+		camera.add(cameraLights); // Attach to camera so it moves with view
+		scene.add(camera); // Need to add camera to scene for lights to work
 
 		// Earth - optimize geometry
 		const earthGeometry = new THREE.SphereGeometry(earthRadius, 32, 32); // Reduced segments
@@ -178,7 +205,10 @@
 			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 			const earthMaterial = new THREE.MeshStandardMaterial({
 				map: texture,
-				side: THREE.FrontSide
+				side: THREE.FrontSide,
+				metalness: 0.0,
+				roughness: 0.5, // Make it less rough to reflect more light
+				emissive: 0x222222 // Add some self-illumination
 			});
 			earth = new THREE.Mesh(earthGeometry, earthMaterial);
 			earth.geometry.computeBoundingSphere();
