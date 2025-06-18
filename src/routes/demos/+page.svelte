@@ -11,6 +11,11 @@
 			title: 'Marquee',
 			date: 'June 17, 2025',
 			link: '/demos/marquee'
+		},
+		{
+			title: 'Eyes Watching the Universe',
+			date: 'June 18, 2025',
+			link: '/demos/eyes'
 		}
 	];
 

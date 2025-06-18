@@ -402,10 +402,17 @@
 
 <div class="my-l">
 	<h2>Eyes Watching the Universe</h2>
+	<p>
+		<a
+			target="_blank"
+			href="https://github.com/aled1027/alexledger.net/tree/main/src/routes/demos/eyes/%2Bpage.svelte"
+			>Demo code</a
+		>
+	</p>
 
 	<p>
-		This is a demo I made for a project I'm working on for a space telescope organization. The
-		concept, which the organization conceived of, is that space telescopes are like eyeballs
+		This is a Three.js demo I made for a project I'm working on for a space telescope organization.
+		The concept, which the organization conceived of, is that space telescopes are like eyeballs
 		orbiting the earth, watching the universe.
 	</p>
 	<p>
