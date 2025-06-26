@@ -7,8 +7,8 @@
 	let scene: THREE.Scene;
 	let camera: THREE.PerspectiveCamera;
 	let particles: THREE.Points;
-	let particleCount = 1000;
-	let particleSize = 0.1;
+	let particleCount = 200;
+	let particleSize = 0.5;
 
 	function init() {
 		// Create scene
@@ -44,7 +44,13 @@
 		geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 		geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
 
-		const material = new THREE.PointsMaterial({ size: particleSize, color: 0xffffff });
+		const material = new THREE.PointsMaterial({
+			size: particleSize,
+			color: 0xffffff,
+			transparent: true,
+			map: new THREE.TextureLoader().load('/textures/eye.png'),
+			alphaTest: 0.5
+		});
 		material.sizeAttenuation = true;
 
 		particles = new THREE.Points(geometry, material);
