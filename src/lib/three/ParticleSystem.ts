@@ -5,9 +5,9 @@ export class ParticleSystem {
 	particleCount: number;
 	particleSize: number;
 
-	constructor(particleCount: number = 200, particleSize: number = 0.5) {
-		this.particleCount = particleCount;
-		this.particleSize = particleSize;
+	constructor() {
+		this.particleCount = 100;
+		this.particleSize = 30;
 		this.particles = this.createParticles();
 	}
 

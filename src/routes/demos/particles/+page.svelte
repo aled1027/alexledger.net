@@ -34,7 +34,7 @@
 	.three-container {
 		position: relative;
 		width: 100%;
-		height: 60vh;
+		height: 80vh;
 		border: 1px solid black;
 		margin-inline: auto;
 		cursor: grab;
