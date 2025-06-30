@@ -276,9 +276,8 @@
 			>Demo code</a
 		>
 	</p>
+	<p>Mouse over to see a bubble. Click to create a ripple.</p>
 	<div class="mt-xl three-container" bind:this={container}></div>
-	<p>Mouse over to see a bubble. Click to create a ripple</p>
-	.
 </div>
 
 <style>
