@@ -15,6 +15,8 @@
 	let rippleTime = 0;
 	let ripples: Array<{ position: THREE.Vector3; startTime: number; duration: number }> = [];
 
+	// TODO: add shadow
+
 	function getMouseIntersectionPoint(event: MouseEvent): THREE.Vector3 | null {
 		if (!raycaster) {
 			raycaster = new THREE.Raycaster();
@@ -122,6 +124,7 @@
 			},
 			vertexShader: `
 				varying vec2 vUv;
+				varying vec3 vWorldPosition;
 				uniform vec3 uDisplacement;
 				uniform float uRippleTime;
 				uniform int uRippleCount;
@@ -142,6 +145,7 @@
 
                     vec4 localPosition = vec4( position, 1.);
                     vec4 worldPosition = modelMatrix * localPosition;
+                    vWorldPosition = worldPosition.rgb;
                     float dist = (length(uDisplacement - worldPosition.rgb));
 
                     float min_distance = 5.;
@@ -184,19 +188,18 @@
 				uniform vec3 uRipplePositions[10];
 				uniform float uRippleTimes[10];
 				varying vec2 vUv;
+				varying vec3 vWorldPosition;
 				
 				void main() {
 					vec4 texColor = texture2D(uTexture, vUv);
 					
-					// Calculate ripple color effect
+					// Calculate ripple color effect using actual world position
 					float greenEffect = 0.0;
 					for (int i = 0; i < 10; i++) {
 						if (i >= uRippleCount) break;
 						
-						// Convert UV to world position (approximate)
-						vec2 worldPos = (vUv - 0.5) * 20.0; // Scale to match geometry
-						vec3 ripplePos = uRipplePositions[i];
-						float rippleDist = length(vec3(worldPos, 0.0) - ripplePos);
+						// Use the actual world position from vertex shader
+						float rippleDist = length(uRipplePositions[i] - vWorldPosition);
 						float rippleAge = uRippleTimes[i];
 						float rippleRadius = rippleAge * 8.0;
 						float rippleWidth = 2.0;
