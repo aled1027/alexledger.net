@@ -26,12 +26,14 @@
 			raycaster = new THREE.Raycaster();
 		}
 
-		pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-		pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+		// Calculate pointer coordinates relative to the container, not the window
+		const rect = container.getBoundingClientRect();
+		pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+		pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
 		raycaster.setFromCamera(pointer, camera);
 		const intersects = raycaster.intersectObjects([hitMesh]);
 		if (intersects.length > 0) {
-			// HERE
 			sphereMesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
 		}
 	}
@@ -83,11 +85,8 @@
 		scene.add(exploreMesh);
 
 		// Set up a hit mesh that covers the whole canvas, but isn't visible
-		const hitGeometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
-		const hitMaterial = new THREE.MeshBasicMaterial({
-			// transparent: true,
-			opacity: 0
-		});
+		const hitGeometry = new THREE.PlaneGeometry(aspect * cameraDistance * 4, cameraDistance * 4);
+		const hitMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 });
 		hitMesh = new THREE.Mesh(hitGeometry, hitMaterial);
 		hitMesh.position.set(0, 0, 0);
 		scene.add(hitMesh);
@@ -114,6 +113,7 @@
 		if (renderer) {
 			renderer.dispose();
 		}
+		window.removeEventListener('pointermove', onPointerMove);
 	});
 </script>
 
