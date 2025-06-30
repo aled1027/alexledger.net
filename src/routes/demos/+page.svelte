@@ -16,6 +16,11 @@
 			title: 'Eyes Watching the Universe',
 			date: 'June 18, 2025',
 			link: '/demos/eyes'
+		},
+		{
+			title: 'Ripple Text',
+			date: 'June 30, 2025',
+			link: '/demos/ripple-text'
 		}
 	];
 

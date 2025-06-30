@@ -268,7 +268,17 @@
 </script>
 
 <div class="my-l">
+	<h2>Ripple Text</h2>
+	<p>
+		<a
+			target="_blank"
+			href="https://github.com/aled1027/alexledger.net/tree/main/src/routes/demos/ripple-text/%2Bpage.svelte"
+			>Demo code</a
+		>
+	</p>
 	<div class="mt-xl three-container" bind:this={container}></div>
+	<p>Mouse over to see a bubble. Click to create a ripple</p>
+	.
 </div>
 
 <style>
