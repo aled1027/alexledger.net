@@ -6,11 +6,34 @@
 	let renderer: THREE.WebGLRenderer;
 	let scene: THREE.Scene;
 	let camera: THREE.OrthographicCamera;
+	let raycaster: THREE.Raycaster;
+	let pointer: THREE.Vector2;
+	let sphereMesh: THREE.Mesh;
+	let hitMesh: THREE.Mesh;
 
 	// Animation loop
 	function animate() {
 		renderer.render(scene, camera);
 		requestAnimationFrame(animate);
+	}
+
+	function onPointerMove(event: MouseEvent) {
+		if (!pointer) {
+			pointer = new THREE.Vector2();
+		}
+
+		if (!raycaster) {
+			raycaster = new THREE.Raycaster();
+		}
+
+		pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+		pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+		raycaster.setFromCamera(pointer, camera);
+		const intersects = raycaster.intersectObjects([hitMesh]);
+		if (intersects.length > 0) {
+			// HERE
+			sphereMesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+		}
 	}
 
 	onMount(() => {
@@ -30,6 +53,7 @@
 
 		const textureLoader = new THREE.TextureLoader();
 		const texture = textureLoader.load('/textures/explore.png');
+
 		const shaderMaterial = new THREE.ShaderMaterial({
 			uniforms: {
 				uTexture: { value: texture }
@@ -58,11 +82,30 @@
 		exploreMesh.rotation.z = Math.PI / 4;
 		scene.add(exploreMesh);
 
-		// Renderer setup
+		// Set up a hit mesh that covers the whole canvas, but isn't visible
+		const hitGeometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
+		const hitMaterial = new THREE.MeshBasicMaterial({
+			// transparent: true,
+			opacity: 0
+		});
+		hitMesh = new THREE.Mesh(hitGeometry, hitMaterial);
+		hitMesh.position.set(0, 0, 0);
+		scene.add(hitMesh);
+
+		// Set up a sphere that follows the mouse
+		const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+		const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+		sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+		sphereMesh.position.set(0, 0, 0);
+		scene.add(sphereMesh);
+
 		renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 		renderer.setSize(container.clientWidth, container.clientHeight);
-		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		renderer.setClearColor(0x000000, 0);
 		container.appendChild(renderer.domElement);
+
+		window.addEventListener('pointermove', onPointerMove);
 
 		animate();
 	});
@@ -84,7 +127,6 @@
 		width: 100%;
 		height: 60vh;
 		margin-inline: auto;
-		border: 1px solid steelblue;
 		cursor: grab;
 	}
 </style>
