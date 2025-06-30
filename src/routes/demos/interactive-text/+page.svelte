@@ -90,7 +90,7 @@
                     vec4 worldPosition = modelMatrix * localPosition;
                     float dist = (length(uDisplacement - worldPosition.rgb));
 
-                    float min_distance = 3.;
+                    float min_distance = 5.;
                     if (dist < min_distance) {
                         float distance_mapped = map(dist, 0., min_distance, 1., 0.);
                         float zDiff = easeInOutCubic(distance_mapped) * 1.; //1 is the max height of displacement
@@ -110,7 +110,7 @@
 			transparent: true
 		});
 
-		const exploreGeometry = new THREE.PlaneGeometry(15, 15, 10, 10);
+		const exploreGeometry = new THREE.PlaneGeometry(20, 20, 20, 20);
 		const exploreMesh = new THREE.Mesh(exploreGeometry, exploreShaderMaterial);
 		exploreMesh.position.set(0, 0, 0);
 		exploreMesh.rotation.z = Math.PI / 4;
@@ -125,7 +125,11 @@
 
 		// Set up a sphere that follows the mouse
 		const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-		const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+		const sphereMaterial = new THREE.MeshBasicMaterial({
+			color: 0x00ff00,
+			transparent: true,
+			opacity: 0
+		});
 		sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
 		sphereMesh.position.set(0, 0, 0);
 		scene.add(sphereMesh);
@@ -159,6 +163,5 @@
 		width: 100%;
 		height: 60vh;
 		margin-inline: auto;
-		cursor: grab;
 	}
 </style>
