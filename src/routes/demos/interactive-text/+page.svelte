@@ -1,19 +1,16 @@
 <script lang="ts">
 	import * as THREE from 'three';
-	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 	import { onMount, onDestroy } from 'svelte';
-	import { ExposureShader } from 'three/examples/jsm/Addons.js';
 
 	let container: HTMLDivElement;
 	let renderer: THREE.WebGLRenderer;
 	let scene: THREE.Scene;
 	let camera: THREE.OrthographicCamera;
-	let controls: OrbitControls;
 
 	// Animation loop
 	function animate() {
-		controls.update();
 		renderer.render(scene, camera);
+		requestAnimationFrame(animate);
 	}
 
 	onMount(() => {
@@ -29,27 +26,32 @@
 		);
 		camera.position.set(0, -10, 5);
 		camera.lookAt(0, 0, 0);
-
 		scene = new THREE.Scene();
-		scene.background = new THREE.Color(0xffffff);
 
-		// Explore texture
+		const textureLoader = new THREE.TextureLoader();
+		const texture = textureLoader.load('/textures/explore.png');
 		const shaderMaterial = new THREE.ShaderMaterial({
 			uniforms: {
-				uTexture: { value: new THREE.TextureLoader().load('/textures/explore.png') }
+				uTexture: { value: texture }
 			},
 			vertexShader: `
-                void main() {
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
+				varying vec2 vUv;
+				void main() {
+					vUv = uv;
+					gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+				}
+			`,
 			fragmentShader: `
-                uniform sampler2D uTexture;
-                void main() {
-                    gl_FragColor = texture2D(uTexture, gl_PointCoord);
-                }
-            `
+				uniform sampler2D uTexture;
+				varying vec2 vUv;
+				void main() {
+					vec4 texColor = texture2D(uTexture, vUv);
+					gl_FragColor = texColor;
+				}
+			`,
+			transparent: true
 		});
+
 		const exploreGeometry = new THREE.PlaneGeometry(15, 15, 10, 10);
 		const exploreMesh = new THREE.Mesh(exploreGeometry, shaderMaterial);
 		exploreMesh.position.set(0, 0, 0);
@@ -61,11 +63,6 @@
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		renderer.setPixelRatio(window.devicePixelRatio);
 		container.appendChild(renderer.domElement);
-
-		// Controls setup
-		controls = new OrbitControls(camera, renderer.domElement);
-		controls.enableDamping = true;
-		controls.dampingFactor = 0.05;
 
 		animate();
 	});
@@ -87,7 +84,7 @@
 		width: 100%;
 		height: 60vh;
 		margin-inline: auto;
-		border: 1px solid red;
+		border: 1px solid steelblue;
 		cursor: grab;
 	}
 </style>
