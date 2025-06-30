@@ -2,49 +2,95 @@
 	import * as THREE from 'three';
 	import { onMount, onDestroy } from 'svelte';
 
+	// Based on https://tympanus.net/codrops/2025/03/24/animating-letters-with-shaders-interactive-text-effect-with-three-js-glsl/
+
 	let container: HTMLDivElement;
 	let renderer: THREE.WebGLRenderer;
 	let scene: THREE.Scene;
 	let camera: THREE.OrthographicCamera;
 	let raycaster: THREE.Raycaster;
-	let pointer: THREE.Vector2;
 	let sphereMesh: THREE.Mesh;
 	let hitMesh: THREE.Mesh;
 	let exploreShaderMaterial: THREE.ShaderMaterial;
+	let rippleTime = 0;
+	let ripples: Array<{ position: THREE.Vector3; startTime: number; duration: number }> = [];
 
-	// Animation loop
-	function animate() {
-		renderer.render(scene, camera);
-		requestAnimationFrame(animate);
-	}
-
-	function onPointerMove(event: MouseEvent) {
-		if (!pointer) {
-			pointer = new THREE.Vector2();
-		}
-
+	function getMouseIntersectionPoint(event: MouseEvent): THREE.Vector3 | null {
 		if (!raycaster) {
 			raycaster = new THREE.Raycaster();
 		}
 
 		// Calculate pointer coordinates relative to the container, not the window
 		const rect = container.getBoundingClientRect();
+		const pointer = new THREE.Vector2();
 		pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
 		pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
 		raycaster.setFromCamera(pointer, camera);
 		const intersects = raycaster.intersectObjects([hitMesh]);
-		if (intersects.length > 0) {
-			sphereMesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
 
-			exploreShaderMaterial.uniforms.uDisplacement.value.set(
-				intersects[0].point.x,
-				intersects[0].point.y,
-				intersects[0].point.z
-			);
+		if (intersects.length > 0) {
+			return intersects[0].point;
+		}
+
+		return null;
+	}
+
+	function onClick(event: MouseEvent) {
+		const point = getMouseIntersectionPoint(event);
+		if (point) {
+			// Create a ripple effect at the clicked point
+			ripples.push({
+				position: point.clone(),
+				startTime: rippleTime,
+				duration: 2.0 // 2 seconds duration
+			});
+		}
+	}
+
+	function onPointerMove(event: MouseEvent) {
+		const point = getMouseIntersectionPoint(event);
+		if (point) {
+			sphereMesh.position.set(point.x, point.y, point.z);
+			exploreShaderMaterial.uniforms.uDisplacement.value.set(point.x, point.y, point.z);
 		} else {
 			exploreShaderMaterial.uniforms.uDisplacement.value.set(40, 40, 40);
 		}
+	}
+
+	function animate() {
+		rippleTime += 0.016; // Approximate 60fps
+
+		// Clean up expired ripples
+		ripples = ripples.filter((ripple) => rippleTime - ripple.startTime < ripple.duration);
+
+		// Update shader with ripple data
+		if (exploreShaderMaterial) {
+			exploreShaderMaterial.uniforms.uRippleTime.value = rippleTime;
+			exploreShaderMaterial.uniforms.uRippleCount.value = ripples.length;
+
+			// Update ripple positions and times
+			const positions: THREE.Vector3[] = [];
+			const times: number[] = [];
+
+			ripples.forEach((ripple) => {
+				const timeSinceStart = rippleTime - ripple.startTime;
+				positions.push(ripple.position);
+				times.push(timeSinceStart);
+			});
+
+			// Pad arrays to match shader expectations
+			while (positions.length < 10) {
+				positions.push(new THREE.Vector3(0, 0, 0));
+				times.push(0);
+			}
+
+			exploreShaderMaterial.uniforms.uRipplePositions.value = positions;
+			exploreShaderMaterial.uniforms.uRippleTimes.value = times;
+		}
+
+		renderer.render(scene, camera);
+		requestAnimationFrame(animate);
 	}
 
 	onMount(() => {
@@ -68,11 +114,19 @@
 		exploreShaderMaterial = new THREE.ShaderMaterial({
 			uniforms: {
 				uTexture: { value: texture },
-				uDisplacement: { value: new THREE.Vector3(0, 0, 0) }
+				uDisplacement: { value: new THREE.Vector3(0, 0, 0) },
+				uRippleTime: { value: 0 },
+				uRippleCount: { value: 0 },
+				uRipplePositions: { value: [] },
+				uRippleTimes: { value: [] }
 			},
 			vertexShader: `
 				varying vec2 vUv;
 				uniform vec3 uDisplacement;
+				uniform float uRippleTime;
+				uniform int uRippleCount;
+				uniform vec3 uRipplePositions[10];
+				uniform float uRippleTimes[10];
 
                 float easeInOutCubic(float x) {
                     return x < 0.5 ? 4. * x * x * x : 1. - pow(-2. * x + 2., 3.) / 2.;
@@ -96,15 +150,71 @@
                         float zDiff = easeInOutCubic(distance_mapped) * 1.; //1 is the max height of displacement
                         new_position.z += zDiff;
                     }
+
+                    // Add ripple effects
+                    float rippleDisplacement = 0.0;
+                    for (int i = 0; i < 10; i++) {
+                        if (i >= uRippleCount) break;
+                        
+                        float rippleDist = length(uRipplePositions[i] - worldPosition.rgb);
+                        float rippleAge = uRippleTimes[i];
+                        float rippleRadius = rippleAge * 8.0; // Increased from 3.0 to 8.0 for faster expansion
+                        float rippleWidth = 2.0; // Width of the ripple wave
+                        
+                        float rippleEffect = 0.0;
+                        if (rippleAge < 2.0) { // Only active ripples
+                            float distFromRipple = abs(rippleDist - rippleRadius);
+                            if (distFromRipple < rippleWidth) {
+                                float rippleIntensity = 1.0 - (rippleAge / 2.0); // Fade out over time
+                                rippleEffect = rippleIntensity * (1.0 - distFromRipple / rippleWidth) * 0.5;
+                            }
+                        }
+                        rippleDisplacement += rippleEffect;
+                    }
+                    
+                    new_position.z += rippleDisplacement;
+
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(new_position,1.0);
 				}
 			`,
 			fragmentShader: `
 				uniform sampler2D uTexture;
+				uniform float uRippleTime;
+				uniform int uRippleCount;
+				uniform vec3 uRipplePositions[10];
+				uniform float uRippleTimes[10];
 				varying vec2 vUv;
+				
 				void main() {
 					vec4 texColor = texture2D(uTexture, vUv);
-					gl_FragColor = texColor;
+					
+					// Calculate ripple color effect
+					float greenEffect = 0.0;
+					for (int i = 0; i < 10; i++) {
+						if (i >= uRippleCount) break;
+						
+						// Convert UV to world position (approximate)
+						vec2 worldPos = (vUv - 0.5) * 20.0; // Scale to match geometry
+						vec3 ripplePos = uRipplePositions[i];
+						float rippleDist = length(vec3(worldPos, 0.0) - ripplePos);
+						float rippleAge = uRippleTimes[i];
+						float rippleRadius = rippleAge * 8.0;
+						float rippleWidth = 2.0;
+						
+						if (rippleAge < 2.0) {
+							float distFromRipple = abs(rippleDist - rippleRadius);
+							if (distFromRipple < rippleWidth) {
+								float rippleIntensity = 1.0 - (rippleAge / 2.0);
+								greenEffect += rippleIntensity * (1.0 - distFromRipple / rippleWidth) * 0.8;
+							}
+						}
+					}
+					
+					// Apply green tint where ripples are active
+					vec3 greenTint = vec3(0.0, 1.0, 0.0);
+					vec3 finalColor = mix(texColor.rgb, greenTint, greenEffect);
+					
+					gl_FragColor = vec4(finalColor, texColor.a);
 				}
 			`,
 			transparent: true
@@ -141,6 +251,7 @@
 		container.appendChild(renderer.domElement);
 
 		window.addEventListener('pointermove', onPointerMove);
+		window.addEventListener('click', onClick);
 
 		animate();
 	});
