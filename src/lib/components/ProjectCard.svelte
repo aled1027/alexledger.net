@@ -6,19 +6,21 @@
 </script>
 
 <article class="project-card" style="--card-color: {theCardColor}">
-	<div class="project-card__middle-entry project-card__scale-animation padding-4">
-		<div class="project-card__asset-wrapper">
-			<enhanced:img
-				class="project-card__cover-asset"
-				src={project.imageUrl}
-				alt={project.imageAlt}
-				sizes="(min-width: 768px) 50vw, 100vw"
-			/>
+	<a href={project.link} target="_blank" rel="noopener noreferrer">
+		<div class="project-card__middle-entry project-card__scale-animation padding-4">
+			<div class="project-card__asset-wrapper">
+				<enhanced:img
+					class="project-card__cover-asset"
+					src={project.imageUrl}
+					alt={project.imageAlt}
+					sizes="(min-width: 768px) 50vw, 100vw"
+				/>
+			</div>
+			<div class="project-card__title-wrapper">
+				<h3 class="project-card__title">{project.projectName}</h3>
+			</div>
 		</div>
-		<div class="project-card__title-wrapper">
-			<h3 class="project-card__title">{project.projectName}</h3>
-		</div>
-	</div>
+	</a>
 </article>
 
 <style>
@@ -53,9 +55,9 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		width: 100%;
-		max-height: 0;
 		overflow: hidden;
+		max-width: 100%;
+		max-height: 0;
 		transition: max-height 0.3s linear;
 
 		/* Glass */
@@ -71,7 +73,7 @@
 
 	.project-card:hover .project-card__title-wrapper {
 		width: 100%;
-		max-height: calc(1rem + 16px);
+		max-height: calc(1rem + 26px);
 	}
 
 	.project-card__title {
@@ -79,9 +81,11 @@
 		font-size: var(--size-step--1);
 		text-decoration: none;
 
+		max-width: 100%;
+
 		/* Trying fibonaccia for fun */
-		padding-block: 8px;
-		padding-inline: 13px;
+		padding-block: 13px;
+		padding-inline: 21px;
 	}
 
 	.project-card__asset-wrapper {
@@ -99,7 +103,7 @@
 
 	.project-card:hover .project-card__asset-wrapper {
 		filter: brightness(1.05);
-		transform: translateY(calc((1rem + 16px) / 2));
+		transform: translateY(calc((1rem + 26px) * 0.33));
 	}
 
 	.project-card__cover-asset {

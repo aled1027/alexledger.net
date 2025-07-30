@@ -14,44 +14,59 @@
 	import Incontext from '$lib/assets/incontext.png?enhanced&format=webp';
 	// @ts-ignore -- Image imports with query parameters
 	import LittleCompass from '$lib/assets/little-compass.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import CatAndAlex from '$lib/assets/catandalex.png?enhanced&format=webp';
 
 	const projects: Project[] = [
 		{
 			projectName: 'Anna Neshyba',
 			imageUrl: AnnaNeshyba,
 			imageAlt: 'Screenshot of the Anna Neshyba website',
-			cardColor: '#D3DCD9'
+			cardColor: '#D3DCD9',
+			link: 'https://anna-neshyba.netlify.app/'
 		},
 		{
 			projectName: 'Metrion',
 			imageUrl: Metrion,
 			imageAlt: 'Screenshot of the Metrion website',
-			cardColor: '#8992cb'
+			cardColor: '#8992cb',
+			link: 'https://metrion.space'
 		},
 		{
 			projectName: 'Give Max Life',
 			imageUrl: GiveMaxLife,
 			imageAlt: 'Screenshot of the Give Max Life website',
-			cardColor: '#9335D1'
+			cardColor: '#9335D1',
+			link: 'https://givemaxlife.com/'
 		},
 		{
 			projectName: 'Seastar',
 			imageUrl: Seastar,
 			imageAlt: 'Screenshot of the Seastar website',
-			cardColor: '#AAB199'
+			cardColor: '#464D36',
+			link: 'https://seastar-coaching.com'
 		},
 		{
 			projectName: 'inContext',
 			imageUrl: Incontext,
 			imageAlt: 'Screenshot of the incontext website',
 			// cardColor: '#6546B8'
-			cardColor: '#EDEFF2'
+			cardColor: '#EDEFF2',
+			link: 'https://incontextlearning.com'
 		},
 		{
 			projectName: 'The Little Compass',
 			imageUrl: LittleCompass,
 			imageAlt: 'Screenshot of the Seastar website',
-			cardColor: '#DDD4FD'
+			cardColor: '#DDD4FD',
+			link: 'https://thelittlecompass.com'
+		},
+		{
+			projectName: 'Cat & Alex Wedding Website',
+			imageUrl: CatAndAlex,
+			imageAlt: 'Screenshot of the Cat and Alex website',
+			cardColor: '#9080D0',
+			link: 'https://catandalex.net'
 		}
 	];
 	let substackSection: HTMLElement;
