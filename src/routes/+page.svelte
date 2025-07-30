@@ -64,7 +64,7 @@
 			link: 'https://thelittlecompass.com'
 		},
 		{
-			projectName: 'Cat & Alex Wedding Website',
+			projectName: "Cat & Alex's Wedding",
 			imageUrl: CatAndAlex,
 			imageAlt: 'Screenshot of the Cat and Alex website',
 			cardColor: '#9080D0',
