@@ -5,10 +5,7 @@
 	let theCardColor = $derived(cardColor || 'hsl(255.65, 45%, 90%)');
 </script>
 
-<div class="project-card" style="--card-color: {theCardColor}">
-	<div class="project-card__title-wrapper">
-		<h3 class="project-card__title">{project.projectName}</h3>
-	</div>
+<article class="project-card" style="--card-color: {theCardColor}">
 	<div class="project-card__middle-entry project-card__scale-animation padding-4">
 		<div class="project-card__asset-wrapper">
 			<enhanced:img
@@ -18,8 +15,11 @@
 				sizes="(min-width: 768px) 50vw, 100vw"
 			/>
 		</div>
+		<div class="project-card__title-wrapper">
+			<h3 class="project-card__title">{project.projectName}</h3>
+		</div>
 	</div>
-</div>
+</article>
 
 <style>
 	.project-card {
@@ -39,18 +39,49 @@
 		flex-direction: column;
 		justify-content: space-between;
 		gap: 0;
+
+		position: relative;
+	}
+
+	.project-card:hover {
+		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
 	}
 
 	.project-card__title-wrapper {
-		/* Trying fibonaccia for fun */
-		padding-block: 13px;
-		padding-inline: 21px;
-		border-bottom: 0.5px solid var(--card-border-color-light);
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.3s linear;
+
+		/* Glass */
+		--bg-glass-color: var(--card-border-color-light);
+		--bg-glass-opacity: 0.2;
+		--bg-glass-blur: 16px;
+
+		background: rgb(from var(--bg-glass-color) r g b / var(--bg-glass-opacity));
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(var(--bg-glass-blur));
+		-webkit-backdrop-filter: blur(var(--bg-glass-blur));
+	}
+
+	.project-card:hover .project-card__title-wrapper {
+		width: 100%;
+		max-height: calc(1rem + 16px);
 	}
 
 	.project-card__title {
+		text-align: center;
 		font-size: var(--size-step--1);
 		text-decoration: none;
+
+		/* Trying fibonaccia for fun */
+		padding-block: 8px;
+		padding-inline: 13px;
 	}
 
 	.project-card__asset-wrapper {
@@ -67,8 +98,8 @@
 	}
 
 	.project-card:hover .project-card__asset-wrapper {
-		transform: scale(1.03);
 		filter: brightness(1.05);
+		transform: translateY(calc((1rem + 16px) / 2));
 	}
 
 	.project-card__cover-asset {
