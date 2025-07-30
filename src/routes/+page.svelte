@@ -10,6 +10,10 @@
 	import Seastar from '$lib/assets/seastar.png?enhanced&format=webp';
 	// @ts-ignore -- Image imports with query parameters
 	import GiveMaxLife from '$lib/assets/give-max-life.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import Incontext from '$lib/assets/incontext.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import LittleCompass from '$lib/assets/little-compass.png?enhanced&format=webp';
 
 	const projects: Project[] = [
 		{
@@ -35,6 +39,19 @@
 			imageUrl: Seastar,
 			imageAlt: 'Screenshot of the Seastar website',
 			cardColor: '#AAB199'
+		},
+		{
+			projectName: 'inContext',
+			imageUrl: Incontext,
+			imageAlt: 'Screenshot of the incontext website',
+			// cardColor: '#6546B8'
+			cardColor: '#EDEFF2'
+		},
+		{
+			projectName: 'The Little Compass',
+			imageUrl: LittleCompass,
+			imageAlt: 'Screenshot of the Seastar website',
+			cardColor: '#DDD4FD'
 		}
 	];
 	let substackSection: HTMLElement;
@@ -110,7 +127,7 @@
 	.project-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(clamp(16rem, 47%, 33rem), 1fr));
-		gap: 1.25rem;
+		gap: 1.5rem;
 	}
 
 	.small-heading {
