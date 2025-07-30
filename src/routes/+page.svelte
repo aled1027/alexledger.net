@@ -16,6 +16,8 @@
 	import LittleCompass from '$lib/assets/little-compass.png?enhanced&format=webp';
 	// @ts-ignore -- Image imports with query parameters
 	import CatAndAlex from '$lib/assets/catandalex.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import LlmToolsAnki from '$lib/assets/llm-tools-anki.png?enhanced&format=webp';
 
 	const projects: Project[] = [
 		{
@@ -47,7 +49,7 @@
 			link: 'https://seastar-coaching.com'
 		},
 		{
-			projectName: 'inContext',
+			projectName: 'inContext Learning',
 			imageUrl: Incontext,
 			imageAlt: 'Screenshot of the incontext website',
 			// cardColor: '#6546B8'
@@ -67,6 +69,13 @@
 			imageAlt: 'Screenshot of the Cat and Alex website',
 			cardColor: '#9080D0',
 			link: 'https://catandalex.net'
+		},
+		{
+			projectName: 'llm-tools-anki',
+			imageUrl: LlmToolsAnki,
+			imageAlt: 'Screenshot of the llm-tools-anki website',
+			cardColor: '#1B883E',
+			link: 'https://github.com/aled1027/llm-tools-anki'
 		}
 	];
 	let substackSection: HTMLElement;
