@@ -21,6 +21,11 @@
 			title: 'Ripple Text',
 			date: 'June 30, 2025',
 			link: '/demos/ripple-text'
+		},
+		{
+			title: 'Hover Animations on Line',
+			date: 'August 18, 2025',
+			link: '/demos/hover-animations-on-line'
 		}
 	];
 
