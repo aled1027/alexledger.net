@@ -18,6 +18,8 @@
 	import CatAndAlex from '$lib/assets/catandalex.png?enhanced&format=webp';
 	// @ts-ignore -- Image imports with query parameters
 	import LlmToolsAnki from '$lib/assets/llm-tools-anki.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import CatNeshyba from '$lib/assets/catneshyba.png?enhanced&format=webp';
 
 	const projects: Project[] = [
 		{
@@ -76,6 +78,13 @@
 			imageAlt: 'Screenshot of the llm-tools-anki website',
 			cardColor: '#1B883E',
 			link: 'https://github.com/aled1027/llm-tools-anki'
+		},
+		{
+			projectName: 'Cat Neshyba',
+			imageUrl: CatNeshyba,
+			imageAlt: 'Screenshot of the Cat Neshyba website',
+			cardColor: '#CED2D5',
+			link: 'https://catneshyba.com'
 		}
 	];
 	let substackSection: HTMLElement;
