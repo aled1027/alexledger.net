@@ -114,7 +114,7 @@
 	}
 
 	// Action for hover
-	function hover(node: HTMLElement): Any {
+	function hover(node: HTMLElement): any {
 		// We want to do this for each text child of the node
 		const children = Array.from(node.children).filter(
 			(child) => child instanceof HTMLElement
