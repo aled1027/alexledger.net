@@ -26,11 +26,6 @@
 			title: 'Hover Animations on Line',
 			date: 'August 18, 2025',
 			link: '/demos/hover-animations-on-line'
-		},
-		{
-			title: 'Rain',
-			date: 'August 28, 2025',
-			link: '/demos/rain'
 		}
 	];
 
