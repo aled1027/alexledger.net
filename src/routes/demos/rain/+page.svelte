@@ -29,6 +29,13 @@
 		camera.lookAt(0, 0, 0);
 		scene = new THREE.Scene();
 
+		// Add a green sphere to the middle of the canvas
+		const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+		const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+		const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+		sphere.position.set(0, 0, 0);
+		scene.add(sphere);
+
 		renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
