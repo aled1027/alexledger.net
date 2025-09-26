@@ -4,10 +4,8 @@
 	import * as THREE from 'three';
 	import { onMount } from 'svelte';
 	import { AsciiEffect } from '../../../lib/three/AsciiEffect.js';
-	// import { TrackballControls } from './TrackballControls.js';
 
 	let camera: THREE.PerspectiveCamera,
-		// controls: TrackballControls,
 		scene: THREE.Scene,
 		renderer: THREE.WebGLRenderer,
 		effect: any,
@@ -87,10 +85,6 @@
 
 		document.body.appendChild(effect.domElement);
 
-		// controls = new TrackballControls(camera, effect.domElement);
-
-		//
-
 		window.addEventListener('resize', onWindowResize);
 	}
 
@@ -111,8 +105,6 @@
 		sphere.rotation.x = timer * 0.0003;
 		sphere.rotation.z = timer * 0.0002;
 
-		// controls.update();
-
 		effect.render(scene, camera);
 	}
 
@@ -130,7 +122,7 @@
 			>Demo code</a
 		>
 	</p>
-	<p>Watch the video below rendered in ASCII characters.</p>
+	<p><strong>Note:</strong> This demo is best viewed on big screens for the full ASCII effect experience.</p>
 	<p>
 		This demo uses Three.js with a custom ASCII effect to render video content as ASCII characters.
 		The effect converts the video frames into a grid of characters, creating a retro terminal aesthetic.
