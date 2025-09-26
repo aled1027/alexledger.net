@@ -26,6 +26,11 @@
 			title: 'Hover Animations on Line',
 			date: 'August 18, 2025',
 			link: '/demos/hover-animations-on-line'
+		},
+		{
+			title: 'Asciied Video',
+			date: 'September 26, 2025',
+			link: '/demos/asciied-video'
 		}
 	];
 
