@@ -102,15 +102,15 @@
 	</p>
 	<p>
 		This demo uses Three.js with a custom ASCII effect to render video content as ASCII characters.
-		The effect converts the video frames into a grid of characters, creating a retro terminal aesthetic.
-		The ASCII characters are mapped based on brightness values, with darker areas using denser characters
-		like '@' and '#', while lighter areas use sparser characters like '.' and ' '.
+		The effect converts the video frames into a grid of characters, creating a retro terminal
+		aesthetic. The ASCII characters are mapped based on brightness values, with darker areas using
+		denser characters like '@' and '#', while lighter areas use sparser characters like '.' and ' '.
 	</p>
 	<p>
-		The ASCII effect implementation is based on mrdoob's Three.js examples from the 
+		The ASCII effect implementation is based on mrdoob's Three.js examples from the
 		<a href="https://github.com/mrdoob/three.js/blob/dev/examples/jsm/effects/AsciiEffect.js"
 			>Three.js repository</a
 		>.
 	</p>
 </div>
-	<div class="canvas-container"></div>
+<div class="canvas-container"></div>
