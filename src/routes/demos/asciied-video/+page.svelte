@@ -9,44 +9,19 @@
 		scene: THREE.Scene,
 		renderer: THREE.WebGLRenderer,
 		effect: any,
-		sphere: THREE.Mesh,
-		plane: THREE.Mesh,
-		videoPlane: THREE.Mesh; // Add videoPlane
-	const start: number = Date.now();
+		videoPlane: THREE.Mesh;
 
 	function init(): void {
-		camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
-		camera.position.y = 50;
-		camera.position.z = 800;
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+
+		camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000);
+		camera.position.y = 0;
+		camera.position.z = 0;
 
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color(0, 0, 0);
 
-		const pointLight1 = new THREE.PointLight(0xffffff, 3, 0, 0);
-		pointLight1.position.set(500, 500, 500);
-		scene.add(pointLight1);
-
-		const pointLight2 = new THREE.PointLight(0xffffff, 1, 0, 0);
-		pointLight2.position.set(-500, -500, -500);
-		scene.add(pointLight2);
-
-		// Sphere that bounces
-		sphere = new THREE.Mesh(
-			new THREE.SphereGeometry(200, 20, 10),
-			new THREE.MeshPhongMaterial({ flatShading: true })
-		);
-		// scene.add(sphere);
-
-		// Plane that's under the bouncing ball
-		// plane = new THREE.Mesh(
-		// 	new THREE.PlaneGeometry(400, 400),
-		// 	new THREE.MeshBasicMaterial({ color: 0xe0e0e0 })
-		// );
-		// plane.position.y = -200;
-		// plane.rotation.x = -Math.PI / 2;
-		// scene.add(plane);
-
-		// --- VIDEO TEXTURE SETUP ---
 		const video = document.createElement('video');
 		video.src = 'https://assets.knowportland.org/alexledgernet/pickleball.mp4';
 		video.crossOrigin = 'anonymous';
@@ -63,49 +38,52 @@
 		videoTexture.magFilter = THREE.LinearFilter;
 		videoTexture.format = THREE.RGBFormat;
 
+		const distance = 100;
+		const fov = camera.fov * (Math.PI / 180);
+		const planeHeight = 2 * Math.tan(fov / 2) * distance;
+		const planeWidth = planeHeight * camera.aspect;
+
 		videoPlane = new THREE.Mesh(
-			new THREE.PlaneGeometry(1024, 576),
+			new THREE.PlaneGeometry(planeWidth, planeHeight),
 			new THREE.MeshBasicMaterial({ map: videoTexture, side: THREE.DoubleSide })
 		);
-		videoPlane.position.set(0, 0, 0); // Center the video in the scene
+		videoPlane.position.set(0, 0, -distance); // Position in front of camera
 		scene.add(videoPlane);
-		// --- END VIDEO TEXTURE SETUP ---
 
 		renderer = new THREE.WebGLRenderer();
-		renderer.setSize(window.innerWidth, window.innerHeight);
-		renderer.setAnimationLoop(animate);
+		renderer.setSize(width, height);
+		renderer.setAnimationLoop(() => {
+			effect.render(scene, camera);
+		});
 
 		effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
-		effect.setSize(window.innerWidth, window.innerHeight);
+		effect.setSize(width, height);
 		effect.domElement.style.color = 'white';
 		effect.domElement.style.backgroundColor = 'black';
-
-		// Special case: append effect.domElement, instead of renderer.domElement.
-		// AsciiEffect creates a custom domElement (a div container) where the ASCII elements are placed.
-
+		effect.domElement.style.width = '100%';
+		effect.domElement.style.height = '100%';
+		effect.domElement.style.zIndex = '10';
 		document.body.appendChild(effect.domElement);
-
 		window.addEventListener('resize', onWindowResize);
 	}
 
 	function onWindowResize(): void {
-		camera.aspect = window.innerWidth / window.innerHeight;
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+
+		camera.aspect = width / height;
 		camera.updateProjectionMatrix();
 
-		renderer.setSize(window.innerWidth, window.innerHeight);
-		effect.setSize(window.innerWidth, window.innerHeight);
-	}
+		const distance = 100;
+		const fov = camera.fov * (Math.PI / 180);
+		const planeHeight = 2 * Math.tan(fov / 2) * distance;
+		const planeWidth = planeHeight * camera.aspect;
 
-	//
+		videoPlane.geometry.dispose();
+		videoPlane.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
 
-	function animate(): void {
-		const timer = Date.now() - start;
-
-		sphere.position.y = Math.abs(Math.sin(timer * 0.002)) * 150;
-		sphere.rotation.x = timer * 0.0003;
-		sphere.rotation.z = timer * 0.0002;
-
-		effect.render(scene, camera);
+		renderer.setSize(width, height);
+		effect.setSize(width, height);
 	}
 
 	onMount((): void => {
@@ -122,7 +100,6 @@
 			>Demo code</a
 		>
 	</p>
-	<p><strong>Note:</strong> This demo is best viewed on big screens for the full ASCII effect experience.</p>
 	<p>
 		This demo uses Three.js with a custom ASCII effect to render video content as ASCII characters.
 		The effect converts the video frames into a grid of characters, creating a retro terminal aesthetic.
@@ -136,5 +113,4 @@
 		>.
 	</p>
 </div>
-
-<div class="canvas-container"></div>
+	<div class="canvas-container"></div>
