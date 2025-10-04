@@ -594,7 +594,8 @@
 		position: relative;
 		gap: var(--size-1);
 		width: 100%;
-		padding: var(--size-2) var(--size-1);
+		padding-block: var(--size-2);
+		padding-inline: var(--size-3) var(--size-1);
 		background: none;
 		border: none;
 		color: var(--gray-9);
