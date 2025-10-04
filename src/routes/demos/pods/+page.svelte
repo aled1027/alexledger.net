@@ -898,14 +898,6 @@
 		margin: var(--size-3) 0;
 	}
 
-	.audio-player {
-		width: 100%;
-		height: 40px;
-		border-radius: var(--radius-2);
-		background: var(--blue-1);
-		border: 1px solid var(--blue-3);
-	}
-
 	.episode-tags {
 		display: flex;
 		flex-wrap: wrap;
