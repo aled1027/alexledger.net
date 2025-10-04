@@ -239,8 +239,28 @@
 				<div class="episode-details-content">
 					{#if selectedEpisode}
 						<div class="episode-header">
-							<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
-							<h2 class="episode-title-large">{selectedEpisode.title}</h2>
+							<div class="episode-title-section">
+								<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
+								<h2 class="episode-title-large">{selectedEpisode.title}</h2>
+							</div>
+							
+							<div class="episode-actions-header">
+								{#if selectedEpisode.state === 'watched'}
+									<button class="action-btn-primary" onclick={() => setState('unwatched')}
+										>Mark as Unread</button
+									>
+								{:else}
+									<button class="action-btn-primary" onclick={() => setState('watched')}
+										>Mark as Read</button
+									>
+								{/if}
+								{#if selectedEpisode.isSaved}
+									<button class="action-btn-secondary" onclick={toggleSaved}>Unsave</button>
+								{:else}
+									<button class="action-btn-secondary" onclick={toggleSaved}>Save</button>
+								{/if}
+							</div>
+							
 							<div class="episode-meta-large">
 								{selectedEpisode.date}, {selectedEpisode.time} · {selectedEpisode.author}
 							</div>
@@ -253,23 +273,6 @@
 
 						<div class="episode-body">
 							<p>{selectedEpisode.description}</p>
-
-							<div class="episode-actions">
-								{#if selectedEpisode.state === 'watched'}
-									<button class="action-btn" onclick={() => setState('unwatched')}
-										>Mark as Unread</button
-									>
-								{:else}
-									<button class="action-btn" onclick={() => setState('watched')}
-										>Mark as Read</button
-									>
-								{/if}
-								{#if selectedEpisode.isSaved}
-									<button class="action-btn" onclick={toggleSaved}>Remove from Saved</button>
-								{:else}
-									<button class="action-btn" onclick={toggleSaved}>Save Episode</button>
-								{/if}
-							</div>
 						</div>
 					{:else}
 						<div class="no-selection">
@@ -465,11 +468,19 @@
 		margin-bottom: var(--size-3);
 	}
 
+	.episode-title-section {
+		display: flex;
+		align-items: flex-start;
+		gap: var(--size-3);
+		margin-bottom: var(--size-3);
+	}
+
 	.episode-indicator-large {
 		width: var(--size-4);
 		height: var(--size-4);
 		border-radius: var(--radius-round);
-		margin-bottom: var(--size-3);
+		flex-shrink: 0;
+		margin-top: var(--size-1);
 	}
 
 	.episode-indicator-large[data-state='unwatched'] {
@@ -484,9 +495,17 @@
 	.episode-title-large {
 		font-size: var(--font-size-4);
 		font-weight: var(--font-weight-6);
-		margin: 0 0 var(--size-2) 0;
+		margin: 0;
 		color: var(--gray-9);
 		line-height: var(--font-lineheight-2);
+		flex: 1;
+	}
+
+	.episode-actions-header {
+		display: flex;
+		gap: var(--size-2);
+		margin-bottom: var(--size-3);
+		flex-wrap: wrap;
 	}
 
 	.episode-meta-large {
@@ -518,17 +537,29 @@
 		margin-bottom: var(--size-5);
 	}
 
-	.episode-actions {
-		display: flex;
-		gap: var(--size-3);
-		flex-wrap: wrap;
-	}
-
-	.action-btn {
+	.action-btn-primary {
 		background: var(--blue-7);
 		outline: none;
 		border: none;
 		color: var(--gray-9);
+		padding: var(--size-2) var(--size-3);
+		border-radius: var(--radius-2);
+		font-size: var(--font-size-1);
+		font-weight: var(--font-weight-6);
+		cursor: pointer;
+		transition: background-color var(--t-ratio);
+		transition-timing-function: var(--ease-2);
+	}
+
+	.action-btn-primary:hover {
+		background: var(--blue-8);
+	}
+
+	.action-btn-secondary {
+		background: var(--gray-4);
+		outline: none;
+		border: none;
+		color: var(--gray-8);
 		padding: var(--size-2) var(--size-3);
 		border-radius: var(--radius-2);
 		font-size: var(--font-size-1);
@@ -538,8 +569,9 @@
 		transition-timing-function: var(--ease-2);
 	}
 
-	.action-btn:hover {
-		background: var(--blue-8);
+	.action-btn-secondary:hover {
+		background: var(--gray-5);
+		color: var(--gray-9);
 	}
 
 	.no-selection {
@@ -654,6 +686,29 @@
 			height: var(--size-fluid-11);
 			color: var(--gray-6);
 			font-style: italic;
+		}
+
+		/* Mobile-specific episode header styling */
+		.episode-title-section {
+			flex-direction: column;
+			gap: var(--size-2);
+		}
+
+		.episode-title-large {
+			font-size: var(--font-size-3);
+		}
+
+		.episode-actions-header {
+			gap: var(--size-3);
+			justify-content: stretch;
+		}
+
+		.action-btn-primary,
+		.action-btn-secondary {
+			flex: 1;
+			text-align: center;
+			padding: var(--size-3) var(--size-2);
+			font-size: var(--font-size-2);
 		}
 	}
 
