@@ -3,11 +3,34 @@
 	import { onMount } from 'svelte';
 
 	// TODO:
-	// Store location of /aud 
+	// Make audio available offline
 
 	// CONSTANTS
 	const FEED_CACHE_KEY = 'podcast_feeds_cache';
 	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+	const FETCH_TIMEOUT = 10000; // 10 seconds
+
+	// CONFIGURATION
+	const FEED_CONFIGS = [
+		{
+			url: 'https://feeds.simplecast.com/BqbsxVfO',
+			icon: '📻',
+			title: '99% Invisible'
+		}
+	] as const;
+
+	const DATE_FORMAT_OPTIONS = {
+		date: {
+			weekday: 'long',
+			month: 'long', 
+			day: 'numeric'
+		},
+		time: {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true
+		}
+	} as const;
 
 	// TYPES
 	interface FeedEntry {
@@ -16,14 +39,14 @@
 		date: string;
 		time: string;
 		author: string;
-		state: 'watched' | 'unwatched' | 'inprogress';
+		state: 'watched' | 'unwatched';
 		isSaved: boolean;
 		tags: string[];
 		enclosure?: {
 			url: string;
 			type: string;
 			length: number;
-			userLocation?: any;
+			userLocation?: number; // Audio playback position in seconds
 		};
 	}
 
@@ -54,7 +77,20 @@
 		items: RSSItem[];
 	}
 
-	// FUNCTIONS
+	// UTILITY FUNCTIONS
+	function formatEpisodeDate(pubDate: string): { date: string; time: string } {
+		const date = new Date(pubDate);
+		
+		if (isNaN(date.getTime())) {
+			return { date: 'Invalid Date', time: 'Invalid Time' };
+		}
+		
+		return {
+			date: date.toLocaleDateString('en-US', DATE_FORMAT_OPTIONS.date),
+			time: date.toLocaleTimeString('en-US', DATE_FORMAT_OPTIONS.time)
+		};
+	}
+
 	function formatFileSize(bytes: number): string {
 		if (bytes === 0) return '0 B';
 		const k = 1024;
@@ -65,7 +101,18 @@
 
 	async function fetchRSSFeed(feedUrl: string): Promise<RSSFeed | null> {
 		try {
-			const response = await fetch(feedUrl);
+			// Create abort controller for this request
+			abortController = new AbortController();
+			const timeoutId = setTimeout(() => abortController?.abort(), FETCH_TIMEOUT);
+			
+			const response = await fetch(feedUrl, {
+				headers: {
+					'Accept': 'application/rss+xml, application/xml, text/xml'
+				},
+				signal: abortController.signal
+			});
+			
+			clearTimeout(timeoutId);
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch feed: ${response.statusText}`);
@@ -134,23 +181,14 @@
 			};
 		} catch (error) {
 			console.error('Error fetching RSS feed:', error);
+			abortController = null;
 			return null;
 		}
 	}
 
 	function mapRSSFeedToFeed(rssFeed: RSSFeed, feedUrl: string, icon: string): Feed {
 		const episodes: FeedEntry[] = rssFeed.items.map((item) => {
-			const pubDate = new Date(item.pubDate);
-			const dateStr = pubDate.toLocaleDateString('en-US', {
-				weekday: 'long',
-				month: 'long',
-				day: 'numeric'
-			});
-			const timeStr = pubDate.toLocaleTimeString('en-US', {
-				hour: 'numeric',
-				minute: '2-digit',
-				hour12: true
-			});
+			const { date: dateStr, time: timeStr } = formatEpisodeDate(item.pubDate);
 
 			return {
 				title: item.title,
@@ -209,7 +247,7 @@
 		}
 	}
 
-	function saveFeeds(): void {
+	function saveUserData(): void {
 		try {
 			cacheFeeds(feeds);
 		} catch (error) {
@@ -226,17 +264,9 @@
 		}
 
 		// If no cache, fetch feeds
-		const feedConfigs = [
-			{
-				url: 'https://feeds.simplecast.com/BqbsxVfO',
-				icon: '📻',
-				title: '99% Invisible'
-			}
-		];
-
 		const fetchedFeeds: Feed[] = [];
 
-		for (const config of feedConfigs) {
+		for (const config of FEED_CONFIGS) {
 			const rssFeed = await fetchRSSFeed(config.url);
 			if (rssFeed) {
 				const feed = mapRSSFeedToFeed(rssFeed, config.url, config.icon);
@@ -250,9 +280,19 @@
 		}
 	}
 
+	// Memory management
+	let abortController: AbortController | null = null;
+
 	// Load feeds on component mount
 	onMount(() => {
 		loadFeeds();
+		
+		return () => {
+			// Cleanup on component destroy
+			if (abortController) {
+				abortController.abort();
+			}
+		};
 	});
 
 	let feeds: Feed[] = $state([]);
@@ -267,50 +307,15 @@
 	let contextMenuPosition = $state({ x: 0, y: 0 });
 	let contextMenuFeedIdx = $state(-1);
 
-	// Audio element reference
-	let audioElement: HTMLAudioElement;
-	let lastRestoredEpisodeId = '';
-
-	// Audio position saving
-	let lastSavedPosition = 0;
+	// Memoized computed values
+	let totalUnreadCount = $derived(
+		feeds.reduce((total, feed) => total + feed.numUnread, 0)
+	);
 
 	// Automatically save feeds data when it changes
 	$effect(() => {
 		if (feeds.length > 0) {
-			saveFeeds();
-		}
-	});
-
-	// Handle episode changes - reset audio element and prepare for new episode
-	$effect(() => {
-		if (selectedFeedEntryIdx !== null && selectedFeed) {
-			const episode = feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx];
-			const episodeId = `${selectedFeedIdx}-${selectedFeedEntryIdx}`;
-			
-			// Reset the restoration flag and saved position tracking for the new episode
-			lastRestoredEpisodeId = '';
-			lastSavedPosition = 0;
-			
-			// If this episode has a saved position, restore it
-			if (episode.enclosure?.userLocation && episode.enclosure.userLocation > 0) {
-				// Wait for audio to be ready, then restore position
-				const restorePosition = () => {
-					if (audioElement && audioElement.duration > 0 && episode.enclosure) {
-						audioElement.currentTime = episode.enclosure.userLocation || 0;
-						lastRestoredEpisodeId = episodeId;
-						lastSavedPosition = episode.enclosure.userLocation || 0;
-					} else if (audioElement) {
-						// If audio isn't ready yet, try again in a bit
-						setTimeout(restorePosition, 100);
-					}
-				};
-				
-				// Start trying to restore position
-				setTimeout(restorePosition, 100);
-			} else {
-				// No saved position, just mark as restored
-				lastRestoredEpisodeId = episodeId;
-			}
+			saveUserData();
 		}
 	});
 
@@ -328,34 +333,21 @@
 		}
 	}
 
-	function setState(newState: 'watched' | 'unwatched' | 'inprogress') {
-		if (selectedFeedEntryIdx !== null && selectedFeed) {
-			feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx].state = newState;
-			
-			// Reset audio position when marking as watched
-			if (newState === 'watched') {
-				resetAudioPosition();
-			}
-		}
-		if (selectedFeed) {
-			let numUnread = 0;
-			for (const e of feeds[selectedFeedIdx].episodes) {
-				if (e.state === 'unwatched' || e.state === 'inprogress') {
-					numUnread += 1;
-				}
-			}
-			feeds[selectedFeedIdx].numUnread = numUnread;
-		}
+	function setState(newState: 'watched' | 'unwatched') {
+		if (selectedFeedEntryIdx === null || !selectedFeed) return;
+		
+		const episode = feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx];
+		episode.state = newState;
+		
+		// More efficient unread count calculation
+		feeds[selectedFeedIdx].numUnread = feeds[selectedFeedIdx].episodes
+			.filter(ep => ep.state === 'unwatched').length;
 	}
 
 	function markAllAsRead(feedIdx: number) {
 		if (feeds[feedIdx]) {
 			feeds[feedIdx].episodes.forEach((episode) => {
 				episode.state = 'watched';
-				// Reset audio position for all episodes
-				if (episode.enclosure) {
-					episode.enclosure.userLocation = 0;
-				}
 			});
 			feeds[feedIdx].numUnread = 0;
 		}
@@ -375,52 +367,6 @@
 		contextMenuVisible = false;
 		contextMenuFeedIdx = -1;
 	}
-
-	// Audio position tracking functions
-	function handleTimeUpdate() {
-		if (audioElement && selectedFeedEntryIdx !== null && selectedFeed) {
-			const currentTime = audioElement.currentTime;
-			const episode = feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx];
-			const episodeId = `${selectedFeedIdx}-${selectedFeedEntryIdx}`;
-			
-			// Save position if we've moved more than 10 seconds from last saved position
-			if (episode.enclosure && lastRestoredEpisodeId === episodeId) {
-				const timeDifference = Math.abs(currentTime - lastSavedPosition);
-				
-				// Save position if we've moved more than 10 seconds from last saved position
-				if (timeDifference >= 10) {
-					episode.enclosure.userLocation = currentTime;
-					lastSavedPosition = currentTime;
-				}
-			}
-			
-			// Set state to inprogress if user has listened for more than 10 seconds
-			if (currentTime > 10 && episode.state === 'unwatched') {
-				episode.state = 'inprogress';
-			}
-		}
-	}
-
-	function handleLoadedData() {
-		// This is now handled by the episode change effect
-		// Keep this function for any future audio loading needs
-	}
-
-	function resetAudioPosition() {
-		if (audioElement && selectedFeedEntryIdx !== null && selectedFeed) {
-			const episode = feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx];
-			const episodeId = `${selectedFeedIdx}-${selectedFeedEntryIdx}`;
-			
-			if (episode.enclosure) {
-				episode.enclosure.userLocation = 0;
-			}
-			if (audioElement) {
-				audioElement.currentTime = 0;
-			}
-			lastRestoredEpisodeId = episodeId;
-			lastSavedPosition = 0;
-		}
-	}
 </script>
 
 <div class="full-bleed">
@@ -430,7 +376,7 @@
 			<div class="user-info">
 				<span>Podcasts</span>
 				<span class="unread-count">
-					{feeds.reduce((total, feed) => total + feed.numUnread, 0)}
+					{totalUnreadCount}
 				</span>
 			</div>
 		</div>
@@ -529,7 +475,6 @@
 								class="episode-item"
 								data-state={feedEntry.state}
 								data-selected={feedEntryIdx === selectedFeedEntryIdx}
-								data-has-position={feedEntry.enclosure?.userLocation && feedEntry.enclosure.userLocation > 0}
 								onclick={() => {
 									selectedFeedEntryIdx = feedEntryIdx;
 									mobileView = 'details';
@@ -537,12 +482,7 @@
 							>
 								<div class="episode-indicator" data-state={feedEntry.state}></div>
 								<div class="episode-content">
-									<h4 class="episode-title">
-										{feedEntry.title}
-										{#if feedEntry.enclosure?.userLocation && feedEntry.enclosure.userLocation > 0}
-											<span class="resume-indicator" title="Resume from {Math.floor(feedEntry.enclosure.userLocation / 60)}:{(Math.floor(feedEntry.enclosure.userLocation % 60)).toString().padStart(2, '0')}">▶</span>
-										{/if}
-									</h4>
+									<h4 class="episode-title">{feedEntry.title}</h4>
 									<p class="episode-description">{@html feedEntry.description}</p>
 									<div class="episode-meta">
 										<span class="episode-date">{feedEntry.date}, {feedEntry.time}</span>
@@ -581,13 +521,6 @@
 									<button class="action-btn-neutral" onclick={() => setState('unwatched')}
 										>Mark as Unread</button
 									>
-								{:else if selectedFeedEntry.state === 'inprogress'}
-									<button class="action-btn-primary" onclick={() => setState('watched')}
-										>Mark as Read</button
-									>
-									<button class="action-btn-secondary" onclick={() => setState('unwatched')}
-										>Mark as Unread</button
-									>
 								{:else}
 									<button class="action-btn-primary" onclick={() => setState('watched')}
 										>Mark as Read</button
@@ -617,13 +550,7 @@
 									</div>
 
 									<div class="audio-container">
-										<audio 
-											bind:this={audioElement}
-											controls 
-											preload="metadata"
-											ontimeupdate={handleTimeUpdate}
-											onloadeddata={handleLoadedData}
-										>
+										<audio controls preload="metadata">
 											<source
 												src={selectedFeedEntry.enclosure.url}
 												type={selectedFeedEntry.enclosure.type}
@@ -851,14 +778,6 @@
 		background: var(--yellow-3);
 	}
 
-	.episode-item[data-has-position='true'] {
-		border-left: 3px solid var(--blue-6);
-	}
-
-	.episode-item[data-state='inprogress'] {
-		border-left: 3px solid var(--orange-6);
-	}
-
 	.episode-indicator {
 		width: var(--size-3);
 		height: var(--size-3);
@@ -869,10 +788,6 @@
 
 	.episode-indicator[data-state='unwatched'] {
 		background: var(--blue-7);
-	}
-
-	.episode-indicator[data-state='inprogress'] {
-		background: var(--orange-6);
 	}
 
 	.episode-indicator[data-state='watched'] {
@@ -891,16 +806,6 @@
 		margin: 0 0 var(--size-1) 0;
 		color: var(--gray-8);
 		line-height: var(--font-lineheight-2);
-		display: flex;
-		align-items: center;
-		gap: var(--size-2);
-	}
-
-	.resume-indicator {
-		font-size: var(--font-size-1);
-		color: var(--blue-6);
-		font-weight: var(--font-weight-5);
-		opacity: 0.8;
 	}
 
 	.episode-description {
@@ -959,10 +864,6 @@
 
 	.episode-indicator-large[data-state='unwatched'] {
 		background: var(--blue-7);
-	}
-
-	.episode-indicator-large[data-state='inprogress'] {
-		background: var(--orange-6);
 	}
 
 	.episode-indicator-large[data-state='watched'] {
