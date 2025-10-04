@@ -118,6 +118,9 @@
 	]);
 	let selectedShowIdx = $state(0);
 	let selectedEpisodeIdx: null | number = $state(0);
+	
+	// Mobile navigation state
+	let mobileView = $state<'feeds' | 'episodes' | 'details'>('feeds');
 
 	let selectedShow = $derived(shows[selectedShowIdx]);
 	let selectedEpisode = $derived(
@@ -160,7 +163,10 @@
 	<!-- Main Layout -->
 	<div class="main-layout">
 		<!-- Left Column: Feeds/Shows -->
-		<div class="feeds-column">
+		<div class="feeds-column" data-mobile-view={mobileView === 'feeds' ? 'visible' : 'hidden'}>
+			<div class="mobile-header">
+				<h1>Podcasts</h1>
+			</div>
 			<div class="feeds-list">
 				{#each shows as show, showIdx}
 					<button
@@ -170,6 +176,7 @@
 							selectedShowIdx = showIdx;
 							if (shows[selectedShowIdx].episodes.length > 0) {
 								selectedEpisodeIdx = 0;
+								mobileView = 'episodes';
 							} else {
 								selectedEpisodeIdx = null;
 							}
@@ -181,73 +188,87 @@
 							<span class="badge">{show.numUnread}</span>
 						{/if}
 					</button>
-				{/each}
+			                {/each}
 			</div>
 		</div>
 
 		<!-- Middle Column: Episodes -->
-		<div class="episodes-column">
-			{#each selectedShow.episodes as episode, episodeIdx}
-				<button
-					class="episode-item"
-					data-state={episode.state}
-					data-selected={episodeIdx === selectedEpisodeIdx}
-					onclick={() => {
-						selectedEpisodeIdx = episodeIdx;
-					}}
-				>
-					<div class="episode-indicator" data-state={episode.state}></div>
-					<div class="episode-content">
-						<h4 class="episode-title">{episode.title}</h4>
-						<p class="episode-description">{episode.description}</p>
-						<div class="episode-meta">
-							<span class="episode-date">{episode.date}, {episode.time}</span>
-							<span class="episode-author">· {episode.author}</span>
+		<div class="episodes-column" data-mobile-view={mobileView === 'episodes' ? 'visible' : 'hidden'}>
+			<div class="mobile-header">
+				<button class="back-btn" onclick={() => mobileView = 'feeds'}>&larr;</button>
+				<h1>{selectedShow.title}</h1>
+			</div>
+			<div class="episodes-list">
+				{#each selectedShow.episodes as episode, episodeIdx}
+					<button
+						class="episode-item"
+						data-state={episode.state}
+						data-selected={episodeIdx === selectedEpisodeIdx}
+						onclick={() => {
+							selectedEpisodeIdx = episodeIdx;
+							mobileView = 'details';
+						}}
+					>
+						<div class="episode-indicator" data-state={episode.state}></div>
+						<div class="episode-content">
+							<h4 class="episode-title">{episode.title}</h4>
+							<p class="episode-description">{episode.description}</p>
+							<div class="episode-meta">
+								<span class="episode-date">{episode.date}, {episode.time}</span>
+								<span class="episode-author">· {episode.author}</span>
+							</div>
 						</div>
-					</div>
-				</button>
-			{/each}
+					</button>
+				{/each}
+			</div>
 		</div>
 
-		<!-- Right Column: Episode Details -->
-		<div class="details-column">
-			{#if selectedEpisode}
-				<div class="episode-header">
-					<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
-					<h2 class="episode-title-large">{selectedEpisode.title}</h2>
-					<div class="episode-meta-large">
-						{selectedEpisode.date}, {selectedEpisode.time} · {selectedEpisode.author}
+		<!-- Right Column:
+ Episode Details -->
+		<div class="details-column" data-mobile-view={mobileView === 'details' ? 'visible' : 'hidden'}>
+			<div class="mobile-header">
+				<button class="back-btn" onclick={() => mobileView = 'episodes'}>&larr;</button>
+				<h1>Episode Details</h1>
+			</div>
+			<div class="episode-details-content">
+				{#if selectedEpisode}
+					<div class="episode-header">
+						<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
+						<h2 class="episode-title-large">{selectedEpisode.title}</h2>
+						<div class="episode-meta-large">
+							{selectedEpisode.date}, {selectedEpisode.time} · {selectedEpisode.author}
+						</div>
+						<div class="episode-tags">
+							{#each selectedEpisode.tags as tag}
+								<span class="tag">{tag}</span>
+							{/each}
+						</div>
 					</div>
-					<div class="episode-tags">
-						{#each selectedEpisode.tags as tag}
-							<span class="tag">{tag}</span>
-						{/each}
-					</div>
-				</div>
 
-				<div class="episode-body">
-					<p>{selectedEpisode.description}</p>
+					<div class="episode-body">
+						<p>{selectedEpisode.description}</p>
 
-					<div class="episode-actions">
-						{#if selectedEpisode.state === 'watched'}
-							<button class="action-btn" onclick={() => setState('unwatched')}
-								>Mark as Unread</button
-							>
-						{:else}
-							<button class="action-btn" onclick={() => setState('watched')}>Mark as Read</button>
-						{/if}
-						{#if selectedEpisode.isSaved}
-							<button class="action-btn" onclick={toggleSaved}>Remove from Saved</button>
-						{:else}
-							<button class="action-btn" onclick={toggleSaved}>Save Episode</button>
-						{/if}
+						<div class="episode-actions">
+							{#if selectedEpisode.state === 'watched'}
+								<button class="action-btn" onclick={() => setState('unwatched')}
+									>Mark as Unread</button
+								>
+							{:else}
+								<button class="action-btn" onclick={() => setState('watched')}>Mark as Read</button>
+							{/if}
+							{#if selectedEpisode.isSaved}
+								<button class="action-btn" onclick={toggleSaved}>Remove from Saved</button>
+							{:else}
+								<button class="action-btn" onclick={toggleSaved}>Save Episode</button>
+							{/if}
+						</div>
 					</div>
-				</div>
-			{:else}
-				<div class="no-selection">
-					<span>No episode selected</span>
-				</div>
-			{/if}
+				{:else}
+					<div class="no-selection">
+						<span>No episode selected</span>
+					</div>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
@@ -549,5 +570,151 @@
 		min-width: var(--size-5);
 		text-align: center;
 		flex-shrink: 0;
+	}
+
+	/* Mobile Header Styles */
+	.mobile-header {
+		display: none;
+		padding: var(--size-3) var(--size-3);
+		border-bottom: var(--border-size-1) solid var(--gray-3);
+		background: var(--gray-2);
+		align-items: center;
+		gap: var(--size-3);
+	}
+
+	.mobile-header h1 {
+		margin: 0;
+		font-size: var(--font-size-3);
+		font-weight: var(--font-weight-6);
+		color: var(--gray-9);
+	}
+
+	.back-btn {
+		background: none;
+		border: none;
+		font-size: var(--font-size-3);
+		color: var(--gray-7);
+		cursor: pointer;
+		padding: var(--size-2);
+		border-radius: var(--radius-2);
+		transition: background-color var(--t-ratio);
+	}
+
+	.back-btn:hover {
+		background: var(--gray-4);
+	}
+
+	.episodes-list {
+		flex: 1;
+		overflow-y: auto;
+	}
+
+	.episode-details-content {
+		flex: 1;
+		overflow-y: auto;
+		padding: var(--size-3);
+	}
+
+	/* Mobile Responsive Design */
+	@media (max-width: 768px) {
+		.mobile-header {
+			display: flex;
+		}
+
+		.main-layout {
+			grid-template-columns: 1fr;
+			height: calc(100vh - var(--size-6));
+		}
+
+		.feeds-column,
+		.episodes-column,
+		.details-column {
+			background: var(--gray-1);
+			border-right: none;
+			border-bottom: none;
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
+
+		.feeds-column[data-mobile-view="hidden"],
+		.episodes-column[data-mobile-view="hidden"],
+		.details-column[data-mobile-view="hidden"] {
+			display: none;
+		}
+
+		.feeds-list {
+			padding: 0;
+			flex: 1;
+		}
+
+		.feed-item {
+			border-bottom: var(--border-size-1) solid var(--gray-3);
+		}
+
+		.episode-item {
+			border-bottom: var(--border-size-1) solid var(--gray-3);
+		}
+
+		.no-selection {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: var(--size-fluid-11);
+			color: var(--gray-6);
+			font-style: italic;
+		}
+	}
+
+	/* Desktop - Ensure mobile elements are hidden */
+	@media (min-width: 769px) {
+		.mobile-header {
+			display: none !important;
+		}
+
+		.main-layout {
+			grid-template-columns: var(--size-fluid-9) 1fr var(--size-fluid-10);
+		}
+
+		.feeds-column,
+		.episodes-column,
+		.details-column {
+			display: flex !important;
+			flex-direction: column;
+		}
+
+		[data-mobile-view="visible"] {
+			display: flex !important;
+		}
+
+		.feeds-column {
+			background: var(--gray-2);
+			border-right: var(--border-size-1) solid var(--gray-6);
+		}
+
+		.episodes-column {
+			background: var(--gray-1);
+			border-right: var(--border-size-1) solid var(--gray-3);
+		}
+
+		.details-column {
+			background: var(--gray-2);
+		}
+
+		.feeds-list {
+			padding: var(--size-2) 0;
+		}
+
+		.feed-item {
+			border-bottom: none;
+		}
+
+		.episode-item {
+			border-bottom: var(--border-size-1) solid var(--gray-3);
+		}
+
+		.episode-details-content {
+			padding: 0;
+		}
 	}
 </style>
