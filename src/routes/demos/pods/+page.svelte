@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 
 	// TODO:
-	// Make audio available offline
+	// Make audio available offline!
 
 	// CONSTANTS
 	const FEED_CACHE_KEY = 'podcast_feeds_cache';
