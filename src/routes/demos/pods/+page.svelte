@@ -630,9 +630,8 @@
 	.feed-menu-btn {
 		background: none;
 		border: none;
-		color: var(--gray-6);
+		color: var(--gray-7);
 		cursor: pointer;
-		padding: var(--size-1);
 		border-radius: var(--radius-2);
 		transition: color var(--t-ratio);
 		opacity: 1;
@@ -640,7 +639,7 @@
 	}
 
 	.feed-item-container:hover .feed-menu-btn {
-		color: var(--gray-8);
+		color: var(--gray-10);
 	}
 
 	.ellipses-icon {
