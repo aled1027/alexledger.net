@@ -8,8 +8,10 @@
 	// CONSTANTS
 	const FEED_CACHE_KEY = 'podcast_feeds_cache';
 	const FEED_CONFIGS_KEY = 'podcast_feed_configs';
+	const AUDIO_CACHE_KEY = 'podcast_audio_cache';
 	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 	const FETCH_TIMEOUT = 10000; // 10 seconds
+	const MAX_STORAGE_QUOTA = 100 * 1024 * 1024; // 100MB limit for audio storage
 	
 	// CORS Proxy - using a public CORS proxy service
 	// This helps bypass CORS restrictions when fetching RSS feeds from different domains
@@ -57,6 +59,9 @@
 			type: string;
 			length: number;
 			userLocation?: number; // Audio playback position in seconds
+			downloadState?: 'not-downloaded' | 'downloading' | 'downloaded' | 'error';
+			downloadProgress?: number; // 0-100
+			localStorageKey?: string; // Key for local storage
 		};
 	}
 
@@ -78,6 +83,9 @@
 			url: string;
 			type: string;
 			length: number;
+			downloadState?: 'not-downloaded' | 'downloading' | 'downloaded' | 'error';
+			downloadProgress?: number;
+			localStorageKey?: string;
 		};
 	}
 
@@ -108,6 +116,199 @@
 		const sizes = ['B', 'KB', 'MB', 'GB'];
 		const i = Math.floor(Math.log(bytes) / Math.log(k));
 		return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+	}
+
+	// AUDIO DOWNLOAD AND STORAGE FUNCTIONS
+	function generateAudioKey(audioUrl: string): string {
+		// Create a unique key based on the audio URL
+		return `audio_${btoa(audioUrl).replace(/[^a-zA-Z0-9]/g, '')}`;
+	}
+
+	function getAudioCache(): Record<string, { data: string; timestamp: number; size: number }> {
+		try {
+			const cached = localStorage.getItem(AUDIO_CACHE_KEY);
+			return cached ? JSON.parse(cached) : {};
+		} catch (error) {
+			console.error('Error reading audio cache:', error);
+			return {};
+		}
+	}
+
+	function setAudioCache(cache: Record<string, { data: string; timestamp: number; size: number }>): void {
+		try {
+			localStorage.setItem(AUDIO_CACHE_KEY, JSON.stringify(cache));
+		} catch (error) {
+			console.error('Error saving audio cache:', error);
+		}
+	}
+
+	function getStorageUsage(): number {
+		const cache = getAudioCache();
+		return Object.values(cache).reduce((total, item) => total + item.size, 0);
+	}
+
+	function cleanupOldAudio(): void {
+		const cache = getAudioCache();
+		const entries = Object.entries(cache);
+		
+		// Sort by timestamp (oldest first)
+		entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+		
+		let currentUsage = getStorageUsage();
+		
+		// Remove oldest entries until we're under quota
+		while (currentUsage > MAX_STORAGE_QUOTA && entries.length > 0) {
+			const [key, item] = entries.shift()!;
+			delete cache[key];
+			currentUsage -= item.size;
+		}
+		
+		setAudioCache(cache);
+	}
+
+	async function downloadAudio(audioUrl: string, feedIdx: number, episodeIdx: number): Promise<void> {
+		const feed = feeds[feedIdx];
+		const episode = feed.episodes[episodeIdx];
+		
+		if (!episode.enclosure) return;
+		
+		const audioKey = generateAudioKey(audioUrl);
+		
+		// Update download state
+		episode.enclosure.downloadState = 'downloading';
+		episode.enclosure.downloadProgress = 0;
+		episode.enclosure.localStorageKey = audioKey;
+		
+		try {
+			// Check if already downloaded
+			const audioCache = getAudioCache();
+			if (audioCache[audioKey]) {
+				episode.enclosure.downloadState = 'downloaded';
+				episode.enclosure.downloadProgress = 100;
+				return;
+			}
+			
+			// Clean up old audio if needed
+			cleanupOldAudio();
+			
+			// Download the audio file
+			const response = await fetch(audioUrl);
+			if (!response.ok) {
+				throw new Error(`Failed to download audio: ${response.statusText}`);
+			}
+			
+			const contentLength = response.headers.get('content-length');
+			const total = contentLength ? parseInt(contentLength, 10) : 0;
+			
+			const reader = response.body?.getReader();
+			if (!reader) {
+				throw new Error('No response body reader available');
+			}
+			
+			const chunks: Uint8Array[] = [];
+			let received = 0;
+			
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) break;
+				
+				chunks.push(value);
+				received += value.length;
+				
+				// Update progress
+				if (total > 0) {
+					episode.enclosure.downloadProgress = Math.round((received / total) * 100);
+				}
+			}
+			
+			// Combine chunks and convert to base64
+			const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+			const audioData = new Uint8Array(totalLength);
+			let offset = 0;
+			
+			for (const chunk of chunks) {
+				audioData.set(chunk, offset);
+				offset += chunk.length;
+			}
+			
+			// Convert to base64 for storage (process in chunks to avoid call stack overflow)
+			let base64Data = '';
+			const chunkSize = 8192; // Process 8KB at a time
+			
+			for (let i = 0; i < audioData.length; i += chunkSize) {
+				const chunk = audioData.slice(i, i + chunkSize);
+				base64Data += btoa(String.fromCharCode(...chunk));
+			}
+			
+			// Store in cache
+			const currentCache = getAudioCache();
+			currentCache[audioKey] = {
+				data: base64Data,
+				timestamp: Date.now(),
+				size: base64Data.length
+			};
+			setAudioCache(currentCache);
+			
+			// Update episode state
+			episode.enclosure.downloadState = 'downloaded';
+			episode.enclosure.downloadProgress = 100;
+			
+		} catch (error) {
+			console.error('Error downloading audio:', error);
+			episode.enclosure.downloadState = 'error';
+			episode.enclosure.downloadProgress = 0;
+		}
+	}
+
+	function deleteDownloadedAudio(feedIdx: number, episodeIdx: number): void {
+		const feed = feeds[feedIdx];
+		const episode = feed.episodes[episodeIdx];
+		
+		if (!episode.enclosure?.localStorageKey) return;
+		
+		const cache = getAudioCache();
+		delete cache[episode.enclosure.localStorageKey];
+		setAudioCache(cache);
+		
+		// Reset download state
+		episode.enclosure.downloadState = 'not-downloaded';
+		episode.enclosure.downloadProgress = 0;
+		episode.enclosure.localStorageKey = undefined;
+	}
+
+	function getAudioUrl(feedIdx: number, episodeIdx: number): string | null {
+		const feed = feeds[feedIdx];
+		const episode = feed.episodes[episodeIdx];
+		
+		if (!episode.enclosure) return null;
+		
+		// If downloaded, return blob URL from local storage
+		if (episode.enclosure.downloadState === 'downloaded' && episode.enclosure.localStorageKey) {
+			const cache = getAudioCache();
+			const cachedAudio = cache[episode.enclosure.localStorageKey];
+			
+			if (cachedAudio) {
+				try {
+					// Convert base64 back to binary
+					const binaryString = atob(cachedAudio.data);
+					const bytes = new Uint8Array(binaryString.length);
+					for (let i = 0; i < binaryString.length; i++) {
+						bytes[i] = binaryString.charCodeAt(i);
+					}
+					
+					// Create blob URL
+					const blob = new Blob([bytes], { type: episode.enclosure.type });
+					return URL.createObjectURL(blob);
+				} catch (error) {
+					console.error('Error creating blob URL:', error);
+					// Fallback to original URL
+					return episode.enclosure.url;
+				}
+			}
+		}
+		
+		// Return original URL
+		return episode.enclosure.url;
 	}
 
 	async function fetchRSSFeed(feedUrl: string): Promise<RSSFeed | null> {
@@ -235,6 +436,20 @@
 		const episodes: FeedEntry[] = rssFeed.items.map((item) => {
 			const { date: dateStr, time: timeStr } = formatEpisodeDate(item.pubDate);
 
+			let enclosure = item.enclosure;
+			if (enclosure) {
+				const audioKey = generateAudioKey(enclosure.url);
+				const cache = getAudioCache();
+				const isDownloaded = cache[audioKey] !== undefined;
+				
+				enclosure = {
+					...enclosure,
+					downloadState: isDownloaded ? 'downloaded' : 'not-downloaded',
+					downloadProgress: isDownloaded ? 100 : 0,
+					localStorageKey: isDownloaded ? audioKey : undefined
+				};
+			}
+
 			return {
 				title: item.title,
 				description: item.description,
@@ -244,7 +459,7 @@
 				state: 'unwatched',
 				isSaved: false,
 				tags: [], // Could be enhanced to extract tags from description
-				enclosure: item.enclosure
+				enclosure
 			};
 		});
 
@@ -415,6 +630,10 @@
 		feeds.reduce((total, feed) => total + feed.numUnread, 0)
 	);
 
+	let storageUsage = $derived(getStorageUsage());
+	let storageUsageFormatted = $derived(formatFileSize(storageUsage));
+	let storageUsagePercent = $derived(Math.round((storageUsage / MAX_STORAGE_QUOTA) * 100));
+
 	// Automatically save feeds data when it changes
 	$effect(() => {
 		if (feeds.length > 0) {
@@ -516,6 +735,11 @@
 				<span>Podcasts</span>
 				<span class="unread-count">
 					{totalUnreadCount}
+				</span>
+			</div>
+			<div class="storage-info">
+				<span class="storage-usage">
+					💾 {storageUsageFormatted} ({storageUsagePercent}%)
 				</span>
 			</div>
 		</div>
@@ -748,12 +972,46 @@
 										<div class="enclosure-size">
 											{formatFileSize(selectedFeedEntry.enclosure.length)}
 										</div>
+										{#if selectedFeedEntry.enclosure.downloadState === 'downloaded'}
+											<div class="download-status downloaded">✓ Downloaded</div>
+										{:else if selectedFeedEntry.enclosure.downloadState === 'downloading'}
+											<div class="download-status downloading">
+												⏳ Downloading... {selectedFeedEntry.enclosure.downloadProgress || 0}%
+											</div>
+										{:else if selectedFeedEntry.enclosure.downloadState === 'error'}
+											<div class="download-status error">❌ Download failed</div>
+										{/if}
+									</div>
+
+									<div class="download-controls">
+										{#if selectedFeedEntry.enclosure?.downloadState === 'downloaded'}
+											<button 
+												class="action-btn-secondary download-btn"
+												onclick={() => deleteDownloadedAudio(selectedFeedIdx, selectedFeedEntryIdx!)}
+											>
+												🗑️ Delete Download
+											</button>
+										{:else if selectedFeedEntry.enclosure?.downloadState === 'not-downloaded'}
+											<button 
+												class="action-btn-primary download-btn"
+												onclick={() => downloadAudio(selectedFeedEntry.enclosure!.url, selectedFeedIdx, selectedFeedEntryIdx!)}
+											>
+												⬇️ Download Audio
+											</button>
+										{:else if selectedFeedEntry.enclosure?.downloadState === 'error'}
+											<button 
+												class="action-btn-primary download-btn"
+												onclick={() => downloadAudio(selectedFeedEntry.enclosure!.url, selectedFeedIdx, selectedFeedEntryIdx!)}
+											>
+												🔄 Retry Download
+											</button>
+										{/if}
 									</div>
 
 									<div class="audio-container">
 										<audio controls preload="metadata">
 											<source
-												src={selectedFeedEntry.enclosure.url}
+												src={getAudioUrl(selectedFeedIdx, selectedFeedEntryIdx!) || selectedFeedEntry.enclosure.url}
 												type={selectedFeedEntry.enclosure.type}
 											/>
 											Your browser does not support the audio element.
@@ -809,6 +1067,17 @@
 	.unread-count {
 		color: var(--gray-6);
 		font-family: var(--font-mono);
+	}
+
+	.storage-info {
+		display: flex;
+		align-items: center;
+	}
+
+	.storage-usage {
+		color: var(--gray-6);
+		font-family: var(--font-mono);
+		font-size: var(--font-size-0);
 	}
 
 	/* Main Layout */
@@ -1149,6 +1418,8 @@
 		margin-bottom: var(--size-3);
 		font-size: var(--font-size-0);
 		color: var(--blue-7);
+		flex-wrap: wrap;
+		align-items: center;
 	}
 
 	.enclosure-type {
@@ -1163,6 +1434,39 @@
 		background: var(--blue-2);
 		padding: var(--size-1) var(--size-2);
 		border-radius: var(--radius-2);
+	}
+
+	.download-status {
+		font-family: var(--font-mono);
+		padding: var(--size-1) var(--size-2);
+		border-radius: var(--radius-2);
+		font-size: var(--font-size-0);
+		font-weight: var(--font-weight-5);
+	}
+
+	.download-status.downloaded {
+		background: var(--green-2);
+		color: var(--green-8);
+	}
+
+	.download-status.downloading {
+		background: var(--yellow-2);
+		color: var(--yellow-8);
+	}
+
+	.download-status.error {
+		background: var(--red-2);
+		color: var(--red-8);
+	}
+
+	.download-controls {
+		margin-bottom: var(--size-3);
+	}
+
+	.download-btn {
+		font-size: var(--font-size-1);
+		padding: var(--size-2) var(--size-3);
+		min-width: 160px;
 	}
 
 	.audio-container {
