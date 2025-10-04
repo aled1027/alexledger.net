@@ -5,8 +5,7 @@
 		{
 			title: '99% Invisible',
 			icon: '📻',
-			url: 'https://example.com',
-			numUnread: 3,
+	numUnread: 3,
 			episodes: [
 				{
 					title: 'Get Played with Roman Mars and Ben Brock Johnson',
@@ -46,8 +45,7 @@
 		{
 			title: 'The Daily',
 			icon: '📰',
-			url: 'https://example.com',
-			numUnread: 2,
+	numUnread: 2,
 			episodes: [
 				{
 					title: 'New Drug Cures Cancer',
@@ -75,8 +73,7 @@
 		{
 			title: 'The Zach Lowe Show',
 			icon: '🏀',
-			url: 'https://example.com',
-			numUnread: 1,
+	numUnread: 1,
 			episodes: [
 				{
 					title: 'Lebron or Luka. Who gets the ball',
@@ -104,8 +101,7 @@
 		{
 			title: 'Marketing Ideas',
 			icon: '💡',
-			url: 'https://example.com',
-			numUnread: 2,
+	numUnread: 2,
 			episodes: [
 				{
 					title: 'The Psychology of Color in Branding',
@@ -155,21 +151,9 @@
 		<div class="user-info">
 			<span class="avatar">👤</span>
 			<span class="username">aled1027</span>
-			<span class="unread-count"
-				>o {shows.reduce((total, show) => total + show.numUnread, 0)} o 0</span
-			>
-		</div>
-		<div class="controls">
-			<button class="control-btn">🔊</button>
-			<button class="control-btn">←</button>
-			<button class="control-btn">⏸️</button>
-			<select class="control-select">
-				<option>ALL - NEWEST</option>
-			</select>
-			<button class="control-btn">🔍</button>
-			<button class="control-btn">➕</button>
-			<button class="control-btn">↑</button>
-			<span class="next-unread">o Next unread ↓</span>
+			<span class="unread-count">
+				{shows.reduce((total, show) => total + show.numUnread, 0)}
+			</span>
 		</div>
 	</div>
 
@@ -314,38 +298,6 @@
 		font-family: var(--font-mono);
 	}
 
-	.controls {
-		display: flex;
-		align-items: center;
-		gap: var(--size-2);
-	}
-
-	.control-btn {
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: var(--size-1);
-		font-size: var(--font-size-2);
-		color: var(--gray-6);
-	}
-
-	.control-btn:hover {
-		color: var(--gray-7);
-	}
-
-	.control-select {
-		border: var(--border-size-1) solid var(--gray-3);
-		border-radius: var(--radius-2);
-		padding: var(--size-1) var(--size-2);
-		font-size: var(--font-size-1);
-		background: var(--gray-2);
-	}
-
-	.next-unread {
-		color: var(--gray-6);
-		font-size: var(--font-size-1);
-	}
-
 	/* Main Layout */
 	.main-layout {
 		display: grid;
@@ -363,26 +315,6 @@
 		border-right: var(--border-size-1) solid var(--gray-6);
 	}
 
-	.nav-section {
-		padding: var(--size-3) 0;
-		border-bottom: var(--border-size-1) solid var(--gray-6);
-	}
-
-	.nav-item {
-		padding: var(--size-2) var(--size-3);
-		cursor: pointer;
-		font-size: var(--font-size-1);
-		color: var(--gray-6);
-	}
-
-	.nav-item.active {
-		color: var(--gray-9);
-		background: var(--gray-4);
-	}
-
-	.nav-item:hover {
-		background: var(--gray-4);
-	}
 
 	.feeds-list {
 		flex: 1;
