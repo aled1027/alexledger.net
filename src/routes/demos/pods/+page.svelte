@@ -1,18 +1,45 @@
 <script lang="ts">
 	import '../../../styles/open-props.css';
 
+	interface Episode {
+		title: string;
+		description: string;
+		date: string;
+		time: string;
+		author: string;
+		state: 'watched' | 'unwatched';
+		isSaved: boolean;
+		tags: string[];
+	}
+
+	interface Show {
+		title: string;
+		feedUrl?: string;
+		icon: string;
+		numUnread: number;
+		episodes: Episode[];
+	}
+
 	// Next:
 	// - Connect to RSS feeds
 	// --> feed cache. and then store some "user data" about episodes
-    //   - like isSaved, state, playback time, etc.
+	//   - like isSaved, state, playback time, etc.
 	//   - maybe ad in progress as a state
 	// - Support audio player
 	// - Remember time in audio player for next time so resuming is good
 	// - Support downloading episodes
+	/**
+	 * Add a feature that:
+* on load:
+* - checks local storage for the feeds
+* - if they're not there, pull the feed and store it in local storage
+* - map the feed to the structure needed
+	 )*/
 
-	let shows = $state([
+	let shows: Show[] = $state([
 		{
 			title: '99% Invisible',
+			feedUrl: 'https://feeds.simplecast.com/BqbsxVfO',
 			icon: '📻',
 			numUnread: 3,
 			episodes: [
@@ -50,89 +77,89 @@
 					tags: ['food', 'environment', 'labor']
 				}
 			]
-		},
-		{
-			title: 'The Daily',
-			icon: '📰',
-			numUnread: 2,
-			episodes: [
-				{
-					title: 'New Drug Cures Cancer',
-					description:
-						'A breakthrough in cancer treatment shows promising results in early clinical trials.',
-					date: 'Today',
-					time: '6:00am',
-					author: 'Michael Barbaro',
-					state: 'unwatched',
-					isSaved: true,
-					tags: ['health', 'medicine', 'cancer']
-				},
-				{
-					title: 'Snowstorm in Boston',
-					description: 'The latest winter weather report and its impact on the Boston area.',
-					date: 'Today',
-					time: '6:00am',
-					author: 'Michael Barbaro',
-					state: 'unwatched',
-					isSaved: false,
-					tags: ['weather', 'boston', 'snow']
-				}
-			]
-		},
-		{
-			title: 'The Zach Lowe Show',
-			icon: '🏀',
-			numUnread: 1,
-			episodes: [
-				{
-					title: 'Lebron or Luka. Who gets the ball',
-					description: 'Breaking down the clutch time decision making between two NBA superstars.',
-					date: 'Monday',
-					time: '11:30am',
-					author: 'Zach Lowe',
-					state: 'unwatched',
-					isSaved: false,
-					tags: ['basketball', 'lebron', 'luka']
-				},
-				{
-					title: 'Steph Curry. Steph Curry.',
-					description:
-						"An analysis of Stephen Curry's incredible shooting display and its impact on modern basketball.",
-					date: 'Friday',
-					time: '11:30am',
-					author: 'Zach Lowe',
-					state: 'watched',
-					isSaved: false,
-					tags: ['basketball', 'stephen curry', 'shooting']
-				}
-			]
-		},
-		{
-			title: 'Marketing Ideas',
-			icon: '💡',
-			numUnread: 2,
-			episodes: [
-				{
-					title: 'The Psychology of Color in Branding',
-					description: 'How colors affect consumer behavior and brand perception.',
-					date: 'Wednesday',
-					time: '3:00pm',
-					author: 'Sarah Miller',
-					state: 'unwatched',
-					isSaved: false,
-					tags: ['psychology', 'branding', 'marketing']
-				}
-			]
 		}
+		// {
+		// 	title: 'The Daily',
+		// 	icon: '📰',
+		// 	numUnread: 2,
+		// 	episodes: [
+		// 		{
+		// 			title: 'New Drug Cures Cancer',
+		// 			description:
+		// 				'A breakthrough in cancer treatment shows promising results in early clinical trials.',
+		// 			date: 'Today',
+		// 			time: '6:00am',
+		// 			author: 'Michael Barbaro',
+		// 			state: 'unwatched',
+		// 			isSaved: true,
+		// 			tags: ['health', 'medicine', 'cancer']
+		// 		},
+		// 		{
+		// 			title: 'Snowstorm in Boston',
+		// 			description: 'The latest winter weather report and its impact on the Boston area.',
+		// 			date: 'Today',
+		// 			time: '6:00am',
+		// 			author: 'Michael Barbaro',
+		// 			state: 'unwatched',
+		// 			isSaved: false,
+		// 			tags: ['weather', 'boston', 'snow']
+		// 		}
+		// 	]
+		// },
+		// {
+		// 	title: 'The Zach Lowe Show',
+		// 	icon: '🏀',
+		// 	numUnread: 1,
+		// 	episodes: [
+		// 		{
+		// 			title: 'Lebron or Luka. Who gets the ball',
+		// 			description: 'Breaking down the clutch time decision making between two NBA superstars.',
+		// 			date: 'Monday',
+		// 			time: '11:30am',
+		// 			author: 'Zach Lowe',
+		// 			state: 'unwatched',
+		// 			isSaved: false,
+		// 			tags: ['basketball', 'lebron', 'luka']
+		// 		},
+		// 		{
+		// 			title: 'Steph Curry. Steph Curry.',
+		// 			description:
+		// 				"An analysis of Stephen Curry's incredible shooting display and its impact on modern basketball.",
+		// 			date: 'Friday',
+		// 			time: '11:30am',
+		// 			author: 'Zach Lowe',
+		// 			state: 'watched',
+		// 			isSaved: false,
+		// 			tags: ['basketball', 'stephen curry', 'shooting']
+		// 		}
+		// 	]
+		// },
+		// {
+		// 	title: 'Marketing Ideas',
+		// 	icon: '💡',
+		// 	numUnread: 2,
+		// 	episodes: [
+		// 		{
+		// 			title: 'The Psychology of Color in Branding',
+		// 			description: 'How colors affect consumer behavior and brand perception.',
+		// 			date: 'Wednesday',
+		// 			time: '3:00pm',
+		// 			author: 'Sarah Miller',
+		// 			state: 'unwatched',
+		// 			isSaved: false,
+		// 			tags: ['psychology', 'branding', 'marketing']
+		// 		}
+		// 	]
+		// }
 	]);
-	let selectedShowIdx = $state(0);
-	let selectedEpisodeIdx: null | number = $state(0);
+	let selectedShowIdx: number = $state(0);
+	let selectedEpisodeIdx: number | null = $state(0);
 
 	// Mobile navigation state
 	let mobileView = $state<'feeds' | 'episodes' | 'details'>('feeds');
 
-	let selectedShow = $derived(shows[selectedShowIdx]);
-	let selectedEpisode = $derived(
+	let selectedShow: Show = $derived(shows[selectedShowIdx]);
+	let selectedEpisode: Episode | null = $derived(
 		selectedEpisodeIdx !== null ? selectedShow.episodes[selectedEpisodeIdx] : null
 	);
 
@@ -143,7 +170,7 @@
 		}
 	}
 
-	function setState(newState: string) {
+	function setState(newState: 'watched' | 'unwatched') {
 		if (selectedEpisodeIdx !== null) {
 			shows[selectedShowIdx].episodes[selectedEpisodeIdx].state = newState;
 		}
@@ -252,7 +279,7 @@
 								<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
 								<h2 class="episode-title-large">{selectedEpisode.title}</h2>
 							</div>
-							
+
 							<div class="episode-actions-header">
 								{#if selectedEpisode.state === 'watched'}
 									<button class="action-btn-neutral" onclick={() => setState('unwatched')}
@@ -269,7 +296,7 @@
 									<button class="action-btn-secondary" onclick={toggleSaved}>Save</button>
 								{/if}
 							</div>
-							
+
 							<div class="episode-meta-large">
 								{selectedEpisode.date}, {selectedEpisode.time} · {selectedEpisode.author}
 							</div>
