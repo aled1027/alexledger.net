@@ -1,6 +1,15 @@
 <script lang="ts">
 	import '../../../styles/open-props.css';
 
+	// Next:
+	// - Connect to RSS feeds
+	// --> feed cache. and then store some "user data" about episodes
+    //   - like isSaved, state, playback time, etc.
+	//   - maybe ad in progress as a state
+	// - Support audio player
+	// - Remember time in audio player for next time so resuming is good
+	// - Support downloading episodes
+
 	let shows = $state([
 		{
 			title: '99% Invisible',
@@ -246,7 +255,7 @@
 							
 							<div class="episode-actions-header">
 								{#if selectedEpisode.state === 'watched'}
-									<button class="action-btn-primary" onclick={() => setState('unwatched')}
+									<button class="action-btn-neutral" onclick={() => setState('unwatched')}
 										>Mark as Unread</button
 									>
 								{:else}
@@ -504,8 +513,22 @@
 	.episode-actions-header {
 		display: flex;
 		gap: var(--size-2);
-		margin-bottom: var(--size-3);
+		margin-bottom: var(--size-2);
 		flex-wrap: wrap;
+		align-items: stretch;
+	}
+
+	.action-btn-primary,
+	.action-btn-secondary,
+	.action-btn-neutral {
+		min-width: 120px;
+		text-align: center;
+		white-space: nowrap;
+	}
+
+	.action-btn-primary,
+	.action-btn-neutral {
+		min-width: 150px;
 	}
 
 	.episode-meta-large {
@@ -538,40 +561,61 @@
 	}
 
 	.action-btn-primary {
-		background: var(--blue-7);
+		background: var(--blue-6);
 		outline: none;
 		border: none;
-		color: var(--gray-9);
+		color: white;
 		padding: var(--size-2) var(--size-3);
 		border-radius: var(--radius-2);
 		font-size: var(--font-size-1);
-		font-weight: var(--font-weight-6);
+		font-weight: var(--font-weight-5);
 		cursor: pointer;
 		transition: background-color var(--t-ratio);
 		transition-timing-function: var(--ease-2);
 	}
 
 	.action-btn-primary:hover {
-		background: var(--blue-8);
+		background: var(--blue-7);
 	}
 
 	.action-btn-secondary {
-		background: var(--gray-4);
+		background: var(--gray-1);
 		outline: none;
-		border: none;
-		color: var(--gray-8);
+		border: 1px solid var(--gray-4);
+		color: var(--gray-7);
 		padding: var(--size-2) var(--size-3);
 		border-radius: var(--radius-2);
 		font-size: var(--font-size-1);
-		font-weight: var(--weight-5);
+		font-weight: var(--font-weight-4);
 		cursor: pointer;
-		transition: background-color var(--t-ratio);
+		transition: all var(--t-ratio);
 		transition-timing-function: var(--ease-2);
 	}
 
 	.action-btn-secondary:hover {
-		background: var(--gray-5);
-		color: var(--gray-9);
+		background: var(--gray-2);
+		border-color: var(--gray-5);
+		color: var(--gray-8);
+	}
+
+	.action-btn-neutral {
+		background: var(--gray-1);
+		outline: none;
+		border: 1px solid var(--gray-4);
+		color: var(--gray-7);
+		padding: var(--size-2) var(--size-3);
+		border-radius: var(--radius-2);
+		font-size: var(--font-size-1);
+		font-weight: var(--font-weight-4);
+		cursor: pointer;
+		transition: all var(--t-ratio);
+		transition-timing-function: var(--ease-2);
+	}
+
+	.action-btn-neutral:hover {
+		background: var(--gray-2);
+		border-color: var(--gray-5);
+		color: var(--gray-8);
 	}
 
 	.no-selection {
@@ -704,11 +748,13 @@
 		}
 
 		.action-btn-primary,
-		.action-btn-secondary {
+		.action-btn-secondary,
+		.action-btn-neutral {
+			padding: var(--size-2) var(--size-2);
+			font-size: var(--font-size-1);
+			border-radius: var(--radius-2);
+			min-width: unset;
 			flex: 1;
-			text-align: center;
-			padding: var(--size-3) var(--size-2);
-			font-size: var(--font-size-2);
 		}
 	}
 
