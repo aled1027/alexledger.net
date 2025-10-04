@@ -199,17 +199,6 @@
 						{/if}
 					</button>
 				{/each}
-				
-				<div class="folder-section">
-					<div class="folder">
-						<span class="folder-name">📁 Know Portland</span>
-						<span class="badge">298</span>
-					</div>
-					<div class="folder">
-						<span class="folder-name">📁 Español</span>
-						<span class="badge">29</span>
-					</div>
-				</div>
 			</div>
 		</div>
 
@@ -432,33 +421,6 @@
 		font-size: 16px;
 		width: 20px;
 		text-align: center;
-	}
-
-	.folder-section {
-		margin-top: 16px;
-		border-top: 1px solid #495057;
-		padding-top: 8px;
-	}
-
-	.folder {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 6px 16px;
-		color: #adb5bd;
-		font-size: 14px;
-		cursor: pointer;
-	}
-
-	.folder:hover {
-		background: rgba(255, 255, 255, 0.05);
-		color: white;
-	}
-
-	.folder-name {
-		display: flex;
-		align-items: center;
-		gap: 8px;
 	}
 
 	/* Middle Column - Episodes */
