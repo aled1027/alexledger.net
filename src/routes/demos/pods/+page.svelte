@@ -14,7 +14,6 @@
 	const FEED_CONFIGS = [
 		{
 			url: 'https://feeds.simplecast.com/BqbsxVfO',
-			icon: '📻',
 			title: '99% Invisible'
 		}
 	] as const;
@@ -74,6 +73,7 @@
 	interface RSSFeed {
 		title: string;
 		description: string;
+		icon?: string;
 		items: RSSItem[];
 	}
 
@@ -131,6 +131,15 @@
 
 			const title = channel.querySelector('title')?.textContent || 'Unknown Feed';
 			const description = channel.querySelector('description')?.textContent || '';
+			
+			// Extract icon from various possible locations
+			const icon = 
+				channel.querySelector('image url')?.textContent ||
+				channel.querySelector('image')?.getAttribute('href') ||
+				channel.querySelector('itunes\\:image')?.getAttribute('href') ||
+				channel.querySelector('atom\\:link[rel="icon"]')?.getAttribute('href') ||
+				channel.querySelector('atom\\:link[rel="apple-touch-icon"]')?.getAttribute('href') ||
+				undefined;
 
 			const items: RSSItem[] = [];
 			const itemElements = channel.querySelectorAll('item');
@@ -177,6 +186,7 @@
 			return {
 				title,
 				description,
+				icon,
 				items
 			};
 		} catch (error) {
@@ -186,7 +196,7 @@
 		}
 	}
 
-	function mapRSSFeedToFeed(rssFeed: RSSFeed, feedUrl: string, icon: string): Feed {
+	function mapRSSFeedToFeed(rssFeed: RSSFeed, feedUrl: string): Feed {
 		const episodes: FeedEntry[] = rssFeed.items.map((item) => {
 			const { date: dateStr, time: timeStr } = formatEpisodeDate(item.pubDate);
 
@@ -208,7 +218,7 @@
 		return {
 			title: rssFeed.title,
 			feedUrl,
-			icon,
+			icon: rssFeed.icon || '📻', // Fallback to default icon if none found
 			numUnread,
 			episodes
 		};
@@ -269,7 +279,7 @@
 		for (const config of FEED_CONFIGS) {
 			const rssFeed = await fetchRSSFeed(config.url);
 			if (rssFeed) {
-				const feed = mapRSSFeedToFeed(rssFeed, config.url, config.icon);
+				const feed = mapRSSFeedToFeed(rssFeed, config.url);
 				fetchedFeeds.push(feed);
 			}
 		}
@@ -421,7 +431,13 @@
 								aria-label={`Select feed: ${feed.title}`}
 							>
 								<button class="feed-item">
-									<span class="feed-icon">{feed.icon}</span>
+									<span class="feed-icon">
+										{#if feed.icon && feed.icon.startsWith('http')}
+											<img src={feed.icon} alt={feed.title} class="feed-icon-img" />
+										{:else}
+											{feed.icon || '📻'}
+										{/if}
+									</span>
 									<span class="feed-name">{feed.title}</span>
 									{#if feed.numUnread > 0}
 										<span class="badge">{feed.numUnread}</span>
@@ -646,6 +662,16 @@
 		font-size: var(--font-size-2);
 		width: var(--size-5);
 		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.feed-icon-img {
+		width: var(--size-5);
+		height: var(--size-5);
+		border-radius: var(--radius-2);
+		object-fit: cover;
 	}
 
 	.feed-item-container {
