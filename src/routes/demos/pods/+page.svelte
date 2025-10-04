@@ -7,16 +7,17 @@
 
 	// CONSTANTS
 	const FEED_CACHE_KEY = 'podcast_feeds_cache';
+	const FEED_CONFIGS_KEY = 'podcast_feed_configs';
 	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 	const FETCH_TIMEOUT = 10000; // 10 seconds
 
-	// CONFIGURATION
-	const FEED_CONFIGS = [
+	// DEFAULT CONFIGURATION
+	const DEFAULT_FEED_CONFIGS: FeedConfig[] = [
 		{
 			url: 'https://feeds.simplecast.com/BqbsxVfO',
-			title: '99% Invisible'
+			dateAdded: new Date().toISOString()
 		}
-	] as const;
+	];
 
 	const DATE_FORMAT_OPTIONS = {
 		date: {
@@ -32,6 +33,11 @@
 	} as const;
 
 	// TYPES
+	interface FeedConfig {
+		url: string;
+		dateAdded: string;
+	}
+
 	interface FeedEntry {
 		title: string;
 		description: string;
@@ -257,6 +263,46 @@
 		}
 	}
 
+	function getFeedConfigs(): FeedConfig[] {
+		try {
+			const stored = localStorage.getItem(FEED_CONFIGS_KEY);
+			if (!stored) {
+				// Initialize with default configs
+				const defaultConfigs = [...DEFAULT_FEED_CONFIGS];
+				setFeedConfigs(defaultConfigs);
+				return defaultConfigs;
+			}
+			return JSON.parse(stored);
+		} catch (error) {
+			console.error('Error reading feed configs:', error);
+			return [...DEFAULT_FEED_CONFIGS];
+		}
+	}
+
+	function setFeedConfigs(configs: FeedConfig[]): void {
+		try {
+			localStorage.setItem(FEED_CONFIGS_KEY, JSON.stringify(configs));
+		} catch (error) {
+			console.error('Error saving feed configs:', error);
+		}
+	}
+
+	function addFeedConfig(url: string): void {
+		const configs = getFeedConfigs();
+		const newConfig: FeedConfig = {
+			url,
+			dateAdded: new Date().toISOString()
+		};
+		configs.push(newConfig);
+		setFeedConfigs(configs);
+	}
+
+	function removeFeedConfig(url: string): void {
+		const configs = getFeedConfigs();
+		const filteredConfigs = configs.filter(config => config.url !== url);
+		setFeedConfigs(filteredConfigs);
+	}
+
 	function saveUserData(): void {
 		try {
 			cacheFeeds(feeds);
@@ -275,8 +321,9 @@
 
 		// If no cache, fetch feeds
 		const fetchedFeeds: Feed[] = [];
+		const feedConfigs = getFeedConfigs();
 
-		for (const config of FEED_CONFIGS) {
+		for (const config of feedConfigs) {
 			const rssFeed = await fetchRSSFeed(config.url);
 			if (rssFeed) {
 				const feed = mapRSSFeedToFeed(rssFeed, config.url);
@@ -316,6 +363,11 @@
 	let contextMenuVisible = $state(false);
 	let contextMenuPosition = $state({ x: 0, y: 0 });
 	let contextMenuFeedIdx = $state(-1);
+
+	// Feed management state
+	let showAddFeedDialog = $state(false);
+	let newFeedUrl = $state('');
+	let showFeedSettings = $state(false);
 
 	// Memoized computed values
 	let totalUnreadCount = $derived(
@@ -377,6 +429,38 @@
 		contextMenuVisible = false;
 		contextMenuFeedIdx = -1;
 	}
+
+	async function addNewFeed() {
+		if (!newFeedUrl.trim()) return;
+		
+		try {
+			// Test if the URL is valid by fetching it
+			const rssFeed = await fetchRSSFeed(newFeedUrl.trim());
+			if (rssFeed) {
+				addFeedConfig(newFeedUrl.trim());
+				// Reload feeds to include the new one
+				await loadFeeds();
+				newFeedUrl = '';
+				showAddFeedDialog = false;
+			} else {
+				alert('Invalid RSS feed URL');
+			}
+		} catch (error) {
+			console.error('Error adding feed:', error);
+			alert('Error adding feed. Please check the URL.');
+		}
+	}
+
+	async function removeFeed(feedUrl: string) {
+		removeFeedConfig(feedUrl);
+		// Reload feeds to remove the deleted one
+		await loadFeeds();
+		// Reset selection if needed
+		if (selectedFeedIdx >= feeds.length) {
+			selectedFeedIdx = Math.max(0, feeds.length - 1);
+			selectedFeedEntryIdx = feeds[selectedFeedIdx]?.episodes.length > 0 ? 0 : null;
+		}
+	}
 </script>
 
 <div class="full-bleed">
@@ -399,6 +483,12 @@
 					<h1>Podcasts</h1>
 				</div>
 				<div class="feeds-list">
+					<div class="add-feed-section">
+						<button class="add-feed-btn" onclick={() => showAddFeedDialog = true}>
+							<span class="add-icon">+</span>
+							<span>Add Feed</span>
+						</button>
+					</div>
 					{#if feeds.length === 0}
 						<div class="loading-message">
 							<span>Loading podcasts...</span>
@@ -472,6 +562,56 @@
 					<button class="context-menu-item" onclick={() => markAllAsRead(contextMenuFeedIdx)}>
 						Mark all as read
 					</button>
+					<button class="context-menu-item" onclick={() => {
+						if (feeds[contextMenuFeedIdx]) {
+							removeFeed(feeds[contextMenuFeedIdx].feedUrl || '');
+						}
+						hideContextMenu();
+					}}>
+						Remove feed
+					</button>
+				</div>
+			{/if}
+
+			<!-- Add Feed Dialog -->
+			{#if showAddFeedDialog}
+				<button
+					class="dialog-backdrop"
+					onclick={() => {
+						showAddFeedDialog = false;
+						newFeedUrl = '';
+					}}
+					onkeydown={(e) => e.key === 'Escape' && (() => {
+						showAddFeedDialog = false;
+						newFeedUrl = '';
+					})()}
+					aria-label="Close add feed dialog"
+				></button>
+				<div class="add-feed-dialog" role="dialog">
+					<div class="dialog-header">
+						<h2>Add New Feed</h2>
+						<button class="close-btn" onclick={() => {
+							showAddFeedDialog = false;
+							newFeedUrl = '';
+						}}>&times;</button>
+					</div>
+					<div class="dialog-content">
+						<label for="feed-url">RSS Feed URL:</label>
+						<input
+							id="feed-url"
+							type="url"
+							bind:value={newFeedUrl}
+							placeholder="https://example.com/feed.xml"
+							onkeydown={(e) => e.key === 'Enter' && addNewFeed()}
+						/>
+					</div>
+					<div class="dialog-actions">
+						<button class="action-btn-secondary" onclick={() => {
+							showAddFeedDialog = false;
+							newFeedUrl = '';
+						}}>Cancel</button>
+						<button class="action-btn-primary" onclick={addNewFeed}>Add Feed</button>
+					</div>
 				</div>
 			{/if}
 
@@ -1272,6 +1412,149 @@
 
 		.episode-details-content {
 			padding: 0;
+		}
+	}
+
+	/* Add Feed Section */
+	.add-feed-section {
+		padding: var(--size-2) var(--size-3);
+		border-bottom: var(--border-size-1) solid var(--gray-3);
+	}
+
+	.add-feed-btn {
+		display: flex;
+		align-items: center;
+		gap: var(--size-2);
+		width: 100%;
+		padding: var(--size-2) var(--size-3);
+		background: var(--blue-1);
+		border: 1px solid var(--blue-3);
+		border-radius: var(--radius-2);
+		color: var(--blue-9);
+		font-size: var(--font-size-1);
+		font-weight: var(--font-weight-5);
+		cursor: pointer;
+		transition: all var(--t-ratio);
+	}
+
+	.add-feed-btn:hover {
+		background: var(--blue-2);
+		border-color: var(--blue-4);
+	}
+
+	.add-icon {
+		font-size: var(--font-size-2);
+		font-weight: var(--font-weight-6);
+	}
+
+	/* Dialog Styles */
+	.dialog-backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 999;
+		background: rgba(0, 0, 0, 0.5);
+		border: none;
+		cursor: default;
+	}
+
+	.add-feed-dialog {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: var(--gray-1);
+		border: 1px solid var(--gray-4);
+		border-radius: var(--radius-3);
+		box-shadow: var(--shadow-4);
+		z-index: 1000;
+		min-width: 400px;
+		max-width: 90vw;
+	}
+
+	.dialog-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: var(--size-3) var(--size-4);
+		border-bottom: var(--border-size-1) solid var(--gray-3);
+	}
+
+	.dialog-header h2 {
+		margin: 0;
+		font-size: var(--font-size-3);
+		font-weight: var(--font-weight-6);
+		color: var(--gray-9);
+	}
+
+	.close-btn {
+		background: none;
+		border: none;
+		font-size: var(--font-size-4);
+		color: var(--gray-6);
+		cursor: pointer;
+		padding: var(--size-1);
+		border-radius: var(--radius-2);
+		transition: color var(--t-ratio);
+	}
+
+	.close-btn:hover {
+		color: var(--gray-8);
+	}
+
+	.dialog-content {
+		padding: var(--size-4);
+	}
+
+	.dialog-content label {
+		display: block;
+		margin-bottom: var(--size-2);
+		font-size: var(--font-size-1);
+		font-weight: var(--font-weight-5);
+		color: var(--gray-8);
+	}
+
+	.dialog-content input {
+		width: 100%;
+		padding: var(--size-2) var(--size-3);
+		border: 1px solid var(--gray-4);
+		border-radius: var(--radius-2);
+		font-size: var(--font-size-1);
+		background: var(--gray-0);
+		color: var(--gray-9);
+		transition: border-color var(--t-ratio);
+	}
+
+	.dialog-content input:focus {
+		outline: none;
+		border-color: var(--blue-6);
+		box-shadow: 0 0 0 2px var(--blue-2);
+	}
+
+	.dialog-actions {
+		display: flex;
+		gap: var(--size-2);
+		padding: var(--size-3) var(--size-4);
+		border-top: var(--border-size-1) solid var(--gray-3);
+		justify-content: flex-end;
+	}
+
+	/* Mobile dialog adjustments */
+	@media (max-width: 768px) {
+		.add-feed-dialog {
+			min-width: unset;
+			width: 90vw;
+			max-width: 400px;
+		}
+
+		.dialog-actions {
+			flex-direction: column;
+		}
+
+		.dialog-actions button {
+			width: 100%;
 		}
 	}
 </style>
