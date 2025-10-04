@@ -10,6 +10,11 @@
 	const FEED_CONFIGS_KEY = 'podcast_feed_configs';
 	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 	const FETCH_TIMEOUT = 10000; // 10 seconds
+	
+	// CORS Proxy - using a public CORS proxy service
+	// This helps bypass CORS restrictions when fetching RSS feeds from different domains
+	// We try direct fetch first, then fallback to proxy if CORS blocks the request
+	const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 
 	// DEFAULT CONFIGURATION
 	const DEFAULT_FEED_CONFIGS: FeedConfig[] = [
@@ -111,20 +116,44 @@
 			abortController = new AbortController();
 			const timeoutId = setTimeout(() => abortController?.abort(), FETCH_TIMEOUT);
 			
-			const response = await fetch(feedUrl, {
-				headers: {
-					'Accept': 'application/rss+xml, application/xml, text/xml'
-				},
-				signal: abortController.signal
-			});
+			// Try direct fetch first, then fallback to CORS proxy if needed
+			let response: Response;
+			let xmlText: string;
+			
+			try {
+				// First attempt: direct fetch
+				response = await fetch(feedUrl, {
+					headers: {
+						'Accept': 'application/rss+xml, application/xml, text/xml'
+					},
+					signal: abortController.signal
+				});
+				
+				if (response.ok) {
+					xmlText = await response.text();
+				} else {
+					throw new Error(`Direct fetch failed: ${response.statusText}`);
+				}
+			} catch (directError) {
+				console.log('Direct fetch failed, trying CORS proxy:', directError);
+				
+				// Second attempt: use CORS proxy
+				const proxyUrl = CORS_PROXY + encodeURIComponent(feedUrl);
+				response = await fetch(proxyUrl, {
+					headers: {
+						'Accept': 'application/rss+xml, application/xml, text/xml'
+					},
+					signal: abortController.signal
+				});
+				
+				if (!response.ok) {
+					throw new Error(`CORS proxy fetch failed: ${response.statusText}`);
+				}
+				
+				xmlText = await response.text();
+			}
 			
 			clearTimeout(timeoutId);
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch feed: ${response.statusText}`);
-			}
-
-			const xmlText = await response.text();
 
 			// Parse XML to extract feed data
 			const parser = new DOMParser();
@@ -312,29 +341,41 @@
 	}
 
 	async function loadFeeds(): Promise<void> {
-		// Check local storage first
+		const feedConfigs = getFeedConfigs();
 		const cachedFeeds = getCachedFeeds();
-		if (cachedFeeds) {
-			feeds = cachedFeeds;
+		
+		// Start with cached feeds to preserve user data
+		const existingFeeds = cachedFeeds || [];
+		const existingUrls = new Set(existingFeeds.map(feed => feed.feedUrl));
+		
+		// Find new feeds that aren't in cache
+		const newConfigs = feedConfigs.filter(config => !existingUrls.has(config.url));
+		
+		// If no new feeds and all configs exist in cache, use cached feeds
+		if (newConfigs.length === 0 && feedConfigs.length === existingFeeds.length) {
+			feeds = existingFeeds;
 			return;
 		}
-
-		// If no cache, fetch feeds
-		const fetchedFeeds: Feed[] = [];
-		const feedConfigs = getFeedConfigs();
-
-		for (const config of feedConfigs) {
+		
+		// Fetch new feeds and merge with existing ones
+		const newFeeds: Feed[] = [];
+		for (const config of newConfigs) {
 			const rssFeed = await fetchRSSFeed(config.url);
 			if (rssFeed) {
 				const feed = mapRSSFeedToFeed(rssFeed, config.url);
-				fetchedFeeds.push(feed);
+				newFeeds.push(feed);
 			}
 		}
-
-		if (fetchedFeeds.length > 0) {
-			feeds = fetchedFeeds;
-			cacheFeeds(fetchedFeeds);
-		}
+		
+		// Merge existing feeds with new feeds, preserving user data
+		const mergedFeeds = [...existingFeeds, ...newFeeds];
+		
+		// Filter out feeds that are no longer in configs (for removed feeds)
+		const configUrls = new Set(feedConfigs.map(config => config.url));
+		const finalFeeds = mergedFeeds.filter(feed => feed.feedUrl && configUrls.has(feed.feedUrl));
+		
+		feeds = finalFeeds;
+		cacheFeeds(finalFeeds);
 	}
 
 	// Memory management
@@ -443,11 +484,15 @@
 				newFeedUrl = '';
 				showAddFeedDialog = false;
 			} else {
-				alert('Invalid RSS feed URL');
+				alert('Invalid RSS feed URL. Please check that the URL points to a valid RSS/XML feed.');
 			}
 		} catch (error) {
 			console.error('Error adding feed:', error);
-			alert('Error adding feed. Please check the URL.');
+			if (error instanceof Error && error.message.includes('CORS')) {
+				alert('Unable to fetch feed due to CORS restrictions. The feed may not be accessible from this domain.');
+			} else {
+				alert('Error adding feed. Please check the URL and try again.');
+			}
 		}
 	}
 
