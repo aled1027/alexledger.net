@@ -41,16 +41,13 @@
 
 	async function fetchRSSFeed(feedUrl: string): Promise<RSSFeed | null> {
 		try {
-			// Use a CORS proxy to fetch RSS feeds
-			const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`;
-			const response = await fetch(proxyUrl);
+			const response = await fetch(feedUrl);
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch feed: ${response.statusText}`);
 			}
 
-			const data = await response.json();
-			const xmlText = data.contents;
+			const xmlText = await response.text();
 
 			// Parse XML to extract feed data
 			const parser = new DOMParser();
