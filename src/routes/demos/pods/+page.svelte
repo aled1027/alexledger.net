@@ -664,7 +664,8 @@
 		}
 
 		.main-layout {
-			grid-template-columns: var(--size-fluid-9) 1fr var(--size-fluid-10);
+			/* grid-template-columns: var(--size-fluid-9) var(--size-fluid-10) max(var(--size-fluid-10), auto); */
+			grid-template-columns: var(--size-fluid-9) var(--size-fluid-10) auto;
 		}
 
 		.feeds-column,
