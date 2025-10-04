@@ -5,7 +5,7 @@
 		{
 			title: '99% Invisible',
 			icon: '📻',
-	numUnread: 3,
+			numUnread: 3,
 			episodes: [
 				{
 					title: 'Get Played with Roman Mars and Ben Brock Johnson',
@@ -45,7 +45,7 @@
 		{
 			title: 'The Daily',
 			icon: '📰',
-	numUnread: 2,
+			numUnread: 2,
 			episodes: [
 				{
 					title: 'New Drug Cures Cancer',
@@ -73,7 +73,7 @@
 		{
 			title: 'The Zach Lowe Show',
 			icon: '🏀',
-	numUnread: 1,
+			numUnread: 1,
 			episodes: [
 				{
 					title: 'Lebron or Luka. Who gets the ball',
@@ -101,7 +101,7 @@
 		{
 			title: 'Marketing Ideas',
 			icon: '💡',
-	numUnread: 2,
+			numUnread: 2,
 			episodes: [
 				{
 					title: 'The Psychology of Color in Branding',
@@ -118,7 +118,7 @@
 	]);
 	let selectedShowIdx = $state(0);
 	let selectedEpisodeIdx: null | number = $state(0);
-	
+
 	// Mobile navigation state
 	let mobileView = $state<'feeds' | 'episodes' | 'details'>('feeds');
 
@@ -148,126 +148,135 @@
 	}
 </script>
 
-<div class="podcast-app">
-	<!-- Top Bar -->
-	<div class="top-bar">
-		<div class="user-info">
-			<span class="avatar">👤</span>
-			<span class="username">aled1027</span>
-			<span class="unread-count">
-				{shows.reduce((total, show) => total + show.numUnread, 0)}
-			</span>
-		</div>
-	</div>
-
-	<!-- Main Layout -->
-	<div class="main-layout">
-		<!-- Left Column: Feeds/Shows -->
-		<div class="feeds-column" data-mobile-view={mobileView === 'feeds' ? 'visible' : 'hidden'}>
-			<div class="mobile-header">
-				<h1>Podcasts</h1>
-			</div>
-			<div class="feeds-list">
-				{#each shows as show, showIdx}
-					<button
-						class="feed-item"
-						data-selected={showIdx === selectedShowIdx}
-						onclick={() => {
-							selectedShowIdx = showIdx;
-							if (shows[selectedShowIdx].episodes.length > 0) {
-								selectedEpisodeIdx = 0;
-								mobileView = 'episodes';
-							} else {
-								selectedEpisodeIdx = null;
-							}
-						}}
-					>
-						<span class="feed-icon">{show.icon}</span>
-						<span class="feed-name">{show.title}</span>
-						{#if show.numUnread > 0}
-							<span class="badge">{show.numUnread}</span>
-						{/if}
-					</button>
-			                {/each}
+<div class="full-bleed">
+	<div class="podcast-app">
+		<!-- Top Bar -->
+		<div class="top-bar">
+			<div class="user-info">
+				<span>Podcasts</span>
+				<span class="unread-count">
+					{shows.reduce((total, show) => total + show.numUnread, 0)}
+				</span>
 			</div>
 		</div>
 
-		<!-- Middle Column: Episodes -->
-		<div class="episodes-column" data-mobile-view={mobileView === 'episodes' ? 'visible' : 'hidden'}>
-			<div class="mobile-header">
-				<button class="back-btn" onclick={() => mobileView = 'feeds'}>&larr;</button>
-				<h1>{selectedShow.title}</h1>
+		<!-- Main Layout -->
+		<div class="main-layout">
+			<!-- Left Column: Feeds/Shows -->
+			<div class="feeds-column" data-mobile-view={mobileView === 'feeds' ? 'visible' : 'hidden'}>
+				<div class="mobile-header">
+					<h1>Podcasts</h1>
+				</div>
+				<div class="feeds-list">
+					{#each shows as show, showIdx}
+						<button
+							class="feed-item"
+							data-selected={showIdx === selectedShowIdx}
+							onclick={() => {
+								selectedShowIdx = showIdx;
+								if (shows[selectedShowIdx].episodes.length > 0) {
+									selectedEpisodeIdx = 0;
+									mobileView = 'episodes';
+								} else {
+									selectedEpisodeIdx = null;
+								}
+							}}
+						>
+							<span class="feed-icon">{show.icon}</span>
+							<span class="feed-name">{show.title}</span>
+							{#if show.numUnread > 0}
+								<span class="badge">{show.numUnread}</span>
+							{/if}
+						</button>
+					{/each}
+				</div>
 			</div>
-			<div class="episodes-list">
-				{#each selectedShow.episodes as episode, episodeIdx}
-					<button
-						class="episode-item"
-						data-state={episode.state}
-						data-selected={episodeIdx === selectedEpisodeIdx}
-						onclick={() => {
-							selectedEpisodeIdx = episodeIdx;
-							mobileView = 'details';
-						}}
-					>
-						<div class="episode-indicator" data-state={episode.state}></div>
-						<div class="episode-content">
-							<h4 class="episode-title">{episode.title}</h4>
-							<p class="episode-description">{episode.description}</p>
-							<div class="episode-meta">
-								<span class="episode-date">{episode.date}, {episode.time}</span>
-								<span class="episode-author">· {episode.author}</span>
+
+			<!-- Middle Column: Episodes -->
+			<div
+				class="episodes-column"
+				data-mobile-view={mobileView === 'episodes' ? 'visible' : 'hidden'}
+			>
+				<div class="mobile-header">
+					<button class="back-btn" onclick={() => (mobileView = 'feeds')}>&larr;</button>
+					<h1>{selectedShow.title}</h1>
+				</div>
+				<div class="episodes-list">
+					{#each selectedShow.episodes as episode, episodeIdx}
+						<button
+							class="episode-item"
+							data-state={episode.state}
+							data-selected={episodeIdx === selectedEpisodeIdx}
+							onclick={() => {
+								selectedEpisodeIdx = episodeIdx;
+								mobileView = 'details';
+							}}
+						>
+							<div class="episode-indicator" data-state={episode.state}></div>
+							<div class="episode-content">
+								<h4 class="episode-title">{episode.title}</h4>
+								<p class="episode-description">{episode.description}</p>
+								<div class="episode-meta">
+									<span class="episode-date">{episode.date}, {episode.time}</span>
+									<span class="episode-author">· {episode.author}</span>
+								</div>
+							</div>
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Right Column:
+ Episode Details -->
+			<div
+				class="details-column"
+				data-mobile-view={mobileView === 'details' ? 'visible' : 'hidden'}
+			>
+				<div class="mobile-header">
+					<button class="back-btn" onclick={() => (mobileView = 'episodes')}>&larr;</button>
+					<h1>Episode Details</h1>
+				</div>
+				<div class="episode-details-content">
+					{#if selectedEpisode}
+						<div class="episode-header">
+							<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
+							<h2 class="episode-title-large">{selectedEpisode.title}</h2>
+							<div class="episode-meta-large">
+								{selectedEpisode.date}, {selectedEpisode.time} · {selectedEpisode.author}
+							</div>
+							<div class="episode-tags">
+								{#each selectedEpisode.tags as tag}
+									<span class="tag">{tag}</span>
+								{/each}
 							</div>
 						</div>
-					</button>
-				{/each}
-			</div>
-		</div>
 
-		<!-- Right Column:
- Episode Details -->
-		<div class="details-column" data-mobile-view={mobileView === 'details' ? 'visible' : 'hidden'}>
-			<div class="mobile-header">
-				<button class="back-btn" onclick={() => mobileView = 'episodes'}>&larr;</button>
-				<h1>Episode Details</h1>
-			</div>
-			<div class="episode-details-content">
-				{#if selectedEpisode}
-					<div class="episode-header">
-						<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
-						<h2 class="episode-title-large">{selectedEpisode.title}</h2>
-						<div class="episode-meta-large">
-							{selectedEpisode.date}, {selectedEpisode.time} · {selectedEpisode.author}
-						</div>
-						<div class="episode-tags">
-							{#each selectedEpisode.tags as tag}
-								<span class="tag">{tag}</span>
-							{/each}
-						</div>
-					</div>
+						<div class="episode-body">
+							<p>{selectedEpisode.description}</p>
 
-					<div class="episode-body">
-						<p>{selectedEpisode.description}</p>
-
-						<div class="episode-actions">
-							{#if selectedEpisode.state === 'watched'}
-								<button class="action-btn" onclick={() => setState('unwatched')}
-									>Mark as Unread</button
-								>
-							{:else}
-								<button class="action-btn" onclick={() => setState('watched')}>Mark as Read</button>
-							{/if}
-							{#if selectedEpisode.isSaved}
-								<button class="action-btn" onclick={toggleSaved}>Remove from Saved</button>
-							{:else}
-								<button class="action-btn" onclick={toggleSaved}>Save Episode</button>
-							{/if}
+							<div class="episode-actions">
+								{#if selectedEpisode.state === 'watched'}
+									<button class="action-btn" onclick={() => setState('unwatched')}
+										>Mark as Unread</button
+									>
+								{:else}
+									<button class="action-btn" onclick={() => setState('watched')}
+										>Mark as Read</button
+									>
+								{/if}
+								{#if selectedEpisode.isSaved}
+									<button class="action-btn" onclick={toggleSaved}>Remove from Saved</button>
+								{:else}
+									<button class="action-btn" onclick={toggleSaved}>Save Episode</button>
+								{/if}
+							</div>
 						</div>
-					</div>
-				{:else}
-					<div class="no-selection">
-						<span>No episode selected</span>
-					</div>
-				{/if}
+					{:else}
+						<div class="no-selection">
+							<span>No episode selected</span>
+						</div>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -297,23 +306,6 @@
 		gap: var(--size-2);
 	}
 
-	.avatar {
-		width: var(--size-5);
-		height: var(--size-5);
-		background: var(--gray-6);
-		color: var(--gray-1);
-		border-radius: var(--radius-round);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: var(--font-size-0);
-	}
-
-	.username {
-		font-weight: var(--font-weight-5);
-		color: var(--gray-9);
-	}
-
 	.unread-count {
 		color: var(--gray-6);
 		font-family: var(--font-mono);
@@ -335,7 +327,6 @@
 		flex-direction: column;
 		border-right: var(--border-size-1) solid var(--gray-6);
 	}
-
 
 	.feeds-list {
 		flex: 1;
@@ -637,9 +628,9 @@
 			height: 100%;
 		}
 
-		.feeds-column[data-mobile-view="hidden"],
-		.episodes-column[data-mobile-view="hidden"],
-		.details-column[data-mobile-view="hidden"] {
+		.feeds-column[data-mobile-view='hidden'],
+		.episodes-column[data-mobile-view='hidden'],
+		.details-column[data-mobile-view='hidden'] {
 			display: none;
 		}
 
@@ -683,7 +674,7 @@
 			flex-direction: column;
 		}
 
-		[data-mobile-view="visible"] {
+		[data-mobile-view='visible'] {
 			display: flex !important;
 		}
 
