@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../../../styles/open-props.css';
+	import { onMount } from 'svelte';
 
 	interface Episode {
 		title: string;
@@ -20,167 +21,223 @@
 		episodes: Episode[];
 	}
 
-	// Next:
-	// - Connect to RSS feeds
-	// --> feed cache. and then store some "user data" about episodes
-	//   - like isSaved, state, playback time, etc.
-	//   - maybe ad in progress as a state
-	// - Support audio player
-	// - Remember time in audio player for next time so resuming is good
-	// - Support downloading episodes
-	/**
-	 * Add a feature that:
-* on load:
-* - checks local storage for the feeds
-* - if they're not there, pull the feed and store it in local storage
-* - map the feed to the structure needed
-	 )*/
+	interface RSSItem {
+		title: string;
+		description: string;
+		pubDate: string;
+		author?: string;
+		guid?: string;
+	}
 
-	let shows: Show[] = $state([
-		{
-			title: '99% Invisible',
-			feedUrl: 'https://feeds.simplecast.com/BqbsxVfO',
-			icon: '📻',
-			numUnread: 3,
-			episodes: [
-				{
-					title: 'Get Played with Roman Mars and Ben Brock Johnson',
-					description:
-						'Hidden Levels explores the hidden stories behind video games, featuring Heather Anne Campbell (Rick and Morty) and Matt Apodaca discussing controllers, culture, and video games.',
-					date: 'Yesterday, October 3rd',
-					time: '1:30pm',
-					author: 'Heather Anne Campbell, Matt Apodaca, Ben Brock Johnson',
-					state: 'unwatched',
-					isSaved: false,
-					tags: ['video games', 'design', 'storytelling']
-				},
-				{
-					title: 'The Power Broker #13: Drop Dead City',
-					description:
-						'In a Colorado meatpacking town, refugees fleeing persecution find themselves in some of the most dangerous jobs in America.',
-					date: 'Tuesday, September 23rd',
-					time: '1:30pm',
-					author: 'Elliott Kalan',
-					state: 'unwatched',
-					isSaved: true,
-					tags: ['labor', 'immigration', 'meatpacking']
-				},
-				{
-					title: 'The New Jungle',
-					description:
-						'This episode was produced in partnership with the Food & Environment Reporting Network, an independent, nonprofit news organization.',
-					date: 'September 15th',
-					time: '2:00pm',
-					author: 'Esther Honig',
-					state: 'watched',
-					isSaved: false,
-					tags: ['food', 'environment', 'labor']
-				}
-			]
+	interface RSSFeed {
+		title: string;
+		description: string;
+		items: RSSItem[];
+	}
+
+	// RSS Feed Management
+	const FEED_CACHE_KEY = 'podcast_feeds_cache';
+	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+	async function fetchRSSFeed(feedUrl: string): Promise<RSSFeed | null> {
+		try {
+			// Use a CORS proxy to fetch RSS feeds
+			const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`;
+			const response = await fetch(proxyUrl);
+
+			if (!response.ok) {
+				throw new Error(`Failed to fetch feed: ${response.statusText}`);
+			}
+
+			const data = await response.json();
+			const xmlText = data.contents;
+
+			// Parse XML to extract feed data
+			const parser = new DOMParser();
+			const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+			const channel = xmlDoc.querySelector('channel');
+			if (!channel) {
+				throw new Error('Invalid RSS feed format');
+			}
+
+			const title = channel.querySelector('title')?.textContent || 'Unknown Feed';
+			const description = channel.querySelector('description')?.textContent || '';
+
+			const items: RSSItem[] = [];
+			const itemElements = channel.querySelectorAll('item');
+
+			itemElements.forEach((item) => {
+				const itemTitle = item.querySelector('title')?.textContent || 'Untitled';
+				const itemDescription = item.querySelector('description')?.textContent || '';
+				const pubDate = item.querySelector('pubDate')?.textContent || '';
+				const author =
+					item.querySelector('author')?.textContent ||
+					item.querySelector('itunes\\:author')?.textContent ||
+					item.querySelector('dc\\:creator')?.textContent ||
+					'';
+				const guid = item.querySelector('guid')?.textContent || '';
+
+				items.push({
+					title: itemTitle,
+					description: itemDescription,
+					pubDate,
+					author,
+					guid
+				});
+			});
+
+			return {
+				title,
+				description,
+				items
+			};
+		} catch (error) {
+			console.error('Error fetching RSS feed:', error);
+			return null;
 		}
-		// {
-		// 	title: 'The Daily',
-		// 	icon: '📰',
-		// 	numUnread: 2,
-		// 	episodes: [
-		// 		{
-		// 			title: 'New Drug Cures Cancer',
-		// 			description:
-		// 				'A breakthrough in cancer treatment shows promising results in early clinical trials.',
-		// 			date: 'Today',
-		// 			time: '6:00am',
-		// 			author: 'Michael Barbaro',
-		// 			state: 'unwatched',
-		// 			isSaved: true,
-		// 			tags: ['health', 'medicine', 'cancer']
-		// 		},
-		// 		{
-		// 			title: 'Snowstorm in Boston',
-		// 			description: 'The latest winter weather report and its impact on the Boston area.',
-		// 			date: 'Today',
-		// 			time: '6:00am',
-		// 			author: 'Michael Barbaro',
-		// 			state: 'unwatched',
-		// 			isSaved: false,
-		// 			tags: ['weather', 'boston', 'snow']
-		// 		}
-		// 	]
-		// },
-		// {
-		// 	title: 'The Zach Lowe Show',
-		// 	icon: '🏀',
-		// 	numUnread: 1,
-		// 	episodes: [
-		// 		{
-		// 			title: 'Lebron or Luka. Who gets the ball',
-		// 			description: 'Breaking down the clutch time decision making between two NBA superstars.',
-		// 			date: 'Monday',
-		// 			time: '11:30am',
-		// 			author: 'Zach Lowe',
-		// 			state: 'unwatched',
-		// 			isSaved: false,
-		// 			tags: ['basketball', 'lebron', 'luka']
-		// 		},
-		// 		{
-		// 			title: 'Steph Curry. Steph Curry.',
-		// 			description:
-		// 				"An analysis of Stephen Curry's incredible shooting display and its impact on modern basketball.",
-		// 			date: 'Friday',
-		// 			time: '11:30am',
-		// 			author: 'Zach Lowe',
-		// 			state: 'watched',
-		// 			isSaved: false,
-		// 			tags: ['basketball', 'stephen curry', 'shooting']
-		// 		}
-		// 	]
-		// },
-		// {
-		// 	title: 'Marketing Ideas',
-		// 	icon: '💡',
-		// 	numUnread: 2,
-		// 	episodes: [
-		// 		{
-		// 			title: 'The Psychology of Color in Branding',
-		// 			description: 'How colors affect consumer behavior and brand perception.',
-		// 			date: 'Wednesday',
-		// 			time: '3:00pm',
-		// 			author: 'Sarah Miller',
-		// 			state: 'unwatched',
-		// 			isSaved: false,
-		// 			tags: ['psychology', 'branding', 'marketing']
-		// 		}
-		// 	]
-		// }
-	]);
+	}
+
+	function mapRSSFeedToShow(rssFeed: RSSFeed, feedUrl: string, icon: string): Show {
+		const episodes: Episode[] = rssFeed.items.map((item) => {
+			const pubDate = new Date(item.pubDate);
+			const dateStr = pubDate.toLocaleDateString('en-US', {
+				weekday: 'long',
+				month: 'long',
+				day: 'numeric'
+			});
+			const timeStr = pubDate.toLocaleTimeString('en-US', {
+				hour: 'numeric',
+				minute: '2-digit',
+				hour12: true
+			});
+
+			return {
+				title: item.title,
+				description: item.description,
+				date: dateStr,
+				time: timeStr,
+				author: item.author || 'Unknown',
+				state: 'unwatched',
+				isSaved: false,
+				tags: [] // Could be enhanced to extract tags from description
+			};
+		});
+
+		const numUnread = episodes.filter((ep) => ep.state === 'unwatched').length;
+
+		return {
+			title: rssFeed.title,
+			feedUrl,
+			icon,
+			numUnread,
+			episodes
+		};
+	}
+
+	function getCachedFeeds(): Show[] | null {
+		try {
+			const cached = localStorage.getItem(FEED_CACHE_KEY);
+			if (!cached) return null;
+
+			const { data, timestamp } = JSON.parse(cached);
+			const now = Date.now();
+
+			// Check if cache is expired
+			if (now - timestamp > FEED_CACHE_EXPIRY) {
+				localStorage.removeItem(FEED_CACHE_KEY);
+				return null;
+			}
+
+			return data;
+		} catch (error) {
+			console.error('Error reading cached feeds:', error);
+			return null;
+		}
+	}
+
+	function cacheFeeds(feeds: Show[]): void {
+		try {
+			const cacheData = {
+				data: feeds,
+				timestamp: Date.now()
+			};
+			localStorage.setItem(FEED_CACHE_KEY, JSON.stringify(cacheData));
+		} catch (error) {
+			console.error('Error caching feeds:', error);
+		}
+	}
+
+	async function loadFeeds(): Promise<void> {
+		// Check local storage first
+		const cachedFeeds = getCachedFeeds();
+		if (cachedFeeds) {
+			shows = cachedFeeds;
+			return;
+		}
+
+		// If no cache, fetch feeds
+		const feedConfigs = [
+			{
+				url: 'https://feeds.simplecast.com/BqbsxVfO',
+				icon: '📻',
+				title: '99% Invisible'
+			}
+		];
+
+		const fetchedShows: Show[] = [];
+
+		for (const config of feedConfigs) {
+			const rssFeed = await fetchRSSFeed(config.url);
+			if (rssFeed) {
+				const show = mapRSSFeedToShow(rssFeed, config.url, config.icon);
+				fetchedShows.push(show);
+			}
+		}
+
+		if (fetchedShows.length > 0) {
+			shows = fetchedShows;
+			cacheFeeds(fetchedShows);
+		}
+	}
+
+	// Load feeds on component mount
+	onMount(() => {
+		loadFeeds();
+	});
+
+	let shows: Show[] = $state([]);
 	let selectedShowIdx: number = $state(0);
 	let selectedEpisodeIdx: number | null = $state(0);
 
 	// Mobile navigation state
 	let mobileView = $state<'feeds' | 'episodes' | 'details'>('feeds');
 
-	let selectedShow: Show = $derived(shows[selectedShowIdx]);
+	let selectedShow: Show | null = $derived(shows[selectedShowIdx] || null);
 	let selectedEpisode: Episode | null = $derived(
-		selectedEpisodeIdx !== null ? selectedShow.episodes[selectedEpisodeIdx] : null
+		selectedShow && selectedEpisodeIdx !== null ? selectedShow.episodes[selectedEpisodeIdx] : null
 	);
 
 	function toggleSaved() {
-		if (selectedEpisodeIdx !== null) {
+		if (selectedEpisodeIdx !== null && selectedShow) {
 			shows[selectedShowIdx].episodes[selectedEpisodeIdx].isSaved =
 				!shows[selectedShowIdx].episodes[selectedEpisodeIdx].isSaved;
 		}
 	}
 
 	function setState(newState: 'watched' | 'unwatched') {
-		if (selectedEpisodeIdx !== null) {
+		if (selectedEpisodeIdx !== null && selectedShow) {
 			shows[selectedShowIdx].episodes[selectedEpisodeIdx].state = newState;
 		}
-		let numUnread = 0;
-		for (const e of shows[selectedShowIdx].episodes) {
-			if (e.state === 'unwatched') {
-				numUnread += 1;
+		if (selectedShow) {
+			let numUnread = 0;
+			for (const e of shows[selectedShowIdx].episodes) {
+				if (e.state === 'unwatched') {
+					numUnread += 1;
+				}
 			}
+			shows[selectedShowIdx].numUnread = numUnread;
 		}
-		shows[selectedShowIdx].numUnread = numUnread;
 	}
 </script>
 
@@ -204,27 +261,33 @@
 					<h1>Podcasts</h1>
 				</div>
 				<div class="feeds-list">
-					{#each shows as show, showIdx}
-						<button
-							class="feed-item"
-							data-selected={showIdx === selectedShowIdx}
-							onclick={() => {
-								selectedShowIdx = showIdx;
-								if (shows[selectedShowIdx].episodes.length > 0) {
-									selectedEpisodeIdx = 0;
-									mobileView = 'episodes';
-								} else {
-									selectedEpisodeIdx = null;
-								}
-							}}
-						>
-							<span class="feed-icon">{show.icon}</span>
-							<span class="feed-name">{show.title}</span>
-							{#if show.numUnread > 0}
-								<span class="badge">{show.numUnread}</span>
-							{/if}
-						</button>
-					{/each}
+					{#if shows.length === 0}
+						<div class="loading-message">
+							<span>Loading podcasts...</span>
+						</div>
+					{:else}
+						{#each shows as show, showIdx}
+							<button
+								class="feed-item"
+								data-selected={showIdx === selectedShowIdx}
+								onclick={() => {
+									selectedShowIdx = showIdx;
+									if (shows[selectedShowIdx].episodes.length > 0) {
+										selectedEpisodeIdx = 0;
+										mobileView = 'episodes';
+									} else {
+										selectedEpisodeIdx = null;
+									}
+								}}
+							>
+								<span class="feed-icon">{show.icon}</span>
+								<span class="feed-name">{show.title}</span>
+								{#if show.numUnread > 0}
+									<span class="badge">{show.numUnread}</span>
+								{/if}
+							</button>
+						{/each}
+					{/if}
 				</div>
 			</div>
 
@@ -235,30 +298,36 @@
 			>
 				<div class="mobile-header">
 					<button class="back-btn" onclick={() => (mobileView = 'feeds')}>&larr;</button>
-					<h1>{selectedShow.title}</h1>
+					<h1>{selectedShow?.title || 'No Show Selected'}</h1>
 				</div>
 				<div class="episodes-list">
-					{#each selectedShow.episodes as episode, episodeIdx}
-						<button
-							class="episode-item"
-							data-state={episode.state}
-							data-selected={episodeIdx === selectedEpisodeIdx}
-							onclick={() => {
-								selectedEpisodeIdx = episodeIdx;
-								mobileView = 'details';
-							}}
-						>
-							<div class="episode-indicator" data-state={episode.state}></div>
-							<div class="episode-content">
-								<h4 class="episode-title">{episode.title}</h4>
-								<p class="episode-description">{episode.description}</p>
-								<div class="episode-meta">
-									<span class="episode-date">{episode.date}, {episode.time}</span>
-									<span class="episode-author">· {episode.author}</span>
+					{#if selectedShow}
+						{#each selectedShow.episodes as episode, episodeIdx}
+							<button
+								class="episode-item"
+								data-state={episode.state}
+								data-selected={episodeIdx === selectedEpisodeIdx}
+								onclick={() => {
+									selectedEpisodeIdx = episodeIdx;
+									mobileView = 'details';
+								}}
+							>
+								<div class="episode-indicator" data-state={episode.state}></div>
+								<div class="episode-content">
+									<h4 class="episode-title">{episode.title}</h4>
+									<p class="episode-description">{episode.description}</p>
+									<div class="episode-meta">
+										<span class="episode-date">{episode.date}, {episode.time}</span>
+										<span class="episode-author">· {episode.author}</span>
+									</div>
 								</div>
-							</div>
-						</button>
-					{/each}
+							</button>
+						{/each}
+					{:else}
+						<div class="no-selection">
+							<span>No show selected</span>
+						</div>
+					{/if}
 				</div>
 			</div>
 
@@ -646,6 +715,15 @@
 	}
 
 	.no-selection {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: var(--size-fluid-11);
+		color: var(--gray-6);
+		font-style: italic;
+	}
+
+	.loading-message {
 		display: flex;
 		align-items: center;
 		justify-content: center;
