@@ -2,7 +2,12 @@
 	import '../../../styles/open-props.css';
 	import { onMount } from 'svelte';
 
-	interface Episode {
+	// CONSTANTS
+	const FEED_CACHE_KEY = 'podcast_feeds_cache';
+	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+	// TYPES
+	interface FeedEntry {
 		title: string;
 		description: string;
 		date: string;
@@ -11,14 +16,19 @@
 		state: 'watched' | 'unwatched';
 		isSaved: boolean;
 		tags: string[];
+		enclosure?: {
+			url: string;
+			type: string;
+			length: number;
+		};
 	}
 
-	interface Show {
+	interface Feed {
 		title: string;
 		feedUrl?: string;
 		icon: string;
 		numUnread: number;
-		episodes: Episode[];
+		episodes: FeedEntry[];
 	}
 
 	interface RSSItem {
@@ -27,6 +37,11 @@
 		pubDate: string;
 		author?: string;
 		guid?: string;
+		enclosure?: {
+			url: string;
+			type: string;
+			length: number;
+		};
 	}
 
 	interface RSSFeed {
@@ -35,9 +50,15 @@
 		items: RSSItem[];
 	}
 
-	// RSS Feed Management
-	const FEED_CACHE_KEY = 'podcast_feeds_cache';
-	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+	// FUNCTIONS
+	function formatFileSize(bytes: number): string {
+		if (bytes === 0) return '0 B';
+		const k = 1024;
+		const sizes = ['B', 'KB', 'MB', 'GB'];
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+	}
 
 	async function fetchRSSFeed(feedUrl: string): Promise<RSSFeed | null> {
 		try {
@@ -75,12 +96,31 @@
 					'';
 				const guid = item.querySelector('guid')?.textContent || '';
 
+				// Extract enclosure data if present
+				const enclosureElement = item.querySelector('enclosure');
+				let enclosure = undefined;
+				if (enclosureElement) {
+					const url = enclosureElement.getAttribute('url') || '';
+					const type = enclosureElement.getAttribute('type') || '';
+					const lengthStr = enclosureElement.getAttribute('length') || '0';
+					const length = parseInt(lengthStr, 10) || 0;
+					
+					if (url && type) {
+						enclosure = {
+							url,
+							type,
+							length
+						};
+					}
+				}
+
 				items.push({
 					title: itemTitle,
 					description: itemDescription,
 					pubDate,
 					author,
-					guid
+					guid,
+					enclosure
 				});
 			});
 
@@ -95,8 +135,8 @@
 		}
 	}
 
-	function mapRSSFeedToShow(rssFeed: RSSFeed, feedUrl: string, icon: string): Show {
-		const episodes: Episode[] = rssFeed.items.map((item) => {
+	function mapRSSFeedToFeed(rssFeed: RSSFeed, feedUrl: string, icon: string): Feed {
+		const episodes: FeedEntry[] = rssFeed.items.map((item) => {
 			const pubDate = new Date(item.pubDate);
 			const dateStr = pubDate.toLocaleDateString('en-US', {
 				weekday: 'long',
@@ -117,7 +157,8 @@
 				author: item.author || 'Unknown',
 				state: 'unwatched',
 				isSaved: false,
-				tags: [] // Could be enhanced to extract tags from description
+				tags: [], // Could be enhanced to extract tags from description
+				enclosure: item.enclosure
 			};
 		});
 
@@ -132,7 +173,7 @@
 		};
 	}
 
-	function getCachedFeeds(): Show[] | null {
+	function getCachedFeeds(): Feed[] | null {
 		try {
 			const cached = localStorage.getItem(FEED_CACHE_KEY);
 			if (!cached) return null;
@@ -153,7 +194,7 @@
 		}
 	}
 
-	function cacheFeeds(feeds: Show[]): void {
+	function cacheFeeds(feeds: Feed[]): void {
 		try {
 			const cacheData = {
 				data: feeds,
@@ -169,7 +210,7 @@
 		// Check local storage first
 		const cachedFeeds = getCachedFeeds();
 		if (cachedFeeds) {
-			shows = cachedFeeds;
+			feeds = cachedFeeds;
 			return;
 		}
 
@@ -182,19 +223,19 @@
 			}
 		];
 
-		const fetchedShows: Show[] = [];
+		const fetchedFeeds: Feed[] = [];
 
 		for (const config of feedConfigs) {
 			const rssFeed = await fetchRSSFeed(config.url);
 			if (rssFeed) {
-				const show = mapRSSFeedToShow(rssFeed, config.url, config.icon);
-				fetchedShows.push(show);
+				const feed = mapRSSFeedToFeed(rssFeed, config.url, config.icon);
+				fetchedFeeds.push(feed);
 			}
 		}
 
-		if (fetchedShows.length > 0) {
-			shows = fetchedShows;
-			cacheFeeds(fetchedShows);
+		if (fetchedFeeds.length > 0) {
+			feeds = fetchedFeeds;
+			cacheFeeds(fetchedFeeds);
 		}
 	}
 
@@ -203,37 +244,37 @@
 		loadFeeds();
 	});
 
-	let shows: Show[] = $state([]);
-	let selectedShowIdx: number = $state(0);
-	let selectedEpisodeIdx: number | null = $state(0);
+	let feeds: Feed[] = $state([]);
+	let selectedFeedIdx: number = $state(0);
+	let selectedFeedEntryIdx: number | null = $state(0);
 
 	// Mobile navigation state
-	let mobileView = $state<'feeds' | 'episodes' | 'details'>('feeds');
+	let mobileView = $state<'feeds' | 'entries' | 'details'>('feeds');
 
-	let selectedShow: Show | null = $derived(shows[selectedShowIdx] || null);
-	let selectedEpisode: Episode | null = $derived(
-		selectedShow && selectedEpisodeIdx !== null ? selectedShow.episodes[selectedEpisodeIdx] : null
+	let selectedFeed: Feed | null = $derived(feeds[selectedFeedIdx] || null);
+	let selectedFeedEntry: FeedEntry | null = $derived(
+		selectedFeed && selectedFeedEntryIdx !== null ? selectedFeed.episodes[selectedFeedEntryIdx] : null
 	);
 
 	function toggleSaved() {
-		if (selectedEpisodeIdx !== null && selectedShow) {
-			shows[selectedShowIdx].episodes[selectedEpisodeIdx].isSaved =
-				!shows[selectedShowIdx].episodes[selectedEpisodeIdx].isSaved;
+		if (selectedFeedEntryIdx !== null && selectedFeed) {
+			feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx].isSaved =
+				!feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx].isSaved;
 		}
 	}
 
 	function setState(newState: 'watched' | 'unwatched') {
-		if (selectedEpisodeIdx !== null && selectedShow) {
-			shows[selectedShowIdx].episodes[selectedEpisodeIdx].state = newState;
+		if (selectedFeedEntryIdx !== null && selectedFeed) {
+			feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx].state = newState;
 		}
-		if (selectedShow) {
+		if (selectedFeed) {
 			let numUnread = 0;
-			for (const e of shows[selectedShowIdx].episodes) {
+			for (const e of feeds[selectedFeedIdx].episodes) {
 				if (e.state === 'unwatched') {
 					numUnread += 1;
 				}
 			}
-			shows[selectedShowIdx].numUnread = numUnread;
+			feeds[selectedFeedIdx].numUnread = numUnread;
 		}
 	}
 </script>
@@ -245,109 +286,108 @@
 			<div class="user-info">
 				<span>Podcasts</span>
 				<span class="unread-count">
-					{shows.reduce((total, show) => total + show.numUnread, 0)}
+						{feeds.reduce((total, feed) => total + feed.numUnread, 0)}
 				</span>
 			</div>
 		</div>
 
 		<!-- Main Layout -->
 		<div class="main-layout">
-			<!-- Left Column: Feeds/Shows -->
+			<!-- Left Column: Feeds/Feeds -->
 			<div class="feeds-column" data-mobile-view={mobileView === 'feeds' ? 'visible' : 'hidden'}>
 				<div class="mobile-header">
 					<h1>Podcasts</h1>
 				</div>
 				<div class="feeds-list">
-					{#if shows.length === 0}
+					{#if feeds.length === 0}
 						<div class="loading-message">
 							<span>Loading podcasts...</span>
 						</div>
 					{:else}
-						{#each shows as show, showIdx}
+						{#each feeds as feed, feedIdx}
 							<button
 								class="feed-item"
-								data-selected={showIdx === selectedShowIdx}
-								onclick={() => {
-									selectedShowIdx = showIdx;
-									if (shows[selectedShowIdx].episodes.length > 0) {
-										selectedEpisodeIdx = 0;
-										mobileView = 'episodes';
-									} else {
-										selectedEpisodeIdx = null;
-									}
-								}}
+								data-selected={feedIdx === selectedFeedIdx}
+							onclick={() => {
+								selectedFeedIdx = feedIdx;
+								if (feeds[selectedFeedIdx].episodes.length > 0) {
+									selectedFeedEntryIdx = 0;
+									mobileView = 'entries';
+								} else {
+									selectedFeedEntryIdx = null;
+								}
+							}}
 							>
-								<span class="feed-icon">{show.icon}</span>
-								<span class="feed-name">{show.title}</span>
-								{#if show.numUnread > 0}
-									<span class="badge">{show.numUnread}</span>
-								{/if}
+							<span class="feed-icon">{feed.icon}</span>
+							<span class="feed-name">{feed.title}</span>
+							{#if feed.numUnread > 0}
+								<span class="badge">{feed.numUnread}</span>
+							{/if}
 							</button>
 						{/each}
 					{/if}
 				</div>
 			</div>
 
-			<!-- Middle Column: Episodes -->
+			<!-- Middle Column: FeedEntries -->
 			<div
 				class="episodes-column"
-				data-mobile-view={mobileView === 'episodes' ? 'visible' : 'hidden'}
+				data-mobile-view={mobileView === 'entries' ? 'visible' : 'hidden'}
 			>
 				<div class="mobile-header">
 					<button class="back-btn" onclick={() => (mobileView = 'feeds')}>&larr;</button>
-					<h1>{selectedShow?.title || 'No Show Selected'}</h1>
+					<h1>{selectedFeed?.title || 'No Feed Selected'}</h1>
 				</div>
 				<div class="episodes-list">
-					{#if selectedShow}
-						{#each selectedShow.episodes as episode, episodeIdx}
+					{#if selectedFeed}
+						{#each selectedFeed.episodes as feedEntry, feedEntryIdx}
 							<button
 								class="episode-item"
-								data-state={episode.state}
-								data-selected={episodeIdx === selectedEpisodeIdx}
-								onclick={() => {
-									selectedEpisodeIdx = episodeIdx;
-									mobileView = 'details';
-								}}
+								data-state={feedEntry.state}
+								data-selected={feedEntryIdx === selectedFeedEntryIdx}
+							onclick={() => {
+								selectedFeedEntryIdx = feedEntryIdx;
+								mobileView = 'details';
+							}}
 							>
-								<div class="episode-indicator" data-state={episode.state}></div>
+								<div class="episode-indicator" data-state={feedEntry.state}></div>
 								<div class="episode-content">
-									<h4 class="episode-title">{episode.title}</h4>
-									<p class="episode-description">{episode.description}</p>
-									<div class="episode-meta">
-										<span class="episode-date">{episode.date}, {episode.time}</span>
-										<span class="episode-author">· {episode.author}</span>
-									</div>
+								<h4 class="episode-title">{feedEntry.title}</h4>
+								<p class="episode-description">{@html feedEntry.description}</p>
+								<div class="episode-meta">
+									<span class="episode-date">{feedEntry.date}, {feedEntry.time}</span>
+									<span class="episode-author">· {feedEntry.author}</span>
+								</div>
 								</div>
 							</button>
 						{/each}
 					{:else}
 						<div class="no-selection">
-							<span>No show selected</span>
+							<span>No feed selected</span>
 						</div>
 					{/if}
 				</div>
 			</div>
 
-			<!-- Right Column:
- Episode Details -->
+			<!-- Right Column: FeedEntry Details -->
 			<div
 				class="details-column"
 				data-mobile-view={mobileView === 'details' ? 'visible' : 'hidden'}
 			>
 				<div class="mobile-header">
-					<button class="back-btn" onclick={() => (mobileView = 'episodes')}>&larr;</button>
-					<h1>Episode Details</h1>
+					<button class="back-btn" onclick={() => (mobileView = 'entries')}>&larr;</button>
+					<h1>FeedEntry Details</h1>
 				</div>
 				<div class="episode-details-content">
-					{#if selectedEpisode}
+					{#if selectedFeedEntry}
 						<div class="episode-header">
 							<div class="episode-title-section">
-								<div class="episode-indicator-large" data-state={selectedEpisode.state}></div>
-								<h2 class="episode-title-large">{selectedEpisode.title}</h2>
+								<div class="episode-indicator-large" data-state={selectedFeedEntry.state}></div>
+								<h2 class="episode-title-large">{selectedFeedEntry.title}</h2>
 							</div>
 
 							<div class="episode-actions-header">
-								{#if selectedEpisode.state === 'watched'}
+								{#if selectedFeedEntry.state === 'watched'}
 									<button class="action-btn-neutral" onclick={() => setState('unwatched')}
 										>Mark as Unread</button
 									>
@@ -356,7 +396,7 @@
 										>Mark as Read</button
 									>
 								{/if}
-								{#if selectedEpisode.isSaved}
+								{#if selectedFeedEntry.isSaved}
 									<button class="action-btn-secondary" onclick={toggleSaved}>Unsave</button>
 								{:else}
 									<button class="action-btn-secondary" onclick={toggleSaved}>Save</button>
@@ -364,21 +404,40 @@
 							</div>
 
 							<div class="episode-meta-large">
-								{selectedEpisode.date}, {selectedEpisode.time} · {selectedEpisode.author}
+								{selectedFeedEntry.date}, {selectedFeedEntry.time} · {selectedFeedEntry.author}
 							</div>
+							{#if selectedFeedEntry.enclosure}
+								<div class="episode-enclosure">
+									<div class="enclosure-header">
+										<span class="enclosure-icon">🎵</span>
+										<span class="enclosure-label">Audio Available</span>
+									</div>
+									<div class="enclosure-details">
+										<div class="enclosure-type">{selectedFeedEntry.enclosure.type}</div>
+										<div class="enclosure-size">{formatFileSize(selectedFeedEntry.enclosure.length)}</div>
+									</div>
+									
+									<div class="audio-container">
+										<audio controls preload="metadata" class="audio-player">
+											<source src={selectedFeedEntry.enclosure.url} type={selectedFeedEntry.enclosure.type} />
+											Your browser does not support the audio element.
+										</audio>
+									</div>
+								</div>
+							{/if}
 							<div class="episode-tags">
-								{#each selectedEpisode.tags as tag}
+								{#each selectedFeedEntry.tags as tag}
 									<span class="tag">{tag}</span>
 								{/each}
 							</div>
 						</div>
 
 						<div class="episode-body">
-							<p>{selectedEpisode.description}</p>
+							<p>{@html selectedFeedEntry.description}</p>
 						</div>
 					{:else}
 						<div class="no-selection">
-							<span>No episode selected</span>
+							<span>No feed entry selected</span>
 						</div>
 					{/if}
 				</div>
@@ -628,6 +687,65 @@
 		font-size: var(--font-size-1);
 		color: var(--gray-6);
 		margin-bottom: var(--size-3);
+	}
+
+	.episode-enclosure {
+		background: var(--blue-1);
+		border: 1px solid var(--blue-3);
+		border-radius: var(--radius-3);
+		padding: var(--size-3);
+		margin-bottom: var(--size-3);
+	}
+
+	.enclosure-header {
+		display: flex;
+		align-items: center;
+		gap: var(--size-2);
+		margin-bottom: var(--size-2);
+	}
+
+	.enclosure-icon {
+		font-size: var(--font-size-2);
+	}
+
+	.enclosure-label {
+		font-size: var(--font-size-1);
+		font-weight: var(--font-weight-6);
+		color: var(--blue-9);
+	}
+
+	.enclosure-details {
+		display: flex;
+		gap: var(--size-3);
+		margin-bottom: var(--size-3);
+		font-size: var(--font-size-0);
+		color: var(--blue-7);
+	}
+
+	.enclosure-type {
+		font-family: var(--font-mono);
+		background: var(--blue-2);
+		padding: var(--size-1) var(--size-2);
+		border-radius: var(--radius-2);
+	}
+
+	.enclosure-size {
+		font-family: var(--font-mono);
+		background: var(--blue-2);
+		padding: var(--size-1) var(--size-2);
+		border-radius: var(--radius-2);
+	}
+
+	.audio-container {
+		margin: var(--size-3) 0;
+	}
+
+	.audio-player {
+		width: 100%;
+		height: 40px;
+		border-radius: var(--radius-2);
+		background: var(--blue-1);
+		border: 1px solid var(--blue-3);
 	}
 
 	.episode-tags {
