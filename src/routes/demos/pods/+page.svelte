@@ -282,6 +282,7 @@
 			}
 			feeds[selectedFeedIdx].numUnread = numUnread;
 		}
+		saveUserData();
 	}
 
 	function markAllAsRead(feedIdx: number) {
@@ -490,7 +491,6 @@
 									</div>
 
 									<div class="audio-container">
-										<audio controls preload="metadata" class="audio-player">
 											<source
 												src={selectedFeedEntry.enclosure.url}
 												type={selectedFeedEntry.enclosure.type}
