@@ -50,7 +50,6 @@
 		items: RSSItem[];
 	}
 
-
 	// FUNCTIONS
 	function formatFileSize(bytes: number): string {
 		if (bytes === 0) return '0 B';
@@ -104,7 +103,7 @@
 					const type = enclosureElement.getAttribute('type') || '';
 					const lengthStr = enclosureElement.getAttribute('length') || '0';
 					const length = parseInt(lengthStr, 10) || 0;
-					
+
 					if (url && type) {
 						enclosure = {
 							url,
@@ -251,9 +250,16 @@
 	// Mobile navigation state
 	let mobileView = $state<'feeds' | 'entries' | 'details'>('feeds');
 
+	// Context menu state
+	let contextMenuVisible = $state(false);
+	let contextMenuPosition = $state({ x: 0, y: 0 });
+	let contextMenuFeedIdx = $state(-1);
+
 	let selectedFeed: Feed | null = $derived(feeds[selectedFeedIdx] || null);
 	let selectedFeedEntry: FeedEntry | null = $derived(
-		selectedFeed && selectedFeedEntryIdx !== null ? selectedFeed.episodes[selectedFeedEntryIdx] : null
+		selectedFeed && selectedFeedEntryIdx !== null
+			? selectedFeed.episodes[selectedFeedEntryIdx]
+			: null
 	);
 
 	function toggleSaved() {
@@ -277,6 +283,30 @@
 			feeds[selectedFeedIdx].numUnread = numUnread;
 		}
 	}
+
+	function markAllAsRead(feedIdx: number) {
+		if (feeds[feedIdx]) {
+			feeds[feedIdx].episodes.forEach((episode) => {
+				episode.state = 'watched';
+			});
+			feeds[feedIdx].numUnread = 0;
+		}
+		contextMenuVisible = false;
+	}
+
+	function showContextMenu(event: MouseEvent, feedIdx: number) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		contextMenuPosition = { x: event.clientX, y: event.clientY };
+		contextMenuFeedIdx = feedIdx;
+		contextMenuVisible = true;
+	}
+
+	function hideContextMenu() {
+		contextMenuVisible = false;
+		contextMenuFeedIdx = -1;
+	}
 </script>
 
 <div class="full-bleed">
@@ -286,7 +316,7 @@
 			<div class="user-info">
 				<span>Podcasts</span>
 				<span class="unread-count">
-						{feeds.reduce((total, feed) => total + feed.numUnread, 0)}
+					{feeds.reduce((total, feed) => total + feed.numUnread, 0)}
 				</span>
 			</div>
 		</div>
@@ -305,29 +335,69 @@
 						</div>
 					{:else}
 						{#each feeds as feed, feedIdx}
-							<button
-								class="feed-item"
+							<div 
+								class="feed-item-container"
 								data-selected={feedIdx === selectedFeedIdx}
-							onclick={() => {
-								selectedFeedIdx = feedIdx;
-								if (feeds[selectedFeedIdx].episodes.length > 0) {
-									selectedFeedEntryIdx = 0;
-									mobileView = 'entries';
-								} else {
-									selectedFeedEntryIdx = null;
-								}
-							}}
+								onclick={() => {
+									selectedFeedIdx = feedIdx;
+									if (feeds[selectedFeedIdx].episodes.length > 0) {
+										selectedFeedEntryIdx = 0;
+										mobileView = 'entries';
+									} else {
+										selectedFeedEntryIdx = null;
+									}
+								}}
+								onkeydown={(e) => e.key === 'Enter' && (() => {
+									selectedFeedIdx = feedIdx;
+									if (feeds[selectedFeedIdx].episodes.length > 0) {
+										selectedFeedEntryIdx = 0;
+										mobileView = 'entries';
+									} else {
+										selectedFeedEntryIdx = null;
+									}
+								})()}
+								role="button"
+								tabindex="0"
+								aria-label={`Select feed: ${feed.title}`}
 							>
-							<span class="feed-icon">{feed.icon}</span>
-							<span class="feed-name">{feed.title}</span>
-							{#if feed.numUnread > 0}
-								<span class="badge">{feed.numUnread}</span>
-							{/if}
-							</button>
+								<button class="feed-item">
+									<span class="feed-icon">{feed.icon}</span>
+									<span class="feed-name">{feed.title}</span>
+									{#if feed.numUnread > 0}
+										<span class="badge">{feed.numUnread}</span>
+									{/if}
+								</button>
+								<button
+									class="feed-menu-btn"
+									onclick={(e) => showContextMenu(e, feedIdx)}
+									title="Feed options"
+								>
+									<span class="ellipses-icon">⋯</span>
+								</button>
+							</div>
 						{/each}
 					{/if}
 				</div>
 			</div>
+
+			<!-- Context Menu -->
+			{#if contextMenuVisible}
+				<button
+					class="context-menu-backdrop"
+					onclick={hideContextMenu}
+					onkeydown={(e) => e.key === 'Escape' && hideContextMenu()}
+					aria-label="Close context menu"
+				></button>
+				<div
+					class="context-menu"
+					style="left: {contextMenuPosition.x}px; top: {contextMenuPosition.y}px;"
+					role="menu"
+				>
+					<button class="context-menu-item" onclick={() => markAllAsRead(contextMenuFeedIdx)}>
+						Mark all as read
+					</button>
+				</div>
+			{/if}
 
 			<!-- Middle Column: FeedEntries -->
 			<div
@@ -345,19 +415,19 @@
 								class="episode-item"
 								data-state={feedEntry.state}
 								data-selected={feedEntryIdx === selectedFeedEntryIdx}
-							onclick={() => {
-								selectedFeedEntryIdx = feedEntryIdx;
-								mobileView = 'details';
-							}}
+								onclick={() => {
+									selectedFeedEntryIdx = feedEntryIdx;
+									mobileView = 'details';
+								}}
 							>
 								<div class="episode-indicator" data-state={feedEntry.state}></div>
 								<div class="episode-content">
-								<h4 class="episode-title">{feedEntry.title}</h4>
-								<p class="episode-description">{@html feedEntry.description}</p>
-								<div class="episode-meta">
-									<span class="episode-date">{feedEntry.date}, {feedEntry.time}</span>
-									<span class="episode-author">· {feedEntry.author}</span>
-								</div>
+									<h4 class="episode-title">{feedEntry.title}</h4>
+									<p class="episode-description">{@html feedEntry.description}</p>
+									<div class="episode-meta">
+										<span class="episode-date">{feedEntry.date}, {feedEntry.time}</span>
+										<span class="episode-author">· {feedEntry.author}</span>
+									</div>
 								</div>
 							</button>
 						{/each}
@@ -414,12 +484,17 @@
 									</div>
 									<div class="enclosure-details">
 										<div class="enclosure-type">{selectedFeedEntry.enclosure.type}</div>
-										<div class="enclosure-size">{formatFileSize(selectedFeedEntry.enclosure.length)}</div>
+										<div class="enclosure-size">
+											{formatFileSize(selectedFeedEntry.enclosure.length)}
+										</div>
 									</div>
-									
+
 									<div class="audio-container">
 										<audio controls preload="metadata" class="audio-player">
-											<source src={selectedFeedEntry.enclosure.url} type={selectedFeedEntry.enclosure.type} />
+											<source
+												src={selectedFeedEntry.enclosure.url}
+												type={selectedFeedEntry.enclosure.type}
+											/>
 											Your browser does not support the audio element.
 										</audio>
 									</div>
@@ -498,27 +573,7 @@
 		padding: var(--size-2) 0;
 	}
 
-	.feed-item {
-		display: flex;
-		align-items: center;
-		width: 100%;
-		padding: var(--size-2) var(--size-3);
-		background: none;
-		border: none;
-		color: var(--gray-9);
-		cursor: pointer;
-		text-align: left;
-		font-size: var(--font-size-1);
-		gap: var(--size-2);
-	}
 
-	.feed-item:hover {
-		background: var(--gray-4);
-	}
-
-	.feed-item[data-selected='true'] {
-		background: var(--gray-5);
-	}
 
 	.feed-name {
 		flex: 1;
@@ -531,6 +586,109 @@
 		font-size: var(--font-size-2);
 		width: var(--size-5);
 		text-align: center;
+	}
+
+	.feed-item-container {
+		display: flex;
+		align-items: center;
+		position: relative;
+		gap: var(--size-1);
+		width: 100%;
+		padding: var(--size-2) var(--size-1);
+		background: none;
+		border: none;
+		color: var(--gray-9);
+		cursor: pointer;
+		text-align: left;
+		font-size: var(--font-size-1);
+		transition: background-color var(--t-ratio);
+	}
+
+	.feed-item-container:hover {
+		background: var(--gray-4);
+	}
+
+	.feed-item-container[data-selected='true'] {
+		background: var(--gray-5);
+	}
+
+	.feed-item {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		background: none;
+		border: none;
+		color: inherit;
+		cursor: pointer;
+		text-align: left;
+		font-size: inherit;
+		gap: var(--size-2);
+		padding: 0;
+	}
+
+	.feed-menu-btn {
+		background: none;
+		border: none;
+		color: var(--gray-6);
+		cursor: pointer;
+		padding: var(--size-1);
+		border-radius: var(--radius-2);
+		transition: color var(--t-ratio);
+		opacity: 1;
+		flex-shrink: 0;
+	}
+
+	.feed-item-container:hover .feed-menu-btn {
+		color: var(--gray-8);
+	}
+
+	.ellipses-icon {
+		font-size: var(--font-size-2);
+		font-weight: bold;
+		line-height: 1;
+		transform: rotate(90deg);
+		display: inline-block;
+	}
+
+	.context-menu-backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 999;
+		background: transparent;
+		border: none;
+		cursor: default;
+	}
+
+	.context-menu {
+		position: fixed;
+		background: var(--gray-1);
+		border: 1px solid var(--gray-4);
+		border-radius: var(--radius-2);
+		box-shadow: var(--shadow-3);
+		z-index: 1000;
+		min-width: 160px;
+		padding: var(--size-1) 0;
+	}
+
+	.context-menu-item {
+		display: block;
+		width: 100%;
+		padding: var(--size-2) var(--size-3);
+		background: none;
+		border: none;
+		color: var(--gray-8);
+		cursor: pointer;
+		text-align: left;
+		font-size: var(--font-size-1);
+		transition: background-color var(--t-ratio);
+	}
+
+	.context-menu-item:hover {
+		background: var(--gray-3);
+		color: var(--gray-9);
 	}
 
 	/* Middle Column - Episodes */
@@ -935,8 +1093,12 @@
 			flex: 1;
 		}
 
-		.feed-item {
+		.feed-item-container {
 			border-bottom: var(--border-size-1) solid var(--gray-3);
+		}
+
+		.feed-item {
+			border-bottom: none;
 		}
 
 		.episode-item {
@@ -1016,6 +1178,10 @@
 
 		.feeds-list {
 			padding: var(--size-2) 0;
+		}
+
+		.feed-item-container {
+			border-bottom: none;
 		}
 
 		.feed-item {
