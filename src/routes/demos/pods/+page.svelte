@@ -2,6 +2,9 @@
 	import '../../../styles/open-props.css';
 	import { onMount } from 'svelte';
 
+	// TODO:
+	// Store location of /aud 
+
 	// CONSTANTS
 	const FEED_CACHE_KEY = 'podcast_feeds_cache';
 	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
@@ -205,6 +208,14 @@
 		}
 	}
 
+	function saveUserData(): void {
+		try {
+			cacheFeeds(feeds);
+		} catch (error) {
+			console.error('Error saving user data:', error);
+		}
+	}
+
 	async function loadFeeds(): Promise<void> {
 		// Check local storage first
 		const cachedFeeds = getCachedFeeds();
@@ -255,6 +266,13 @@
 	let contextMenuPosition = $state({ x: 0, y: 0 });
 	let contextMenuFeedIdx = $state(-1);
 
+	// Automatically save feeds data when it changes
+	$effect(() => {
+		if (feeds.length > 0) {
+			saveUserData();
+		}
+	});
+
 	let selectedFeed: Feed | null = $derived(feeds[selectedFeedIdx] || null);
 	let selectedFeedEntry: FeedEntry | null = $derived(
 		selectedFeed && selectedFeedEntryIdx !== null
@@ -282,7 +300,6 @@
 			}
 			feeds[selectedFeedIdx].numUnread = numUnread;
 		}
-		saveUserData();
 	}
 
 	function markAllAsRead(feedIdx: number) {
@@ -481,7 +498,7 @@
 								<div class="episode-enclosure">
 									<div class="enclosure-header">
 										<span class="enclosure-icon">🎵</span>
-										<span class="enclosure-label">Audio Available</span>
+										<span class="enclosure-label">Audio</span>
 									</div>
 									<div class="enclosure-details">
 										<div class="enclosure-type">{selectedFeedEntry.enclosure.type}</div>
@@ -491,6 +508,7 @@
 									</div>
 
 									<div class="audio-container">
+										<audio controls preload="metadata">
 											<source
 												src={selectedFeedEntry.enclosure.url}
 												type={selectedFeedEntry.enclosure.type}
