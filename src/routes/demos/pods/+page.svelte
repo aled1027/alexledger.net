@@ -281,7 +281,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: var(--size-2) var(--size-3);
-		background: var(--gray-9);
+		background: var(--gray-1);
 		border-bottom: var(--border-size-1) solid var(--gray-3);
 		font-size: var(--font-size-1);
 	}
@@ -296,7 +296,7 @@
 		width: var(--size-5);
 		height: var(--size-5);
 		background: var(--gray-6);
-		color: var(--gray-9);
+		color: var(--gray-1);
 		border-radius: var(--radius-round);
 		display: flex;
 		align-items: center;
@@ -305,7 +305,8 @@
 	}
 
 	.username {
-		font-weight: var(--weight-5);
+		font-weight: var(--font-weight-5);
+		color: var(--gray-9);
 	}
 
 	.unread-count {
@@ -337,7 +338,7 @@
 		border-radius: var(--radius-2);
 		padding: var(--size-1) var(--size-2);
 		font-size: var(--font-size-1);
-		background: var(--gray-9);
+		background: var(--gray-2);
 	}
 
 	.next-unread {
@@ -350,37 +351,37 @@
 		display: grid;
 		grid-template-columns: var(--size-fluid-9) 1fr var(--size-fluid-10);
 		height: calc(100vh - var(--size-6));
-		background: var(--gray-9);
+		background: var(--gray-1);
 	}
 
 	/* Left Column - Feeds */
 	.feeds-column {
-		background: var(--gray-9);
-		color: var(--gray-0);
+		background: var(--gray-2);
+		color: var(--gray-9);
 		display: flex;
 		flex-direction: column;
-		border-right: var(--border-size-1) solid var(--gray-8);
+		border-right: var(--border-size-1) solid var(--gray-6);
 	}
 
 	.nav-section {
 		padding: var(--size-3) 0;
-		border-bottom: var(--border-size-1) solid var(--gray-8);
+		border-bottom: var(--border-size-1) solid var(--gray-6);
 	}
 
 	.nav-item {
 		padding: var(--size-2) var(--size-3);
 		cursor: pointer;
 		font-size: var(--font-size-1);
-		color: var(--gray-4);
+		color: var(--gray-6);
 	}
 
 	.nav-item.active {
-		color: var(--gray-0);
-		background: var(--gray-8);
+		color: var(--gray-9);
+		background: var(--gray-4);
 	}
 
 	.nav-item:hover {
-		background: var(--gray-8);
+		background: var(--gray-4);
 	}
 
 	.feeds-list {
@@ -396,7 +397,7 @@
 		padding: var(--size-2) var(--size-3);
 		background: none;
 		border: none;
-		color: var(--gray-0);
+		color: var(--gray-9);
 		cursor: pointer;
 		text-align: left;
 		font-size: var(--font-size-1);
@@ -404,11 +405,11 @@
 	}
 
 	.feed-item:hover {
-		background: var(--gray-8);
+		background: var(--gray-4);
 	}
 
 	.feed-item[data-selected='true'] {
-		background: var(--gray-7);
+		background: var(--gray-5);
 	}
 
 	.feed-name {
@@ -426,8 +427,8 @@
 
 	/* Middle Column - Episodes */
 	.episodes-column {
-		background: var(--yellow-1);
-		border-right: var(--border-size-1) solid var(--yellow-3);
+		background: var(--gray-1);
+		border-right: var(--border-size-1) solid var(--gray-3);
 		overflow-y: auto;
 	}
 
@@ -437,14 +438,14 @@
 		padding: var(--size-3) var(--size-3);
 		background: none;
 		border: none;
-		border-bottom: var(--border-size-1) solid var(--yellow-3);
+		border-bottom: var(--border-size-1) solid var(--gray-3);
 		cursor: pointer;
 		text-align: left;
 		gap: var(--size-3);
 	}
 
 	.episode-item:hover {
-		background: var(--yellow-2);
+		background: var(--gray-2);
 	}
 
 	.episode-item[data-selected='true'] {
@@ -475,17 +476,17 @@
 
 	.episode-title {
 		font-size: var(--font-size-2);
-		font-weight: var(--weight-6);
+		font-weight: var(--font-weight-6);
 		margin: 0 0 var(--size-1) 0;
-		color: var(--gray-7);
-		line-height: var(--line-height-tight);
+		color: var(--gray-8);
+		line-height: var(--font-lineheight-2);
 	}
 
 	.episode-description {
 		font-size: var(--font-size-1);
 		color: var(--gray-6);
 		margin: 0 0 var(--size-2) 0;
-		line-height: var(--line-height-loose);
+		line-height: var(--font-lineheight-3);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		display: -webkit-box;
@@ -509,7 +510,7 @@
 
 	/* Right Column - Details */
 	.details-column {
-		background: var(--gray-9);
+		background: var(--gray-2);
 		padding: var(--size-5);
 		overflow-y: auto;
 	}
@@ -538,10 +539,10 @@
 
 	.episode-title-large {
 		font-size: var(--font-size-4);
-		font-weight: var(--weight-6);
+		font-weight: var(--font-weight-6);
 		margin: 0 0 var(--size-2) 0;
 		color: var(--gray-9);
-		line-height: var(--line-height-tight);
+		line-height: var(--font-lineheight-2);
 	}
 
 	.episode-meta-large {
@@ -558,12 +559,12 @@
 	}
 
 	.tag {
-		background: var(--gray-1);
-		color: var(--gray-7);
+		background: var(--gray-4);
+		color: var(--gray-9);
 		padding: var(--size-1) var(--size-2);
 		border-radius: var(--radius-3);
 		font-size: var(--font-size-0);
-		font-weight: var(--weight-5);
+		font-weight: var(--font-weight-5);
 	}
 
 	.episode-body p {
@@ -608,11 +609,11 @@
 
 	.badge {
 		background: var(--gray-6);
-		color: var(--gray-9);
+		color: var(--gray-1);
 		font-size: var(--font-size-0);
-		font-weight: var(--weight-6);
+		font-weight: var(--font-weight-6);
 		padding: var(--size-1) var(--size-2);
-		border-radius: var(--size-fluid-3);
+		border-radius: var(--radius-3);
 		min-width: var(--size-5);
 		text-align: center;
 		flex-shrink: 0;
