@@ -1,7 +1,5 @@
 <script lang="ts">
-	//
-	// 
-	//
+	import '../../../styles/open-props.css';
 
 	let shows = $state([
 		{
@@ -12,7 +10,8 @@
 			episodes: [
 				{
 					title: 'Get Played with Roman Mars and Ben Brock Johnson',
-					description: 'Hidden Levels explores the hidden stories behind video games, featuring Heather Anne Campbell (Rick and Morty) and Matt Apodaca discussing controllers, culture, and video games.',
+					description:
+						'Hidden Levels explores the hidden stories behind video games, featuring Heather Anne Campbell (Rick and Morty) and Matt Apodaca discussing controllers, culture, and video games.',
 					date: 'Yesterday, October 3rd',
 					time: '1:30pm',
 					author: 'Heather Anne Campbell, Matt Apodaca, Ben Brock Johnson',
@@ -22,7 +21,8 @@
 				},
 				{
 					title: 'The Power Broker #13: Drop Dead City',
-					description: 'In a Colorado meatpacking town, refugees fleeing persecution find themselves in some of the most dangerous jobs in America.',
+					description:
+						'In a Colorado meatpacking town, refugees fleeing persecution find themselves in some of the most dangerous jobs in America.',
 					date: 'Tuesday, September 23rd',
 					time: '1:30pm',
 					author: 'Elliott Kalan',
@@ -32,7 +32,8 @@
 				},
 				{
 					title: 'The New Jungle',
-					description: 'This episode was produced in partnership with the Food & Environment Reporting Network, an independent, nonprofit news organization.',
+					description:
+						'This episode was produced in partnership with the Food & Environment Reporting Network, an independent, nonprofit news organization.',
 					date: 'September 15th',
 					time: '2:00pm',
 					author: 'Esther Honig',
@@ -50,7 +51,8 @@
 			episodes: [
 				{
 					title: 'New Drug Cures Cancer',
-					description: 'A breakthrough in cancer treatment shows promising results in early clinical trials.',
+					description:
+						'A breakthrough in cancer treatment shows promising results in early clinical trials.',
 					date: 'Today',
 					time: '6:00am',
 					author: 'Michael Barbaro',
@@ -88,7 +90,8 @@
 				},
 				{
 					title: 'Steph Curry. Steph Curry.',
-					description: 'An analysis of Stephen Curry\'s incredible shooting display and its impact on modern basketball.',
+					description:
+						"An analysis of Stephen Curry's incredible shooting display and its impact on modern basketball.",
 					date: 'Friday',
 					time: '11:30am',
 					author: 'Zach Lowe',
@@ -152,7 +155,9 @@
 		<div class="user-info">
 			<span class="avatar">👤</span>
 			<span class="username">aled1027</span>
-			<span class="unread-count">o {shows.reduce((total, show) => total + show.numUnread, 0)} o 0</span>
+			<span class="unread-count"
+				>o {shows.reduce((total, show) => total + show.numUnread, 0)} o 0</span
+			>
 		</div>
 		<div class="controls">
 			<button class="control-btn">🔊</button>
@@ -172,12 +177,6 @@
 	<div class="main-layout">
 		<!-- Left Column: Feeds/Shows -->
 		<div class="feeds-column">
-			<div class="nav-section">
-				<div class="nav-item active">📺 NewsBlur Dashboard</div>
-				<div class="nav-item">⚙️ Infrequent Site Stories</div>
-				<div class="nav-item">🌐 All Site Stories</div>
-			</div>
-			
 			<div class="feeds-list">
 				{#each shows as show, showIdx}
 					<button
@@ -241,13 +240,15 @@
 						{/each}
 					</div>
 				</div>
-				
+
 				<div class="episode-body">
 					<p>{selectedEpisode.description}</p>
-					
+
 					<div class="episode-actions">
 						{#if selectedEpisode.state === 'watched'}
-							<button class="action-btn" onclick={() => setState('unwatched')}>Mark as Unread</button>
+							<button class="action-btn" onclick={() => setState('unwatched')}
+								>Mark as Unread</button
+							>
 						{:else}
 							<button class="action-btn" onclick={() => setState('watched')}>Mark as Read</button>
 						{/if}
@@ -271,7 +272,7 @@
 	.podcast-app {
 		min-height: 100vh;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-		background: #f8f9fa;
+		background: var(--gray-0);
 	}
 
 	/* Top Bar */
@@ -279,135 +280,135 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 8px 16px;
-		background: white;
-		border-bottom: 1px solid #e1e5e9;
-		font-size: 14px;
+		padding: var(--size-2) var(--size-3);
+		background: var(--gray-9);
+		border-bottom: var(--border-size-1) solid var(--gray-3);
+		font-size: var(--font-size-1);
 	}
 
 	.user-info {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: var(--size-2);
 	}
 
 	.avatar {
-		width: 24px;
-		height: 24px;
-		background: #6c757d;
-		color: white;
-		border-radius: 50%;
+		width: var(--size-5);
+		height: var(--size-5);
+		background: var(--gray-6);
+		color: var(--gray-9);
+		border-radius: var(--radius-round);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 12px;
+		font-size: var(--font-size-0);
 	}
 
 	.username {
-		font-weight: 500;
+		font-weight: var(--weight-5);
 	}
 
 	.unread-count {
-		color: #6c757d;
-		font-family: monospace;
+		color: var(--gray-6);
+		font-family: var(--font-mono);
 	}
 
 	.controls {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: var(--size-2);
 	}
 
 	.control-btn {
 		background: none;
 		border: none;
 		cursor: pointer;
-		padding: 4px;
-		font-size: 16px;
-		color: #6c757d;
+		padding: var(--size-1);
+		font-size: var(--font-size-2);
+		color: var(--gray-6);
 	}
 
 	.control-btn:hover {
-		color: #495057;
+		color: var(--gray-7);
 	}
 
 	.control-select {
-		border: 1px solid #e1e5e9;
-		border-radius: 4px;
-		padding: 4px 8px;
-		font-size: 14px;
-		background: white;
+		border: var(--border-size-1) solid var(--gray-3);
+		border-radius: var(--radius-2);
+		padding: var(--size-1) var(--size-2);
+		font-size: var(--font-size-1);
+		background: var(--gray-9);
 	}
 
 	.next-unread {
-		color: #6c757d;
-		font-size: 14px;
+		color: var(--gray-6);
+		font-size: var(--font-size-1);
 	}
 
 	/* Main Layout */
 	.main-layout {
 		display: grid;
-		grid-template-columns: 280px 1fr 400px;
-		height: calc(100vh - 50px);
-		background: white;
+		grid-template-columns: var(--size-fluid-9) 1fr var(--size-fluid-10);
+		height: calc(100vh - var(--size-6));
+		background: var(--gray-9);
 	}
 
 	/* Left Column - Feeds */
 	.feeds-column {
-		background: #343a40;
-		color: white;
+		background: var(--gray-9);
+		color: var(--gray-0);
 		display: flex;
 		flex-direction: column;
-		border-right: 1px solid #495057;
+		border-right: var(--border-size-1) solid var(--gray-8);
 	}
 
 	.nav-section {
-		padding: 12px 0;
-		border-bottom: 1px solid #495057;
+		padding: var(--size-3) 0;
+		border-bottom: var(--border-size-1) solid var(--gray-8);
 	}
 
 	.nav-item {
-		padding: 8px 16px;
+		padding: var(--size-2) var(--size-3);
 		cursor: pointer;
-		font-size: 14px;
-		color: #adb5bd;
+		font-size: var(--font-size-1);
+		color: var(--gray-4);
 	}
 
 	.nav-item.active {
-		color: white;
-		background: rgba(255, 255, 255, 0.1);
+		color: var(--gray-0);
+		background: var(--gray-8);
 	}
 
 	.nav-item:hover {
-		background: rgba(255, 255, 255, 0.05);
+		background: var(--gray-8);
 	}
 
 	.feeds-list {
 		flex: 1;
 		overflow-y: auto;
-		padding: 8px 0;
+		padding: var(--size-2) 0;
 	}
 
 	.feed-item {
 		display: flex;
 		align-items: center;
 		width: 100%;
-		padding: 6px 16px;
+		padding: var(--size-2) var(--size-3);
 		background: none;
 		border: none;
-		color: white;
+		color: var(--gray-0);
 		cursor: pointer;
 		text-align: left;
-		font-size: 14px;
-		gap: 8px;
+		font-size: var(--font-size-1);
+		gap: var(--size-2);
 	}
 
 	.feed-item:hover {
-		background: rgba(255, 255, 255, 0.05);
+		background: var(--gray-8);
 	}
 
 	.feed-item[data-selected='true'] {
-		background: rgba(255, 255, 255, 0.15);
+		background: var(--gray-7);
 	}
 
 	.feed-name {
@@ -418,53 +419,53 @@
 	}
 
 	.feed-icon {
-		font-size: 16px;
-		width: 20px;
+		font-size: var(--font-size-2);
+		width: var(--size-5);
 		text-align: center;
 	}
 
 	/* Middle Column - Episodes */
 	.episodes-column {
-		background: #fff3cd;
-		border-right: 1px solid #ffeaa7;
+		background: var(--yellow-1);
+		border-right: var(--border-size-1) solid var(--yellow-3);
 		overflow-y: auto;
 	}
 
 	.episode-item {
 		display: flex;
 		width: 100%;
-		padding: 12px 16px;
+		padding: var(--size-3) var(--size-3);
 		background: none;
 		border: none;
-		border-bottom: 1px solid #ffeaa7;
+		border-bottom: var(--border-size-1) solid var(--yellow-3);
 		cursor: pointer;
 		text-align: left;
-		gap: 12px;
+		gap: var(--size-3);
 	}
 
 	.episode-item:hover {
-		background: rgba(255, 234, 167, 0.3);
+		background: var(--yellow-2);
 	}
 
 	.episode-item[data-selected='true'] {
-		background: rgba(255, 234, 167, 0.5);
+		background: var(--yellow-3);
 	}
 
 	.episode-indicator {
-		width: 12px;
-		height: 12px;
-		border-radius: 50%;
+		width: var(--size-3);
+		height: var(--size-3);
+		border-radius: var(--radius-round);
 		flex-shrink: 0;
-		margin-top: 6px;
+		margin-top: var(--size-2);
 	}
 
 	.episode-indicator[data-state='unwatched'] {
-		background: #007bff;
+		background: var(--blue-7);
 	}
 
 	.episode-indicator[data-state='watched'] {
-		background: #6c757d;
-		opacity: 0.3;
+		background: var(--gray-6);
+		opacity: var(--opacity-30);
 	}
 
 	.episode-content {
@@ -473,18 +474,18 @@
 	}
 
 	.episode-title {
-		font-size: 16px;
-		font-weight: 600;
-		margin: 0 0 4px 0;
-		color: #495057;
-		line-height: 1.3;
+		font-size: var(--font-size-2);
+		font-weight: var(--weight-6);
+		margin: 0 0 var(--size-1) 0;
+		color: var(--gray-7);
+		line-height: var(--line-height-tight);
 	}
 
 	.episode-description {
-		font-size: 14px;
-		color: #6c757d;
-		margin: 0 0 8px 0;
-		line-height: 1.4;
+		font-size: var(--font-size-1);
+		color: var(--gray-6);
+		margin: 0 0 var(--size-2) 0;
+		line-height: var(--line-height-loose);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		display: -webkit-box;
@@ -494,126 +495,126 @@
 	}
 
 	.episode-meta {
-		font-size: 12px;
-		color: #868e96;
+		font-size: var(--font-size-0);
+		color: var(--gray-5);
 	}
 
 	.episode-date {
-		font-weight: 500;
+		font-weight: var(--weight-5);
 	}
 
 	.episode-author {
-		color: #adb5bd;
+		color: var(--gray-4);
 	}
 
 	/* Right Column - Details */
 	.details-column {
-		background: white;
-		padding: 20px;
+		background: var(--gray-9);
+		padding: var(--size-5);
 		overflow-y: auto;
 	}
 
 	.episode-header {
-		border-bottom: 1px solid #e9ecef;
-		padding-bottom: 16px;
-		margin-bottom: 16px;
+		border-bottom: var(--border-size-1) solid var(--gray-3);
+		padding-bottom: var(--size-3);
+		margin-bottom: var(--size-3);
 	}
 
 	.episode-indicator-large {
-		width: 16px;
-		height: 16px;
-		border-radius: 50%;
-		margin-bottom: 12px;
+		width: var(--size-4);
+		height: var(--size-4);
+		border-radius: var(--radius-round);
+		margin-bottom: var(--size-3);
 	}
 
 	.episode-indicator-large[data-state='unwatched'] {
-		background: #007bff;
+		background: var(--blue-7);
 	}
 
 	.episode-indicator-large[data-state='watched'] {
-		background: #6c757d;
-		opacity: 0.3;
+		background: var(--gray-6);
+		opacity: var(--opacity-30);
 	}
 
 	.episode-title-large {
-		font-size: 24px;
-		font-weight: 600;
-		margin: 0 0 8px 0;
-		color: #212529;
-		line-height: 1.2;
+		font-size: var(--font-size-4);
+		font-weight: var(--weight-6);
+		margin: 0 0 var(--size-2) 0;
+		color: var(--gray-9);
+		line-height: var(--line-height-tight);
 	}
 
 	.episode-meta-large {
-		font-size: 14px;
-		color: #6c757d;
-		margin-bottom: 12px;
+		font-size: var(--font-size-1);
+		color: var(--gray-6);
+		margin-bottom: var(--size-3);
 	}
 
 	.episode-tags {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 6px;
-		margin-bottom: 16px;
+		gap: var(--size-2);
+		margin-bottom: var(--size-3);
 	}
 
 	.tag {
-		background: #f8f9fa;
-		color: #495057;
-		padding: 4px 8px;
-		border-radius: 12px;
-		font-size: 12px;
-		font-weight: 500;
+		background: var(--gray-1);
+		color: var(--gray-7);
+		padding: var(--size-1) var(--size-2);
+		border-radius: var(--radius-3);
+		font-size: var(--font-size-0);
+		font-weight: var(--weight-5);
 	}
 
 	.episode-body p {
-		font-size: 16px;
-		line-height: 1.6;
-		color: #495057;
-		margin-bottom: 20px;
+		font-size: var(--font-size-2);
+		line-height: var(--line-height-loose);
+		color: var(--gray-7);
+		margin-bottom: var(--size-5);
 	}
 
 	.episode-actions {
 		display: flex;
-		gap: 12px;
+		gap: var(--size-3);
 		flex-wrap: wrap;
 	}
 
 	.action-btn {
-		background: #007bff;
+		background: var(--blue-7);
 		outline: none;
 		border: none;
-		color: white;
-		padding: 8px 16px;
-		border-radius: 6px;
-		font-size: 14px;
-		font-weight: 500;
+		color: var(--gray-9);
+		padding: var(--size-2) var(--size-3);
+		border-radius: var(--radius-2);
+		font-size: var(--font-size-1);
+		font-weight: var(--weight-5);
 		cursor: pointer;
-		transition: background-color 0.15s;
+		transition: background-color var(--t-ratio);
+		transition-timing-function: var(--ease-2);
 	}
 
 	.action-btn:hover {
-		background: #0056b3;
+		background: var(--blue-8);
 	}
 
 	.no-selection {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 200px;
-		color: #6c757d;
+		height: var(--size-fluid-11);
+		color: var(--gray-6);
 		font-style: italic;
 	}
 
 	.badge {
-		background: #6c757d;
-		color: white;
-		font-size: 12px;
-		font-weight: 600;
-		padding: 2px 8px;
-		border-radius: 10px;
-		min-width: 20px;
+		background: var(--gray-6);
+		color: var(--gray-9);
+		font-size: var(--font-size-0);
+		font-weight: var(--weight-6);
+		padding: var(--size-1) var(--size-2);
+		border-radius: var(--size-fluid-3);
+		min-width: var(--size-5);
 		text-align: center;
 		flex-shrink: 0;
 	}
-
 </style>

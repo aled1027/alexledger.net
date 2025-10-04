@@ -38,7 +38,6 @@
 		"@lucide/svelte": "^0.479.0",
 		"@types/three": "^0.177.0",
 		"gsap": "^3.13.0",
-		"open-props": "^1.7.16",
 		"sass-embedded": "^1.85.1",
 		"three": "^0.177.0"
 	}
