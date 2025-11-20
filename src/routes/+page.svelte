@@ -27,7 +27,7 @@
 			imageUrl: AnnaNeshyba,
 			imageAlt: 'Screenshot of the Anna Neshyba website',
 			cardColor: '#D3DCD9',
-			link: 'https://anna-neshyba.netlify.app/'
+			link: 'https://annaneshyba.com/'
 		},
 		{
 			projectName: 'Metrion',
