@@ -5,29 +5,20 @@
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 	import { onMount } from 'svelte';
+	import { ThreeEffect, type ThreeEffectOptions } from '$lib/three/utils';
 
 	let container: HTMLDivElement;
 
-	interface MoebiusEffectOptions {
+	interface MoebiusEffectOptions extends ThreeEffectOptions {
 		strength?: number;
-		clearColor?: string;
-		clearAlpha?: number;
 	}
 
 	/**
 	 * A custom effect implemented in the same architectural style
 	 * as Three.js's AsciiEffect — a wrapper around WebGLRenderer.
 	 */
-	class MoebiusEffect {
-		public domElement: HTMLCanvasElement;
-
-		private renderer: THREE.WebGLRenderer;
+	class MoebiusEffect extends ThreeEffect {
 		private strength: number;
-		private clearColor: string;
-		private clearAlpha: number;
-
-		private width = 0;
-		private height = 0;
 
 		// Internal rendering system
 		private rtSceneColor: THREE.WebGLRenderTarget;
@@ -41,13 +32,10 @@
 			camera: THREE.OrthographicCamera,
 			options: MoebiusEffectOptions = {}
 		) {
-			this.renderer = renderer;
-			this.clearColor = options.clearColor ?? '#000';
-			this.clearAlpha = options.clearAlpha ?? 1.0;
+			super(renderer, options);
 			this.strength = options.strength ?? 0.5;
 			this.fsScene = scene;
 			this.fsCamera = camera;
-			this.domElement = renderer.domElement;
 
 			this.rtSceneColor = new THREE.WebGLRenderTarget(1, 1);
 			const plane = new THREE.PlaneGeometry(2, 2);
@@ -91,22 +79,13 @@
 			this.fsScene.add(quad);
 		}
 
-		/**
-		 * Resize the effect.
-		 */
-		public setSize(width: number, height: number): void {
-			this.width = width;
-			this.height = height;
-
-			this.renderer.setSize(width, height);
+		protected onResize(width: number, height: number): void {
+			this.rtSceneColor.setSize(width, height);
 		}
 
-		public render(scene: THREE.Scene, camera: THREE.Camera): void {
-			this.rtSceneColor.setSize(this.width, this.height);
-
+		protected applyEffect(scene: THREE.Scene, camera: THREE.Camera): void {
 			// Render scene → render target
 			this.renderer.setRenderTarget(this.rtSceneColor);
-			this.renderer.setClearColor(this.clearColor, this.clearAlpha);
 			this.renderer.clear();
 			this.renderer.render(scene, camera);
 
