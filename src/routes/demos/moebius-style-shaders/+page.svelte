@@ -129,16 +129,28 @@
 		sphere.position.set(-1, 2, 1);
 		scene.add(sphere);
 
+		// Add pink cube
+		const cubeGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+		const cubeColor = new THREE.Color("pink");
+		const cubeMaterial = new THREE.MeshStandardMaterial({ color: cubeColor });
+		const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+		cube.castShadow = true;
+		cube.position.set(2, 0.75, 2);
+		cube.rotation.y = Math.PI / 3;
+		scene.add(cube);
+
 		// Add ground
 		const groundGeometry = new THREE.PlaneGeometry(10, 10, 100, 100);
 		const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
 		const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+		ground.receiveShadow = true;
 		ground.position.set(0, 0, 0);
 		ground.rotation.x = -Math.PI / 2;
 		scene.add(ground);
 
 
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
+		renderer.shadowMap.enabled = true;
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
 
