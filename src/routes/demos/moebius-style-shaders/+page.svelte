@@ -24,7 +24,9 @@
 			camera: THREE.Camera,
 			strength: number
 		) {
+			// Basically, this is a shader that applies to the entire scene, not just a particular object
 			super(renderer);
+
 			this.strength = strength;
 			this.scene = scene;
 			this.camera = camera;
@@ -85,11 +87,6 @@
 			this.renderer.clear();
 			this.renderer.render(scene, camera);
 
-			// Use the render target texture for the warp pass
-			this.applyMoebiusWarp();
-		}
-
-		private applyMoebiusWarp(): void {
 			this.material.uniforms.tDiffuse.value = this.sceneColor.texture;
 
 			// Render fullscreen quad to screen
