@@ -15,13 +15,13 @@
 		// Scene color is an off-screen buffer that's a virtual canvas
 		private sceneColor: THREE.WebGLRenderTarget;
 		private scene: THREE.Scene;
-		private camera: THREE.OrthographicCamera;
+		private camera: THREE.Camera;
 		private material: THREE.ShaderMaterial;
 
 		constructor(
 			renderer: THREE.WebGLRenderer,
 			scene: THREE.Scene,
-			camera: THREE.OrthographicCamera,
+			camera: THREE.Camera,
 			strength: number
 		) {
 			super(renderer);
@@ -53,17 +53,21 @@
 				void main() {
 					vec2 uv = vUv;
 
-					float angle = uv.x * 6.283185;  // 2π
-					float radius = uv.y;
+					// float angle = uv.x * 6.283185;  // 2π
+					// float radius = uv.y;
 
-					radius += sin(angle * 2.0) * 0.05 * strength;
+					// radius += sin(angle * 2.0) * 0.05 * strength;
 
-					vec2 warpedUV = vec2(
-						( sin(angle) * radius * 0.5 ) + 0.5,
-						( cos(angle) * radius * 0.5 ) + 0.5
-					);
+					// vec2 warpedUV = vec2(
+						// ( sin(angle) * radius * 0.5 ) + 0.5,
+						// ( cos(angle) * radius * 0.5 ) + 0.5
+					// );
 
-					gl_FragColor = texture2D(tDiffuse, warpedUV);
+					// warpedUV.x = uv.x;
+					// warpedUV.y = uv.y;
+
+					vec4 color = texture2D(tDiffuse, uv);
+					gl_FragColor = vec4(color.r + 0.1, color.g, color.b, color.a);
 				}`,
 			});
 
@@ -155,17 +159,17 @@
 		container.appendChild(renderer.domElement);
 
 
-		// const moebiusEffect = new MoebiusEffect(renderer, scene, camera, 0.1);
-		// moebiusEffect.setSize(container.clientWidth, container.clientHeight);
-		// moebiusEffect.render(scene, camera);
+		const moebiusEffect = new MoebiusEffect(renderer, scene, camera, 0.1);
+		moebiusEffect.setSize(container.clientWidth, container.clientHeight);
+		moebiusEffect.render(scene, camera);
 
 		const controls = new OrbitControls(camera, renderer.domElement);
 
 		function animate() {
 			requestAnimationFrame(animate);
 			controls.update();
-			// moebiusEffect.render(scene, camera);
-			renderer.render(scene, camera);
+			moebiusEffect.render(scene, camera);
+			// renderer.render(scene, camera);
 		}
 		animate();
 	});
