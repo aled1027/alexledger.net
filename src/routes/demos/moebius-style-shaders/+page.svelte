@@ -21,10 +21,10 @@
 		private strength: number;
 
 		// Internal rendering system
-		private rtSceneColor: THREE.WebGLRenderTarget;
-		private fsScene: THREE.Scene;
-		private fsCamera: THREE.OrthographicCamera;
-		private fsMaterial: THREE.ShaderMaterial;
+		private sceneColor: THREE.WebGLRenderTarget;
+		private scene: THREE.Scene;
+		private camera: THREE.OrthographicCamera;
+		private material: THREE.ShaderMaterial;
 
 		constructor(
 			renderer: THREE.WebGLRenderer,
@@ -34,13 +34,13 @@
 		) {
 			super(renderer, options);
 			this.strength = options.strength ?? 0.5;
-			this.fsScene = scene;
-			this.fsCamera = camera;
+			this.scene = scene;
+			this.camera = camera;
 
-			this.rtSceneColor = new THREE.WebGLRenderTarget(1, 1);
+			this.sceneColor = new THREE.WebGLRenderTarget(1, 1);
 			const plane = new THREE.PlaneGeometry(2, 2);
 
-			this.fsMaterial = new THREE.ShaderMaterial({
+			this.material = new THREE.ShaderMaterial({
 				uniforms: {
 					tDiffuse: { value: null as THREE.Texture | null },
 					strength: { value: this.strength }
@@ -71,21 +71,20 @@
 					);
 
 					gl_FragColor = texture2D(tDiffuse, warpedUV);
-				}
-			`
+				}`,
 			});
 
-			const quad = new THREE.Mesh(plane, this.fsMaterial);
-			this.fsScene.add(quad);
+			const quad = new THREE.Mesh(plane, this.material);
+			this.scene.add(quad);
 		}
 
 		protected onResize(width: number, height: number): void {
-			this.rtSceneColor.setSize(width, height);
+			this.sceneColor.setSize(width, height);
 		}
 
 		protected applyEffect(scene: THREE.Scene, camera: THREE.Camera): void {
 			// Render scene → render target
-			this.renderer.setRenderTarget(this.rtSceneColor);
+			this.renderer.setRenderTarget(this.sceneColor);
 			this.renderer.clear();
 			this.renderer.render(scene, camera);
 
@@ -94,12 +93,12 @@
 		}
 
 		private applyMoebiusWarp(): void {
-			this.fsMaterial.uniforms.tDiffuse.value = this.rtSceneColor.texture;
+			this.material.uniforms.tDiffuse.value = this.sceneColor.texture;
 
 			// Render fullscreen quad to screen
 			this.renderer.setRenderTarget(null);
 			this.renderer.clear();
-			this.renderer.render(this.fsScene, this.fsCamera);
+			this.renderer.render(this.scene, this.camera);
 		}
 	}
 
@@ -131,7 +130,6 @@
 		const moebiusEffect = new MoebiusEffect(renderer, scene, camera);
 		moebiusEffect.setSize(container.clientWidth, container.clientHeight);
 		moebiusEffect.render(scene, camera);
-;
 		const controls = new OrbitControls(camera, renderer.domElement);
 
 		function animate() {
