@@ -13,15 +13,15 @@ export abstract class ThreeEffect {
 	public readonly domElement: HTMLCanvasElement;
 
 	protected renderer: THREE.WebGLRenderer;
-	protected clearColor: string;
-	protected clearAlpha: number;
+	// protected clearColor: string;
+	// protected clearAlpha: number;
 	protected width = 0;
 	protected height = 0;
 
 	constructor(renderer: THREE.WebGLRenderer, options: ThreeEffectOptions = {}) {
 		this.renderer = renderer;
-		this.clearColor = options.clearColor ?? '#000';
-		this.clearAlpha = options.clearAlpha ?? 1.0;
+		// this.clearColor = options.clearColor ?? '#000';
+		// this.clearAlpha = options.clearAlpha ?? 1.0;
 		this.domElement = renderer.domElement;
 	}
 
@@ -39,7 +39,7 @@ export abstract class ThreeEffect {
 	 * Render the scene with the effect applied.
 	 */
 	public render(scene: THREE.Scene, camera: THREE.Camera): void {
-		this.renderer.setClearColor(this.clearColor, this.clearAlpha);
+		// this.renderer.setClearColor(this.clearColor, this.clearAlpha);
 		this.applyEffect(scene, camera);
 	}
 

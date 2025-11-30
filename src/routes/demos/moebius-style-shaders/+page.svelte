@@ -9,18 +9,10 @@
 
 	let container: HTMLDivElement;
 
-	interface MoebiusEffectOptions extends ThreeEffectOptions {
-		strength?: number;
-	}
-
-	/**
-	 * A custom effect implemented in the same architectural style
-	 * as Three.js's AsciiEffect — a wrapper around WebGLRenderer.
-	 */
 	class MoebiusEffect extends ThreeEffect {
 		private strength: number;
-
-		// Internal rendering system
+		
+		// Scene color is an off-screen buffer that's a virtual canvas
 		private sceneColor: THREE.WebGLRenderTarget;
 		private scene: THREE.Scene;
 		private camera: THREE.OrthographicCamera;
@@ -30,14 +22,15 @@
 			renderer: THREE.WebGLRenderer,
 			scene: THREE.Scene,
 			camera: THREE.OrthographicCamera,
-			options: MoebiusEffectOptions = {}
+			strength: number
 		) {
-			super(renderer, options);
-			this.strength = options.strength ?? 0.5;
+			super(renderer);
+			this.strength = strength;
 			this.scene = scene;
 			this.camera = camera;
 
 			this.sceneColor = new THREE.WebGLRenderTarget(1, 1);
+			console.log('sceneColor', this.sceneColor);
 			const plane = new THREE.PlaneGeometry(2, 2);
 
 			this.material = new THREE.ShaderMaterial({
@@ -106,28 +99,49 @@
 		const scene = new THREE.Scene();
 		const aspect = container.clientWidth / container.clientHeight;
 		const frustumSize = 5;
-		const camera = new THREE.OrthographicCamera(
-			(-frustumSize * aspect) / 2,
-			(frustumSize * aspect) / 2,
-			frustumSize / 2,
-			-frustumSize / 2,
-			0.1,
-			1000
+		const camera = new THREE.PerspectiveCamera(
+			65, // fov
+			aspect, // aspect
+			0.1, // near
+			1000 // far
 		);
-		camera.position.z = 5;
+		camera.position.set(0, 5, 10);
+		camera.lookAt(0, 0, 0);
 		scene.add(camera);
 
-		const geometry = new THREE.BoxGeometry(1, 1, 1);
-		const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-		const cube = new THREE.Mesh(geometry, material);
-		scene.add(cube);
-		scene.background = null; // Make background transparent
+		// A a directional light
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 4.5);
+		directionalLight.position.set(10, 10, 10);
+		directionalLight.lookAt(0, 0, 0);
+		scene.add(directionalLight);
+
+		// Ambient light
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+		scene.add(ambientLight);
+
+		// Add Sphere
+		const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+		const sphereColor = new THREE.Color("orange");
+		const sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereColor });
+		const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+		sphere.position.set(-1, 2, 1);
+		scene.add(sphere);
+
+		// Add ground
+		const groundGeometry = new THREE.PlaneGeometry(10, 10, 100, 100);
+		const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+		const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+		ground.position.set(0, 0, 0);
+		ground.rotation.x = -Math.PI / 2;
+		scene.add(ground);
+
 
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
 
-		const moebiusEffect = new MoebiusEffect(renderer, scene, camera);
+
+		const moebiusEffect = new MoebiusEffect(renderer, scene, camera, 0.1);
 		moebiusEffect.setSize(container.clientWidth, container.clientHeight);
 		moebiusEffect.render(scene, camera);
 		const controls = new OrbitControls(camera, renderer.domElement);
