@@ -97,8 +97,8 @@
 
 	onMount(() => {
 		const scene = new THREE.Scene();
+		scene.background = new THREE.Color(0x4E44BB);
 		const aspect = container.clientWidth / container.clientHeight;
-		const frustumSize = 5;
 		const camera = new THREE.PerspectiveCamera(
 			65, // fov
 			aspect, // aspect
@@ -113,6 +113,7 @@
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 4.5);
 		directionalLight.position.set(10, 10, 10);
 		directionalLight.lookAt(0, 0, 0);
+		directionalLight.castShadow = true;
 		scene.add(directionalLight);
 
 		// Ambient light
@@ -124,6 +125,7 @@
 		const sphereColor = new THREE.Color("orange");
 		const sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereColor });
 		const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+		sphere.castShadow = true;
 		sphere.position.set(-1, 2, 1);
 		scene.add(sphere);
 
@@ -141,15 +143,17 @@
 		container.appendChild(renderer.domElement);
 
 
-		const moebiusEffect = new MoebiusEffect(renderer, scene, camera, 0.1);
-		moebiusEffect.setSize(container.clientWidth, container.clientHeight);
-		moebiusEffect.render(scene, camera);
+		// const moebiusEffect = new MoebiusEffect(renderer, scene, camera, 0.1);
+		// moebiusEffect.setSize(container.clientWidth, container.clientHeight);
+		// moebiusEffect.render(scene, camera);
+
 		const controls = new OrbitControls(camera, renderer.domElement);
 
 		function animate() {
 			requestAnimationFrame(animate);
 			controls.update();
-			moebiusEffect.render(scene, camera);
+			// moebiusEffect.render(scene, camera);
+			renderer.render(scene, camera);
 		}
 		animate();
 	});
