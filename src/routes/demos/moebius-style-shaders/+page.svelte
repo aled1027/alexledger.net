@@ -8,10 +8,134 @@
 
 	let container: HTMLDivElement;
 
+	interface MoebiusEffectOptions {
+		strength?: number;
+		clearColor?: string;
+		clearAlpha?: number;
+	}
+
+	/**
+	 * A custom effect implemented in the same architectural style
+	 * as Three.js's AsciiEffect — a wrapper around WebGLRenderer.
+	 */
+	class MoebiusEffect {
+		public domElement: HTMLCanvasElement;
+
+		private renderer: THREE.WebGLRenderer;
+		private strength: number;
+		private clearColor: string;
+		private clearAlpha: number;
+
+		private width = 0;
+		private height = 0;
+
+		// Internal rendering system
+		private rtSceneColor: THREE.WebGLRenderTarget;
+		private fsScene: THREE.Scene;
+		private fsCamera: THREE.OrthographicCamera;
+		private fsMaterial: THREE.ShaderMaterial;
+
+		constructor(
+			renderer: THREE.WebGLRenderer,
+			scene: THREE.Scene,
+			camera: THREE.OrthographicCamera,
+			options: MoebiusEffectOptions = {}
+		) {
+			this.renderer = renderer;
+			this.clearColor = options.clearColor ?? '#000';
+			this.clearAlpha = options.clearAlpha ?? 1.0;
+			this.strength = options.strength ?? 0.5;
+			this.fsScene = scene;
+			this.fsCamera = camera;
+			this.domElement = renderer.domElement;
+
+			this.rtSceneColor = new THREE.WebGLRenderTarget(1, 1);
+			const plane = new THREE.PlaneGeometry(2, 2);
+
+			this.fsMaterial = new THREE.ShaderMaterial({
+				uniforms: {
+					tDiffuse: { value: null as THREE.Texture | null },
+					strength: { value: this.strength }
+				},
+				vertexShader: `
+				varying vec2 vUv;
+				void main() {
+					vUv = uv;
+					gl_Position = vec4(position, 1.0);
+				}
+			`,
+				fragmentShader: `
+				varying vec2 vUv;
+				uniform sampler2D tDiffuse;
+				uniform float strength;
+
+				void main() {
+					vec2 uv = vUv;
+
+					float angle = uv.x * 6.283185;  // 2π
+					float radius = uv.y;
+
+					radius += sin(angle * 2.0) * 0.05 * strength;
+
+					vec2 warpedUV = vec2(
+						( sin(angle) * radius * 0.5 ) + 0.5,
+						( cos(angle) * radius * 0.5 ) + 0.5
+					);
+
+					gl_FragColor = texture2D(tDiffuse, warpedUV);
+				}
+			`
+			});
+
+			const quad = new THREE.Mesh(plane, this.fsMaterial);
+			this.fsScene.add(quad);
+		}
+
+		/**
+		 * Resize the effect.
+		 */
+		public setSize(width: number, height: number): void {
+			this.width = width;
+			this.height = height;
+
+			this.renderer.setSize(width, height);
+		}
+
+		public render(scene: THREE.Scene, camera: THREE.Camera): void {
+			this.rtSceneColor.setSize(this.width, this.height);
+
+			// Render scene → render target
+			this.renderer.setRenderTarget(this.rtSceneColor);
+			this.renderer.setClearColor(this.clearColor, this.clearAlpha);
+			this.renderer.clear();
+			this.renderer.render(scene, camera);
+
+			// Use the render target texture for the warp pass
+			this.applyMoebiusWarp();
+		}
+
+		private applyMoebiusWarp(): void {
+			this.fsMaterial.uniforms.tDiffuse.value = this.rtSceneColor.texture;
+
+			// Render fullscreen quad to screen
+			this.renderer.setRenderTarget(null);
+			this.renderer.clear();
+			this.renderer.render(this.fsScene, this.fsCamera);
+		}
+	}
+
 	onMount(() => {
-		// We'll do something
 		const scene = new THREE.Scene();
-		const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+		const aspect = container.clientWidth / container.clientHeight;
+		const frustumSize = 5;
+		const camera = new THREE.OrthographicCamera(
+			(-frustumSize * aspect) / 2,
+			(frustumSize * aspect) / 2,
+			frustumSize / 2,
+			-frustumSize / 2,
+			0.1,
+			1000
+		);
 		camera.position.z = 5;
 		scene.add(camera);
 
@@ -19,28 +143,38 @@
 		const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 		const cube = new THREE.Mesh(geometry, material);
 		scene.add(cube);
-
+		scene.background = null; // Make background transparent
 
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
 
+		const moebiusEffect = new MoebiusEffect(renderer, scene, camera);
+		moebiusEffect.setSize(container.clientWidth, container.clientHeight);
+		moebiusEffect.render(scene, camera);
+;
 		const controls = new OrbitControls(camera, renderer.domElement);
 
 		function animate() {
 			requestAnimationFrame(animate);
 			controls.update();
-			renderer.render(scene, camera);
+			moebiusEffect.render(scene, camera);
 		}
 		animate();
-
 	});
 </script>
 
 <div class="my-l">
 	<h2>Moebius Style Shaders</h2>
 	<p>
-		Description
+		Based on <a
+			target="_blank"
+			href="https://blog.maximeheckel.com/posts/moebius-style-post-processing/">this blog post</a
+		>
+		by Maxime Heckel, which is itself based on
+		<a target="_blank" href="https://www.youtube.com/watch?v=jlKNOirh66E&ab_channel=UselessGameDev"
+			>this video</a
+		> by Useless Game Dev.
 	</p>
 
 	<div class="mt-xl three-container" bind:this={container}></div>
