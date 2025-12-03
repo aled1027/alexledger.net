@@ -42,6 +42,20 @@
 			}
 		});
 
+		// Hide the overlay after animations complete so normal scrolling can continue
+		gsap.to(overlayEle, {
+			ease: 'none',
+			// opacity: 0,
+			y: '-100%', // Optionally slide it down off screen
+			scrollTrigger: {
+				trigger: '.pioneer-wrapper',
+				start: '400vh top',
+				end: '+=100vh',
+				scrub: true,
+				markers: true
+			}
+		});
+
 
 	});
 </script>
@@ -66,11 +80,16 @@
 	<p>more content</p>
 </div>
 
+<div class="content2">
+	<h2>And continue!</h2>
+	<p>pretty fun, no?</p>
+</div>
 
 <style lang="scss">
 	.pioneer-wrapper {
 		position: relative;
-		min-height: 300vh;
+		min-height: 400vh;
+		padding-bottom: 50vh; // Optional: adds breathing room before content2
 	}
 
 	.content1 {
@@ -99,5 +118,9 @@
 		opacity: 0;
 		color: white;
 		filter: blur(10px);
+	}
+
+	.content2 {
+		min-height: 100vh;
 	}
 </style>
