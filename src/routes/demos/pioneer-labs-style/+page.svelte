@@ -6,6 +6,7 @@
 	let container: HTMLDivElement;
 	let overlayEle: HTMLDivElement;
 	let overlayContentEle: HTMLDivElement;
+	let pioneerWrapper: HTMLDivElement; // Add this
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
@@ -21,10 +22,9 @@
 			borderRadius: "0",
 			scrollTrigger: {
 				trigger: '.pioneer-wrapper',
-				start: '0vh top', // No idea why -200vh
+				start: '0vh top',
 				end: '+=300vh',
 				scrub: true,
-				markers: true
 			}
 		});
 
@@ -38,19 +38,27 @@
 				start: '200vh top',
 				end: '+=200vh',
 				scrub: true,
-				markers: true
 			}
 		});
 
 		// Hide the overlay after animations complete so normal scrolling can continue
-		gsap.to(overlayEle, {
+		gsap.to(overlayEle, { // Change from overlayEle to pioneerWrapper
 			ease: 'none',
-			// opacity: 0,
-			y: '-100%', // Optionally slide it down off screen
+			y: '-100%',
 			scrollTrigger: {
 				trigger: '.pioneer-wrapper',
 				start: '400vh top',
 				end: '+=100vh',
+				scrub: true,
+			}
+		});
+
+		gsap.set(".content1", {
+			opacity: 0,
+			scrollTrigger: {
+				trigger: '.pioneer-wrapper',
+				start: '400vh top',
+				end: '+=1vh',
 				scrub: true,
 				markers: true
 			}
@@ -60,7 +68,7 @@
 	});
 </script>
 
-<div class="pioneer-wrapper">
+<div class="pioneer-wrapper" bind:this={pioneerWrapper}>
 	<div bind:this={overlayEle} class="overlay">
 		<div bind:this={overlayContentEle} class="overlay-content">
 			<br />
@@ -77,7 +85,6 @@
 		<p>Scroll down, if you please.</p>
 		<div class="" bind:this={container}></div>
 	</div>
-	<p>more content</p>
 </div>
 
 <div class="content2">
@@ -88,7 +95,7 @@
 <style lang="scss">
 	.pioneer-wrapper {
 		position: relative;
-		min-height: 400vh;
+		min-height: 200vh;
 		padding-bottom: 50vh; // Optional: adds breathing room before content2
 	}
 
@@ -97,6 +104,7 @@
 		top: 150px;
 		left: 80px;
 		z-index: 0;
+		opacity: 1;
 	}
 
 	.overlay {
@@ -121,6 +129,7 @@
 	}
 
 	.content2 {
+		padding-block-start: 20vh;
 		min-height: 100vh;
 	}
 </style>
