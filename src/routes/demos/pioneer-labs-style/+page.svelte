@@ -7,6 +7,12 @@
 	let overlayContentEle: HTMLDivElement;
 	let pioneerWrapper: HTMLDivElement; // Add this
 
+	/* 
+	 * TODO:
+	 * - why are the vhs not adding up like I expect them to?
+	 * - Why is this so bad on mobile?
+	 */
+
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
 
@@ -127,12 +133,15 @@
 		opacity: 0;
 		color: white;
 		filter: blur(10px);
+
+		width: max-content;
+		margin-inline: auto;
+		padding: 1rem;
 	}
 
 	.content1 {
 		position: fixed;
 		top: 150px;
-		// left: 1rem;
 		z-index: 0;
 		opacity: 1;
 
@@ -144,7 +153,8 @@
 	.content2 {
 		position: fixed;
 		top: 150px;
-		left: 80px;
+		width: max-content;
+		margin-inline: auto;
 		z-index: 0;
 		opacity: 0;
 	}
