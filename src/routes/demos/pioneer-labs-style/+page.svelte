@@ -54,13 +54,15 @@
 		});
 
 		gsap.set(".content1", {
-			opacity: 0,
 			scrollTrigger: {
 				trigger: '.pioneer-wrapper',
 				start: '400vh top',
 				end: '+=1vh',
 				scrub: true,
-				markers: true
+				markers: true,
+				onUpdate: (self) => {
+					gsap.set(".content1", { opacity: 1 - self.progress });
+				}
 			}
 		});
 
