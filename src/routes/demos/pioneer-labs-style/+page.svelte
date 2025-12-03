@@ -44,7 +44,7 @@
 		gsap.to(overlayEle, {
 			// Change from overlayEle to pioneerWrapper
 			ease: 'none',
-			y: '-100%',
+			y: '-100vh',
 			scrollTrigger: {
 				trigger: '.pioneer-wrapper',
 				start: '500vh top',
@@ -56,11 +56,23 @@
 		gsap.set('.content1', {
 			scrollTrigger: {
 				trigger: '.pioneer-wrapper',
-				start: '200vh top',
+				start: '600vh top',
 				end: '+=1vh',
 				scrub: true,
 				onUpdate: (self) => {
 					gsap.set('.content1', { opacity: 1 - self.progress });
+				}
+			}
+		});
+
+		gsap.set('.content2', {
+			scrollTrigger: {
+				trigger: '.pioneer-wrapper',
+				start: '600vh top',
+				end: '+=1vh',
+				scrub: true,
+				onUpdate: (self) => {
+					gsap.set('.content2', { opacity: self.progress });
 				}
 			}
 		});
@@ -83,25 +95,17 @@
 		</p>
 		<p>Scroll down, if you please.</p>
 	</div>
-</div>
-
-<div class="content2">
-	<h2>And more content!</h2>
-	<p>pretty fun, no?</p>
+	<div class="content2">
+		<h2>And more content!</h2>
+		<p>pretty fun, no?</p>
+	</div>
 </div>
 
 <style lang="scss">
 	.pioneer-wrapper {
 		position: relative;
-		min-height: 150vh;
-	}
-
-	.content1 {
-		position: fixed;
-		top: 150px;
-		left: 80px;
-		z-index: 0;
-		opacity: 1;
+		height: 300vh;
+		margin-block-end: 10vh;
 	}
 
 	.overlay {
@@ -125,8 +129,23 @@
 		filter: blur(10px);
 	}
 
+	.content1 {
+		position: fixed;
+		top: 150px;
+		// left: 1rem;
+		z-index: 0;
+		opacity: 1;
+
+		width: max-content;
+		margin-inline: auto;
+
+	}
+
 	.content2 {
-		padding-block-start: 20vh;
-		min-height: 100vh;
+		position: fixed;
+		top: 150px;
+		left: 80px;
+		z-index: 0;
+		opacity: 0;
 	}
 </style>
