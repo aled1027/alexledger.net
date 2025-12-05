@@ -5,7 +5,7 @@
 	let headerHeight = $state(0);
 
 	ScrollTrigger.defaults({
-		toggleActions: 'restart pause resume none',
+		toggleActions: 'restart pause resume none'
 		// markers: true
 	});
 
@@ -23,18 +23,10 @@
 			// Calculate end point: for rolodex effect, each panel should unpin
 			// when the next panel's bottom reaches the top
 			let end: number;
-			if (index < panels.length - 1) {
-				// For all panels except the last, unpin when next panel's bottom reaches the top
-				const nextPanel = panels[index + 1];
-				const nextPanelRect = nextPanel.getBoundingClientRect();
-				const nextPanelBottom = nextPanelRect.bottom + window.scrollY;
-				end = nextPanelBottom - headerHeight;
-			} else {
-				// Last panel: unpin when its own bottom reaches the top
-				const panelRect = panel.getBoundingClientRect();
-				const panelBottom = panelRect.bottom + window.scrollY;
-				end = panelBottom - headerHeight;
-			}
+
+			const panelEndIdx = index < panels.length - 1 ? index + 1 : index;
+			const panelEnd = panels[panelEndIdx].getBoundingClientRect().bottom + window.scrollY;
+			end = panelEnd - headerHeight;
 
 			gsap.to(panel, {
 				scrollTrigger: {
@@ -53,7 +45,7 @@
 					trigger: panel,
 					start: `top ${headerHeight}px`,
 					end: '+=50%',
-					scrub: true,
+					scrub: true
 				}
 			});
 		});
