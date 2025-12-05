@@ -23,30 +23,33 @@
 				scrollTrigger: {
 					trigger: panel,
 					start: `top ${headerHeight}px`,
+					end: "+=200%", // works?
+					// end: "+=300vh",
 					pin: true,
+					pinSpacing: false
 				}
 			});
 		});
 	});
 </script>
 
-<div class="my-l cont">
+<div class="cont">
 	<div class="panel a">A</div>
 	<div class="panel b">B</div>
 	<div class="panel c">C</div>
 </div>
+<p>More content!</p>
 
 <style lang="scss">
 	.panel {
-		height: calc(40vh - var(--header-height, 0px));
+		height: calc(100vh - var(--header-height, 0px));
 		width: 100vw;
 		margin-inline: calc(50% - 50vw);
 		background-color: red;
 
 		margin-block: 0;
 		border: 1px solid black;
-		position: sticky;
-		top: 0;
+		margin-block-end: 200%;
 	}
 
 	.b {
