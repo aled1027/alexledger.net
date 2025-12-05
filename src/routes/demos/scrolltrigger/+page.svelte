@@ -6,8 +6,9 @@
 
 	ScrollTrigger.defaults({
 		toggleActions: 'restart pause resume none',
-		markers: true
+		// markers: true
 	});
+
 	gsap.registerPlugin(ScrollTrigger);
 
 	$effect(() => {
@@ -53,31 +54,35 @@
 					start: `top ${headerHeight}px`,
 					end: '+=50%',
 					scrub: true,
-					markers: true
 				}
 			});
 		});
 	});
 </script>
 
+<p class="screen">Scroll down</p>
 <div class="panel-container">
 	<div class="panel a" style="background: red"><h2>A</h2></div>
 	<div class="panel b" style="background: blue"><h2>B</h2></div>
 	<div class="panel c" style="background: yellow"><h2>C</h2></div>
 </div>
-<p>More content!</p>
+<p class="screen">That's all!</p>
 
 <style lang="scss">
 	.panel {
 		height: calc(100vh - var(--header-height, 0px));
 		width: 100vw;
 		margin-inline: calc(50% - 50vw);
-		border: 1px solid black;
 		margin-block-end: 200%;
 	}
 
-
 	h2 {
 		opacity: 0;
+	}
+
+	.screen {
+		height: calc(100vh - var(--header-height, 0px));
+		width: 100vw;
+		margin-inline: calc(50% - 50vw);
 	}
 </style>
