@@ -60,10 +60,10 @@
 	});
 </script>
 
-<div class="cont">
-	<div class="panel a"><h2>A</h2></div>
-	<div class="panel b"><h2>B</h2></div>
-	<div class="panel c"><h2>C</h2></div>
+<div class="panel-container">
+	<div class="panel a" style="background: red"><h2>A</h2></div>
+	<div class="panel b" style="background: blue"><h2>B</h2></div>
+	<div class="panel c" style="background: yellow"><h2>C</h2></div>
 </div>
 <p>More content!</p>
 
@@ -72,22 +72,10 @@
 		height: calc(100vh - var(--header-height, 0px));
 		width: 100vw;
 		margin-inline: calc(50% - 50vw);
-		background-color: red;
 		border: 1px solid black;
 		margin-block-end: 200%;
 	}
 
-	.b {
-		background-color: blue;
-	}
-
-	.c {
-		background-color: yellow;
-	}
-
-	.cont {
-		margin-block-end: 200vh;
-	}
 
 	h2 {
 		opacity: 0;
