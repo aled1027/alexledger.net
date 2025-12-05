@@ -19,15 +19,14 @@
 	$effect(() => {
 		const panels: HTMLElement[] = gsap.utils.toArray('.panel');
 		panels.forEach((panel, index) => {
-			// Calculate end point: for rolodex effect, each panel should unpin when the next panel's bottom reaches the top
-			let end: string | number;
+			// Calculate end point: for rolodex effect, each panel should unpin
+			// when the next panel's bottom reaches the top
+			let end: number;
 			if (index < panels.length - 1) {
 				// For all panels except the last, unpin when next panel's bottom reaches the top
 				const nextPanel = panels[index + 1];
-				// Get the position of the next panel's bottom relative to the document
 				const nextPanelRect = nextPanel.getBoundingClientRect();
 				const nextPanelBottom = nextPanelRect.bottom + window.scrollY;
-				// The end scroll position is when next panel's bottom reaches the top of viewport (accounting for header)
 				end = nextPanelBottom - headerHeight;
 			} else {
 				// Last panel: unpin when its own bottom reaches the top
