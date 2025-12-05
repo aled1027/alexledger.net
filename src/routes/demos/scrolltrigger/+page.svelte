@@ -11,8 +11,8 @@
 	gsap.registerPlugin(ScrollTrigger);
 
 	$effect(() => {
-		headerHeight = document.querySelector('.site-header')?.clientHeight ?? 0;
 		// Set header height as a CSS variable
+		headerHeight = document.querySelector('.site-header')?.clientHeight ?? 0;
 		document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
 	});
 
@@ -20,23 +20,20 @@
 		const panels: HTMLElement[] = gsap.utils.toArray('.panel');
 		panels.forEach((panel, index) => {
 			// Calculate end point: for rolodex effect, each panel should unpin when the next panel's bottom reaches the top
-			let end: string | (() => number);
+			let end: string | number;
 			if (index < panels.length - 1) {
 				// For all panels except the last, unpin when next panel's bottom reaches the top
 				const nextPanel = panels[index + 1];
-				end = () => {
-					const nextPanelRect = nextPanel.getBoundingClientRect();
-					const scrollY = window.scrollY;
-					// Calculate when next panel's bottom will reach the top of viewport (accounting for header)
-					return nextPanelRect.bottom + scrollY - headerHeight;
-				};
+				// Get the position of the next panel's bottom relative to the document
+				const nextPanelRect = nextPanel.getBoundingClientRect();
+				const nextPanelBottom = nextPanelRect.bottom + window.scrollY;
+				// The end scroll position is when next panel's bottom reaches the top of viewport (accounting for header)
+				end = nextPanelBottom - headerHeight;
 			} else {
 				// Last panel: unpin when its own bottom reaches the top
-				end = () => {
-					const panelRect = panel.getBoundingClientRect();
-					const scrollY = window.scrollY;
-					return panelRect.bottom + scrollY - headerHeight;
-				};
+				const panelRect = panel.getBoundingClientRect();
+				const panelBottom = panelRect.bottom + window.scrollY;
+				end = panelBottom - headerHeight;
 			}
 
 			gsap.to(panel, {
