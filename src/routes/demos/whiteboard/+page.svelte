@@ -175,7 +175,7 @@
 </script>
 
 <div class="my-l demo-container">
-	<h1>White Board</h1>
+	<h1>Whiteboard</h1>
 	<p>
 		<a
 			target="_blank"
