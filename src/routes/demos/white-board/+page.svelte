@@ -1,9 +1,6 @@
 <script lang="ts">
 	import * as THREE from 'three';
 
-	// @ts-ignore
-	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
 	import { onMount } from 'svelte';
 
 	let container: HTMLDivElement;
@@ -11,17 +8,21 @@
 	onMount(() => {
 		// We'll do something
 
-		const numRows = 20;
-		const numColumns = 20;
+		const numRows = 100;
+		const numColumns = 100;
 		const z = 0;
 		const scene = new THREE.Scene();
+		// Transparent background
+		scene.background = null;
+		const pointSize = 0.9;
 
 		// Calculate the bounding box of the grid of points
 		const gridWidth = numColumns - 1;
 		const gridHeight = numRows - 1;
+		const pointColor = 0x020202;
 
 		const aspect = container.clientWidth / container.clientHeight;
-		const margin = 3;
+		const margin = pointSize / 2;
 
 		// Set camera so all points are visible, considering FOV and aspect ratio
 		const camera = new THREE.PerspectiveCamera(
@@ -30,9 +31,6 @@
 			0.1,
 			1000
 		);
-
-		// Figure out the maximum extent of the grid from center on both axes
-		const maxGridExtent = Math.max(gridWidth / 2, gridHeight / 2);
 
 		// Use some trigonometry to set the camera z position so all points fit the view vertically
 		const fovRadians = (camera.fov * Math.PI) / 180;
@@ -64,20 +62,18 @@
 		const pointsBuffer = new Float32Array(points.flatMap((p) => [p.x, p.y, p.z]));
 		const geometry = new THREE.BufferGeometry();
 		geometry.setAttribute('position', new THREE.BufferAttribute(pointsBuffer, 3));
-		const material = new THREE.PointsMaterial({ color: 0x00ff00, size: 0.5 });
+		const material = new THREE.PointsMaterial({ color: pointColor, size: pointSize });
 		const mesh = new THREE.Points(geometry, material);
 
 		scene.add(mesh);
 
-		const renderer = new THREE.WebGLRenderer({ antialias: true });
+		const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+		renderer.setClearColor(0x000000, 0); // transparent background
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
 
-		const controls = new OrbitControls(camera, renderer.domElement);
-
 		function animate() {
 			requestAnimationFrame(animate);
-			controls.update();
 			renderer.render(scene, camera);
 		}
 		animate();
@@ -102,6 +98,6 @@
 		height: 60vh;
 		margin-inline: auto;
 		cursor: grab;
-		border: 1px solid black;
+		// border: 1px solid black;
 	}
 </style>
