@@ -62,15 +62,86 @@
 		const pointsBuffer = new Float32Array(points.flatMap((p) => [p.x, p.y, p.z]));
 		const geometry = new THREE.BufferGeometry();
 		geometry.setAttribute('position', new THREE.BufferAttribute(pointsBuffer, 3));
-		const material = new THREE.PointsMaterial({ color: pointColor, size: pointSize });
+		
+		// Create color buffer - each point has RGB values (0-1 range)
+		const numPoints = points.length;
+		const colors = new Float32Array(numPoints * 3);
+		const blackColor = [0.007, 0.007, 0.007]; // 0x020202 normalized
+		const whiteColor = [1, 1, 1];
+		
+		// Initialize all points to black
+		for (let i = 0; i < numPoints; i++) {
+			colors[i * 3] = blackColor[0];
+			colors[i * 3 + 1] = blackColor[1];
+			colors[i * 3 + 2] = blackColor[2];
+		}
+		
+		geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+		const material = new THREE.PointsMaterial({ 
+			size: pointSize,
+			vertexColors: true // Enable per-vertex colors
+		});
 		const mesh = new THREE.Points(geometry, material);
 
 		scene.add(mesh);
 
 		const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+		renderer.setPixelRatio(window.devicePixelRatio);
 		renderer.setClearColor(0x000000, 0); // transparent background
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
+
+		// Set up raycasting for mouse interaction
+		const raycaster = new THREE.Raycaster();
+		const mouse = new THREE.Vector2();
+		let lastHoveredIndex: number | null = null;
+
+		function onMouseMove(event: MouseEvent) {
+			const rect = container.getBoundingClientRect();
+			mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+			mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+			raycaster.setFromCamera(mouse, camera);
+			const intersects = raycaster.intersectObject(mesh);
+
+			if (intersects.length > 0) {
+				const intersect = intersects[0];
+				if (intersect.index !== undefined) {
+					const index = intersect.index;
+					
+					// Only toggle if we've moved to a different point
+					if (lastHoveredIndex !== index) {
+						// Check current color and toggle
+						const r = colors[index * 3];
+						const g = colors[index * 3 + 1];
+						const b = colors[index * 3 + 2];
+						
+						// Check if point is currently black (or very dark)
+						const isBlack = r < 0.5 && g < 0.5 && b < 0.5;
+						
+						if (isBlack) {
+							// Change to white
+							colors[index * 3] = whiteColor[0];
+							colors[index * 3 + 1] = whiteColor[1];
+							colors[index * 3 + 2] = whiteColor[2];
+						} else {
+							// Change to black
+							colors[index * 3] = blackColor[0];
+							colors[index * 3 + 1] = blackColor[1];
+							colors[index * 3 + 2] = blackColor[2];
+						}
+						
+						geometry.attributes.color.needsUpdate = true;
+						lastHoveredIndex = index;
+					}
+				}
+			} else {
+				// Reset tracking when mouse leaves canvas
+				lastHoveredIndex = null;
+			}
+		}
+
+		container.addEventListener('mousemove', onMouseMove);
 
 		function animate() {
 			requestAnimationFrame(animate);
