@@ -135,13 +135,10 @@
 	<h1 class="font-decorative size-step-7">Alex Ledger</h1>
 	<div class="size-step-2 hero-fade-in">
 		<p>
-			I'm a web designer and developer from Portland, Oregon. I work with businesses to design and
-			build websites.
+			I’m a freelance web developer and designer based in Portland, Oregon.
 		</p>
 		<p>
-			I specialize in creating beautiful, functional websites that help businesses grow. I focus on
-			combining good fundamentals— strong, clear copy and design— with a sprinkle of magic to make
-			the experience fun and attention-grabbing.
+			I  create interactive, animated websites that help businesses clearly communicate what they do and what makes them different.
 		</p>
 	</div>
 </section>
