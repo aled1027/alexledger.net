@@ -10,6 +10,7 @@
 		renderer: THREE.WebGLRenderer,
 		effect: any,
 		videoPlane: THREE.Mesh;
+	let container: HTMLDivElement;
 
 	function init(): void {
 		const width = window.innerWidth;
@@ -30,7 +31,7 @@
 		video.autoplay = true;
 		video.playsInline = true;
 		video.style.display = 'none';
-		document.body.appendChild(video);
+		container.appendChild(video);
 		video.play();
 
 		const videoTexture = new THREE.VideoTexture(video);
@@ -63,7 +64,7 @@
 		effect.domElement.style.width = '100%';
 		effect.domElement.style.height = '100%';
 		effect.domElement.style.zIndex = '10';
-		document.body.appendChild(effect.domElement);
+		container.appendChild(effect.domElement);
 		window.addEventListener('resize', onWindowResize);
 	}
 
@@ -86,8 +87,14 @@
 		effect.setSize(width, height);
 	}
 
-	onMount((): void => {
+	onMount(() => {
 		init();
+		return () => {
+			window.removeEventListener('resize', onWindowResize);
+			if (container) {
+				container.innerHTML = '';
+			}
+		};
 	});
 </script>
 
@@ -113,4 +120,4 @@
 		>.
 	</p>
 </div>
-<div class="canvas-container"></div>
+<div class="canvas-container" bind:this={container}></div>
