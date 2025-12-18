@@ -52,11 +52,12 @@
 			const gridHalfHeight = gridHeight / 2;
 			const gridHalfWidth = gridWidth / 2;
 
+			// Determine the z that's needed for the camera to fit the grid vertically and horizontally
 			const fitZVert = (gridHalfHeight + margin) / Math.tan(fovRadians / 2);
 			const fitZHoriz = (gridHalfWidth + margin) / (Math.tan(fovRadians / 2) * aspect);
-			const fitZ = Math.max(fitZVert, fitZHoriz);
+			const z = Math.max(fitZVert, fitZHoriz);
 
-			this.camera.position.set(0, 0, fitZ);
+			this.camera.position.set(0, 0, z);
 			this.camera.lookAt(0, 0, 0);
 			this.scene.add(this.camera);
 		}
@@ -173,8 +174,8 @@
 	});
 </script>
 
-<div class="my-l">
-	<h2>White Board</h2>
+<div class="my-l demo-container">
+	<h1>White Board</h1>
 	<p>
 		<a
 			target="_blank"
@@ -197,6 +198,10 @@
 		width: 100%;
 		height: 60vh;
 		margin-inline: auto;
-		cursor: grab;
+		cursor: pointer;
+	}
+
+	p {
+		max-width: 55rem;
 	}
 </style>
