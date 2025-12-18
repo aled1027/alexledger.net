@@ -22,6 +22,8 @@
 	import CatNeshyba from '$lib/assets/catneshyba.png?enhanced&format=webp';
 	// @ts-ignore -- Image imports with query parameters
 	import Vyx from '$lib/assets/vyx.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import MedicalNoteGenerator from '$lib/assets/medical-note-generator.png?enhanced&format=webp';
 
 	const projects: Project[] = [
 		{
@@ -51,6 +53,13 @@
 			imageAlt: 'Screenshot of the Vyx website',
 			cardColor: '#8B8B8B',
 			link: 'https://vyx.gg'
+		},
+		{
+			projectName: 'Medical Note Generator',
+			imageUrl: MedicalNoteGenerator,
+			imageAlt: 'Screenshot of the Medical Note Generator website',
+			cardColor: '#E6E6E6',
+			link: 'https://github.com/johnyquest7/rust_med',
 		},
 		{
 			projectName: 'Seastar',
