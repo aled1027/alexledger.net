@@ -31,6 +31,11 @@
 			title: 'Asciied Video',
 			date: 'September 26, 2025',
 			link: '/demos/asciied-video'
+		},
+		{
+			title: 'White Board',
+			date: 'December 18, 2025',
+			link: '/demos/white-board'
 		}
 	];
 
