@@ -24,6 +24,8 @@
 	import Vyx from '$lib/assets/vyx.png?enhanced&format=webp';
 	// @ts-ignore -- Image imports with query parameters
 	import MedicalNoteGenerator from '$lib/assets/medical-note-generator.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import Ethyca from '$lib/assets/ethyca.png?enhanced&format=webp';
 
 	const projects: Project[] = [
 		{
@@ -53,6 +55,13 @@
 			imageAlt: 'Screenshot of the Vyx website',
 			cardColor: '#8B8B8B',
 			link: 'https://vyx.gg'
+		},
+		{
+			projectName: 'Ethyca Product Animation',
+			imageUrl: Ethyca,
+			imageAlt: 'Screenshot of the Ethyca Product Animation',
+			cardColor: '#E8E8E8',
+			link: ''
 		},
 		{
 			projectName: 'Medical Note Generator',

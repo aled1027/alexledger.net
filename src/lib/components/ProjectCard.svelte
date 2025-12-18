@@ -6,21 +6,39 @@
 </script>
 
 <article class="project-card" style="--card-color: {theCardColor}">
-	<a href={project.link} target="_blank" rel="noopener noreferrer">
-		<div class="project-card__middle-entry project-card__scale-animation padding-4">
-			<div class="project-card__asset-wrapper">
-				<enhanced:img
-					class="project-card__cover-asset"
-					src={project.imageUrl}
-					alt={project.imageAlt}
-					sizes="(min-width: 768px) 50vw, 100vw"
-				/>
+	{#if project.link}
+		<a href={project.link} target="_blank" rel="noopener noreferrer">
+			<div class="project-card__middle-entry project-card__scale-animation padding-4">
+				<div class="project-card__asset-wrapper">
+					<enhanced:img
+						class="project-card__cover-asset"
+						src={project.imageUrl}
+						alt={project.imageAlt}
+						sizes="(min-width: 768px) 50vw, 100vw"
+					/>
+				</div>
+				<div class="project-card__title-wrapper">
+					<h3 class="project-card__title">{project.projectName}</h3>
+				</div>
 			</div>
-			<div class="project-card__title-wrapper">
-				<h3 class="project-card__title">{project.projectName}</h3>
+		</a>
+	{:else}
+		<div>
+			<div class="project-card__middle-entry project-card__scale-animation padding-4">
+				<div class="project-card__asset-wrapper">
+					<enhanced:img
+						class="project-card__cover-asset"
+						src={project.imageUrl}
+						alt={project.imageAlt}
+						sizes="(min-width: 768px) 50vw, 100vw"
+					/>
+				</div>
+				<div class="project-card__title-wrapper">
+					<h3 class="project-card__title">{project.projectName}</h3>
+				</div>
 			</div>
 		</div>
-	</a>
+	{/if}
 </article>
 
 <style>
