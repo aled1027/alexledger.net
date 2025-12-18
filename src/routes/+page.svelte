@@ -20,6 +20,8 @@
 	import LlmToolsAnki from '$lib/assets/llm-tools-anki.png?enhanced&format=webp';
 	// @ts-ignore -- Image imports with query parameters
 	import CatNeshyba from '$lib/assets/catneshyba.png?enhanced&format=webp';
+	// @ts-ignore -- Image imports with query parameters
+	import Vyx from '$lib/assets/vyx.png?enhanced&format=webp';
 
 	const projects: Project[] = [
 		{
@@ -42,6 +44,13 @@
 			imageAlt: 'Screenshot of the Give Max Life website',
 			cardColor: '#9335D1',
 			link: 'https://givemaxlife.com/'
+		},
+		{
+			projectName: 'Vyx',
+			imageUrl: Vyx,
+			imageAlt: 'Screenshot of the Vyx website',
+			cardColor: '#8B8B8B',
+			link: 'https://vyx.gg'
 		},
 		{
 			projectName: 'Seastar',
