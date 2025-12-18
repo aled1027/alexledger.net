@@ -61,7 +61,7 @@
 			imageUrl: Ethyca,
 			imageAlt: 'Screenshot of the Ethyca Product Animation',
 			cardColor: '#E8E8E8',
-			link: ''
+			link: '/ethyca.mp4'
 		},
 		{
 			projectName: 'Medical Note Generator',
