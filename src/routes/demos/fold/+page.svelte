@@ -54,13 +54,16 @@
 				void main() {
 					vUv = uv;
 
-					float radius = -0.8;
+					float radius = -1.0;
 					vec3 center = vec3(0.,0., radius);
 					vec3 posSpherical = position - center;
 
-					// Normalize yz
+					// Normalize yz. This makes it a roll that with the ends along the x-axis
 					vec2 normalizedSpherericalYZ = normalize(posSpherical.yz);
 					vec3 posSphericalNormalized = vec3(posSpherical.x, normalizedSpherericalYZ.x, normalizedSpherericalYZ.y);
+
+					// Interpolate between position and posSphericalNormalized based on uProgress
+					// So it slowly becomes more spherical as uProgress increases
 					vec3 pos = mix(position, posSphericalNormalized, uProgress);
 					gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 				}
