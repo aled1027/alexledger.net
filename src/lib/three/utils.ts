@@ -55,4 +55,3 @@ export abstract class ThreeEffect {
 	 */
 	protected abstract applyEffect(scene: THREE.Scene, camera: THREE.Camera): void;
 }
-

@@ -537,8 +537,8 @@
 		</li>
 	</ul>
 	<p>
-		Note that this demo is not optimized for mobile and small devices, so it may load slowly, run slowly, or
-		not work.
+		Note that this demo is not optimized for mobile and small devices, so it may load slowly, run
+		slowly, or not work.
 	</p>
 	<div class="mt-xl three-container" bind:this={container}></div>
 </div>

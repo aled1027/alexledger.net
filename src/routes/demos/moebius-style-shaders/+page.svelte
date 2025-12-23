@@ -11,7 +11,7 @@
 
 	class MoebiusEffect extends ThreeEffect {
 		private strength: number;
-		
+
 		// Scene color is an off-screen buffer that's a virtual canvas
 		private sceneColor: THREE.WebGLRenderTarget;
 		private scene: THREE.Scene;
@@ -70,7 +70,7 @@
 
 					vec4 color = texture2D(tDiffuse, uv);
 					gl_FragColor = vec4(color.r + 0.1, color.g, color.b, color.a);
-				}`,
+				}`
 			});
 
 			const quad = new THREE.Mesh(plane, this.material);
@@ -98,7 +98,7 @@
 
 	onMount(() => {
 		const scene = new THREE.Scene();
-		scene.background = new THREE.Color(0x4E44BB);
+		scene.background = new THREE.Color(0x4e44bb);
 		const aspect = container.clientWidth / container.clientHeight;
 		const camera = new THREE.PerspectiveCamera(
 			65, // fov
@@ -123,7 +123,7 @@
 
 		// Add Sphere
 		const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-		const sphereColor = new THREE.Color("orange");
+		const sphereColor = new THREE.Color('orange');
 		const sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereColor });
 		const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 		sphere.castShadow = true;
@@ -132,7 +132,7 @@
 
 		// Add pink cube
 		const cubeGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-		const cubeColor = new THREE.Color("pink");
+		const cubeColor = new THREE.Color('pink');
 		const cubeMaterial = new THREE.MeshStandardMaterial({ color: cubeColor });
 		const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 		cube.castShadow = true;
@@ -149,12 +149,10 @@
 		ground.rotation.x = -Math.PI / 2;
 		scene.add(ground);
 
-
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.shadowMap.enabled = true;
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
-
 
 		const moebiusEffect = new MoebiusEffect(renderer, scene, camera, 0.1);
 		moebiusEffect.setSize(container.clientWidth, container.clientHeight);

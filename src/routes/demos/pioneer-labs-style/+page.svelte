@@ -7,7 +7,7 @@
 	let overlayContentEle: HTMLDivElement;
 	let pioneerWrapper: HTMLDivElement; // Add this
 
-	/* 
+	/*
 	 * TODO:
 	 * - why are the vhs not adding up like I expect them to?
 	 * - Why is this so bad on mobile?
@@ -147,7 +147,6 @@
 
 		width: max-content;
 		margin-inline: auto;
-
 	}
 
 	.content2 {

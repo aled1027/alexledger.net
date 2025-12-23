@@ -12,7 +12,7 @@
 	const FEED_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 	const FETCH_TIMEOUT = 10000; // 10 seconds
 	const MAX_STORAGE_QUOTA = 100 * 1024 * 1024; // 100MB limit for audio storage
-	
+
 	// CORS Proxy - using a public CORS proxy service
 	// This helps bypass CORS restrictions when fetching RSS feeds from different domains
 	// We try direct fetch first, then fallback to proxy if CORS blocks the request
@@ -29,7 +29,7 @@
 	const DATE_FORMAT_OPTIONS = {
 		date: {
 			weekday: 'long',
-			month: 'long', 
+			month: 'long',
 			day: 'numeric'
 		},
 		time: {
@@ -99,11 +99,11 @@
 	// UTILITY FUNCTIONS
 	function formatEpisodeDate(pubDate: string): { date: string; time: string } {
 		const date = new Date(pubDate);
-		
+
 		if (isNaN(date.getTime())) {
 			return { date: 'Invalid Date', time: 'Invalid Time' };
 		}
-		
+
 		return {
 			date: date.toLocaleDateString('en-US', DATE_FORMAT_OPTIONS.date),
 			time: date.toLocaleTimeString('en-US', DATE_FORMAT_OPTIONS.time)
@@ -134,7 +134,9 @@
 		}
 	}
 
-	function setAudioCache(cache: Record<string, { data: string; timestamp: number; size: number }>): void {
+	function setAudioCache(
+		cache: Record<string, { data: string; timestamp: number; size: number }>
+	): void {
 		try {
 			localStorage.setItem(AUDIO_CACHE_KEY, JSON.stringify(cache));
 		} catch (error) {
@@ -150,35 +152,39 @@
 	function cleanupOldAudio(): void {
 		const cache = getAudioCache();
 		const entries = Object.entries(cache);
-		
+
 		// Sort by timestamp (oldest first)
 		entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-		
+
 		let currentUsage = getStorageUsage();
-		
+
 		// Remove oldest entries until we're under quota
 		while (currentUsage > MAX_STORAGE_QUOTA && entries.length > 0) {
 			const [key, item] = entries.shift()!;
 			delete cache[key];
 			currentUsage -= item.size;
 		}
-		
+
 		setAudioCache(cache);
 	}
 
-	async function downloadAudio(audioUrl: string, feedIdx: number, episodeIdx: number): Promise<void> {
+	async function downloadAudio(
+		audioUrl: string,
+		feedIdx: number,
+		episodeIdx: number
+	): Promise<void> {
 		const feed = feeds[feedIdx];
 		const episode = feed.episodes[episodeIdx];
-		
+
 		if (!episode.enclosure) return;
-		
+
 		const audioKey = generateAudioKey(audioUrl);
-		
+
 		// Update download state
 		episode.enclosure.downloadState = 'downloading';
 		episode.enclosure.downloadProgress = 0;
 		episode.enclosure.localStorageKey = audioKey;
-		
+
 		try {
 			// Check if already downloaded
 			const audioCache = getAudioCache();
@@ -187,59 +193,59 @@
 				episode.enclosure.downloadProgress = 100;
 				return;
 			}
-			
+
 			// Clean up old audio if needed
 			cleanupOldAudio();
-			
+
 			// Download the audio file
 			const response = await fetch(audioUrl);
 			if (!response.ok) {
 				throw new Error(`Failed to download audio: ${response.statusText}`);
 			}
-			
+
 			const contentLength = response.headers.get('content-length');
 			const total = contentLength ? parseInt(contentLength, 10) : 0;
-			
+
 			const reader = response.body?.getReader();
 			if (!reader) {
 				throw new Error('No response body reader available');
 			}
-			
+
 			const chunks: Uint8Array[] = [];
 			let received = 0;
-			
+
 			while (true) {
 				const { done, value } = await reader.read();
 				if (done) break;
-				
+
 				chunks.push(value);
 				received += value.length;
-				
+
 				// Update progress
 				if (total > 0) {
 					episode.enclosure.downloadProgress = Math.round((received / total) * 100);
 				}
 			}
-			
+
 			// Combine chunks and convert to base64
 			const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
 			const audioData = new Uint8Array(totalLength);
 			let offset = 0;
-			
+
 			for (const chunk of chunks) {
 				audioData.set(chunk, offset);
 				offset += chunk.length;
 			}
-			
+
 			// Convert to base64 for storage (process in chunks to avoid call stack overflow)
 			let base64Data = '';
 			const chunkSize = 8192; // Process 8KB at a time
-			
+
 			for (let i = 0; i < audioData.length; i += chunkSize) {
 				const chunk = audioData.slice(i, i + chunkSize);
 				base64Data += btoa(String.fromCharCode(...chunk));
 			}
-			
+
 			// Store in cache
 			const currentCache = getAudioCache();
 			currentCache[audioKey] = {
@@ -248,11 +254,10 @@
 				size: base64Data.length
 			};
 			setAudioCache(currentCache);
-			
+
 			// Update episode state
 			episode.enclosure.downloadState = 'downloaded';
 			episode.enclosure.downloadProgress = 100;
-			
 		} catch (error) {
 			console.error('Error downloading audio:', error);
 			episode.enclosure.downloadState = 'error';
@@ -263,13 +268,13 @@
 	function deleteDownloadedAudio(feedIdx: number, episodeIdx: number): void {
 		const feed = feeds[feedIdx];
 		const episode = feed.episodes[episodeIdx];
-		
+
 		if (!episode.enclosure?.localStorageKey) return;
-		
+
 		const cache = getAudioCache();
 		delete cache[episode.enclosure.localStorageKey];
 		setAudioCache(cache);
-		
+
 		// Reset download state
 		episode.enclosure.downloadState = 'not-downloaded';
 		episode.enclosure.downloadProgress = 0;
@@ -279,14 +284,14 @@
 	function getAudioUrl(feedIdx: number, episodeIdx: number): string | null {
 		const feed = feeds[feedIdx];
 		const episode = feed.episodes[episodeIdx];
-		
+
 		if (!episode.enclosure) return null;
-		
+
 		// If downloaded, return blob URL from local storage
 		if (episode.enclosure.downloadState === 'downloaded' && episode.enclosure.localStorageKey) {
 			const cache = getAudioCache();
 			const cachedAudio = cache[episode.enclosure.localStorageKey];
-			
+
 			if (cachedAudio) {
 				try {
 					// Convert base64 back to binary
@@ -295,7 +300,7 @@
 					for (let i = 0; i < binaryString.length; i++) {
 						bytes[i] = binaryString.charCodeAt(i);
 					}
-					
+
 					// Create blob URL
 					const blob = new Blob([bytes], { type: episode.enclosure.type });
 					return URL.createObjectURL(blob);
@@ -306,7 +311,7 @@
 				}
 			}
 		}
-		
+
 		// Return original URL
 		return episode.enclosure.url;
 	}
@@ -316,20 +321,20 @@
 			// Create abort controller for this request
 			abortController = new AbortController();
 			const timeoutId = setTimeout(() => abortController?.abort(), FETCH_TIMEOUT);
-			
+
 			// Try direct fetch first, then fallback to CORS proxy if needed
 			let response: Response;
 			let xmlText: string;
-			
+
 			try {
 				// First attempt: direct fetch
 				response = await fetch(feedUrl, {
 					headers: {
-						'Accept': 'application/rss+xml, application/xml, text/xml'
+						Accept: 'application/rss+xml, application/xml, text/xml'
 					},
 					signal: abortController.signal
 				});
-				
+
 				if (response.ok) {
 					xmlText = await response.text();
 				} else {
@@ -337,23 +342,23 @@
 				}
 			} catch (directError) {
 				console.log('Direct fetch failed, trying CORS proxy:', directError);
-				
+
 				// Second attempt: use CORS proxy
 				const proxyUrl = CORS_PROXY + encodeURIComponent(feedUrl);
 				response = await fetch(proxyUrl, {
 					headers: {
-						'Accept': 'application/rss+xml, application/xml, text/xml'
+						Accept: 'application/rss+xml, application/xml, text/xml'
 					},
 					signal: abortController.signal
 				});
-				
+
 				if (!response.ok) {
 					throw new Error(`CORS proxy fetch failed: ${response.statusText}`);
 				}
-				
+
 				xmlText = await response.text();
 			}
-			
+
 			clearTimeout(timeoutId);
 
 			// Parse XML to extract feed data
@@ -367,9 +372,9 @@
 
 			const title = channel.querySelector('title')?.textContent || 'Unknown Feed';
 			const description = channel.querySelector('description')?.textContent || '';
-			
+
 			// Extract icon from various possible locations
-			const icon = 
+			const icon =
 				channel.querySelector('image url')?.textContent ||
 				channel.querySelector('image')?.getAttribute('href') ||
 				channel.querySelector('itunes\\:image')?.getAttribute('href') ||
@@ -441,7 +446,7 @@
 				const audioKey = generateAudioKey(enclosure.url);
 				const cache = getAudioCache();
 				const isDownloaded = cache[audioKey] !== undefined;
-				
+
 				enclosure = {
 					...enclosure,
 					downloadState: isDownloaded ? 'downloaded' : 'not-downloaded',
@@ -543,7 +548,7 @@
 
 	function removeFeedConfig(url: string): void {
 		const configs = getFeedConfigs();
-		const filteredConfigs = configs.filter(config => config.url !== url);
+		const filteredConfigs = configs.filter((config) => config.url !== url);
 		setFeedConfigs(filteredConfigs);
 	}
 
@@ -558,20 +563,20 @@
 	async function loadFeeds(): Promise<void> {
 		const feedConfigs = getFeedConfigs();
 		const cachedFeeds = getCachedFeeds();
-		
+
 		// Start with cached feeds to preserve user data
 		const existingFeeds = cachedFeeds || [];
-		const existingUrls = new Set(existingFeeds.map(feed => feed.feedUrl));
-		
+		const existingUrls = new Set(existingFeeds.map((feed) => feed.feedUrl));
+
 		// Find new feeds that aren't in cache
-		const newConfigs = feedConfigs.filter(config => !existingUrls.has(config.url));
-		
+		const newConfigs = feedConfigs.filter((config) => !existingUrls.has(config.url));
+
 		// If no new feeds and all configs exist in cache, use cached feeds
 		if (newConfigs.length === 0 && feedConfigs.length === existingFeeds.length) {
 			feeds = existingFeeds;
 			return;
 		}
-		
+
 		// Fetch new feeds and merge with existing ones
 		const newFeeds: Feed[] = [];
 		for (const config of newConfigs) {
@@ -581,14 +586,14 @@
 				newFeeds.push(feed);
 			}
 		}
-		
+
 		// Merge existing feeds with new feeds, preserving user data
 		const mergedFeeds = [...existingFeeds, ...newFeeds];
-		
+
 		// Filter out feeds that are no longer in configs (for removed feeds)
-		const configUrls = new Set(feedConfigs.map(config => config.url));
-		const finalFeeds = mergedFeeds.filter(feed => feed.feedUrl && configUrls.has(feed.feedUrl));
-		
+		const configUrls = new Set(feedConfigs.map((config) => config.url));
+		const finalFeeds = mergedFeeds.filter((feed) => feed.feedUrl && configUrls.has(feed.feedUrl));
+
 		feeds = finalFeeds;
 		cacheFeeds(finalFeeds);
 	}
@@ -599,7 +604,7 @@
 	// Load feeds on component mount
 	onMount(() => {
 		loadFeeds();
-		
+
 		return () => {
 			// Cleanup on component destroy
 			if (abortController) {
@@ -626,9 +631,7 @@
 	let showFeedSettings = $state(false);
 
 	// Memoized computed values
-	let totalUnreadCount = $derived(
-		feeds.reduce((total, feed) => total + feed.numUnread, 0)
-	);
+	let totalUnreadCount = $derived(feeds.reduce((total, feed) => total + feed.numUnread, 0));
 
 	let storageUsage = $derived(getStorageUsage());
 	let storageUsageFormatted = $derived(formatFileSize(storageUsage));
@@ -657,13 +660,14 @@
 
 	function setState(newState: 'watched' | 'unwatched') {
 		if (selectedFeedEntryIdx === null || !selectedFeed) return;
-		
+
 		const episode = feeds[selectedFeedIdx].episodes[selectedFeedEntryIdx];
 		episode.state = newState;
-		
+
 		// More efficient unread count calculation
-		feeds[selectedFeedIdx].numUnread = feeds[selectedFeedIdx].episodes
-			.filter(ep => ep.state === 'unwatched').length;
+		feeds[selectedFeedIdx].numUnread = feeds[selectedFeedIdx].episodes.filter(
+			(ep) => ep.state === 'unwatched'
+		).length;
 	}
 
 	function markAllAsRead(feedIdx: number) {
@@ -692,7 +696,7 @@
 
 	async function addNewFeed() {
 		if (!newFeedUrl.trim()) return;
-		
+
 		try {
 			// Test if the URL is valid by fetching it
 			const rssFeed = await fetchRSSFeed(newFeedUrl.trim());
@@ -708,7 +712,9 @@
 		} catch (error) {
 			console.error('Error adding feed:', error);
 			if (error instanceof Error && error.message.includes('CORS')) {
-				alert('Unable to fetch feed due to CORS restrictions. The feed may not be accessible from this domain.');
+				alert(
+					'Unable to fetch feed due to CORS restrictions. The feed may not be accessible from this domain.'
+				);
 			} else {
 				alert('Error adding feed. Please check the URL and try again.');
 			}
@@ -753,7 +759,7 @@
 				</div>
 				<div class="feeds-list">
 					<div class="add-feed-section">
-						<button class="add-feed-btn" onclick={() => showAddFeedDialog = true}>
+						<button class="add-feed-btn" onclick={() => (showAddFeedDialog = true)}>
 							<span class="add-icon">+</span>
 							<span>Add Feed</span>
 						</button>
@@ -764,7 +770,7 @@
 						</div>
 					{:else}
 						{#each feeds as feed, feedIdx}
-							<div 
+							<div
 								class="feed-item-container"
 								data-selected={feedIdx === selectedFeedIdx}
 								onclick={() => {
@@ -776,15 +782,17 @@
 										selectedFeedEntryIdx = null;
 									}
 								}}
-								onkeydown={(e) => e.key === 'Enter' && (() => {
-									selectedFeedIdx = feedIdx;
-									if (feeds[selectedFeedIdx].episodes.length > 0) {
-										selectedFeedEntryIdx = 0;
-										mobileView = 'entries';
-									} else {
-										selectedFeedEntryIdx = null;
-									}
-								})()}
+								onkeydown={(e) =>
+									e.key === 'Enter' &&
+									(() => {
+										selectedFeedIdx = feedIdx;
+										if (feeds[selectedFeedIdx].episodes.length > 0) {
+											selectedFeedEntryIdx = 0;
+											mobileView = 'entries';
+										} else {
+											selectedFeedEntryIdx = null;
+										}
+									})()}
 								role="button"
 								tabindex="0"
 								aria-label={`Select feed: ${feed.title}`}
@@ -831,12 +839,15 @@
 					<button class="context-menu-item" onclick={() => markAllAsRead(contextMenuFeedIdx)}>
 						Mark all as read
 					</button>
-					<button class="context-menu-item" onclick={() => {
-						if (feeds[contextMenuFeedIdx]) {
-							removeFeed(feeds[contextMenuFeedIdx].feedUrl || '');
-						}
-						hideContextMenu();
-					}}>
+					<button
+						class="context-menu-item"
+						onclick={() => {
+							if (feeds[contextMenuFeedIdx]) {
+								removeFeed(feeds[contextMenuFeedIdx].feedUrl || '');
+							}
+							hideContextMenu();
+						}}
+					>
 						Remove feed
 					</button>
 				</div>
@@ -850,19 +861,24 @@
 						showAddFeedDialog = false;
 						newFeedUrl = '';
 					}}
-					onkeydown={(e) => e.key === 'Escape' && (() => {
-						showAddFeedDialog = false;
-						newFeedUrl = '';
-					})()}
+					onkeydown={(e) =>
+						e.key === 'Escape' &&
+						(() => {
+							showAddFeedDialog = false;
+							newFeedUrl = '';
+						})()}
 					aria-label="Close add feed dialog"
 				></button>
 				<div class="add-feed-dialog" role="dialog">
 					<div class="dialog-header">
 						<h2>Add New Feed</h2>
-						<button class="close-btn" onclick={() => {
-							showAddFeedDialog = false;
-							newFeedUrl = '';
-						}}>&times;</button>
+						<button
+							class="close-btn"
+							onclick={() => {
+								showAddFeedDialog = false;
+								newFeedUrl = '';
+							}}>&times;</button
+						>
 					</div>
 					<div class="dialog-content">
 						<label for="feed-url">RSS Feed URL:</label>
@@ -875,10 +891,13 @@
 						/>
 					</div>
 					<div class="dialog-actions">
-						<button class="action-btn-secondary" onclick={() => {
-							showAddFeedDialog = false;
-							newFeedUrl = '';
-						}}>Cancel</button>
+						<button
+							class="action-btn-secondary"
+							onclick={() => {
+								showAddFeedDialog = false;
+								newFeedUrl = '';
+							}}>Cancel</button
+						>
 						<button class="action-btn-primary" onclick={addNewFeed}>Add Feed</button>
 					</div>
 				</div>
@@ -985,23 +1004,34 @@
 
 									<div class="download-controls">
 										{#if selectedFeedEntry.enclosure?.downloadState === 'downloaded'}
-											<button 
+											<button
 												class="action-btn-secondary download-btn"
-												onclick={() => deleteDownloadedAudio(selectedFeedIdx, selectedFeedEntryIdx!)}
+												onclick={() =>
+													deleteDownloadedAudio(selectedFeedIdx, selectedFeedEntryIdx!)}
 											>
 												🗑️ Delete Download
 											</button>
 										{:else if selectedFeedEntry.enclosure?.downloadState === 'not-downloaded'}
-											<button 
+											<button
 												class="action-btn-primary download-btn"
-												onclick={() => downloadAudio(selectedFeedEntry.enclosure!.url, selectedFeedIdx, selectedFeedEntryIdx!)}
+												onclick={() =>
+													downloadAudio(
+														selectedFeedEntry.enclosure!.url,
+														selectedFeedIdx,
+														selectedFeedEntryIdx!
+													)}
 											>
 												⬇️ Download Audio
 											</button>
 										{:else if selectedFeedEntry.enclosure?.downloadState === 'error'}
-											<button 
+											<button
 												class="action-btn-primary download-btn"
-												onclick={() => downloadAudio(selectedFeedEntry.enclosure!.url, selectedFeedIdx, selectedFeedEntryIdx!)}
+												onclick={() =>
+													downloadAudio(
+														selectedFeedEntry.enclosure!.url,
+														selectedFeedIdx,
+														selectedFeedEntryIdx!
+													)}
 											>
 												🔄 Retry Download
 											</button>
@@ -1011,7 +1041,8 @@
 									<div class="audio-container">
 										<audio controls preload="metadata">
 											<source
-												src={getAudioUrl(selectedFeedIdx, selectedFeedEntryIdx!) || selectedFeedEntry.enclosure.url}
+												src={getAudioUrl(selectedFeedIdx, selectedFeedEntryIdx!) ||
+													selectedFeedEntry.enclosure.url}
 												type={selectedFeedEntry.enclosure.type}
 											/>
 											Your browser does not support the audio element.
@@ -1102,8 +1133,6 @@
 		overflow-y: auto;
 		padding: var(--size-2) 0;
 	}
-
-
 
 	.feed-name {
 		flex: 1;

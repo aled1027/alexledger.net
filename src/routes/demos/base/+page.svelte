@@ -11,7 +11,12 @@
 	onMount(() => {
 		// We'll do something
 		const scene = new THREE.Scene();
-		const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+		const camera = new THREE.PerspectiveCamera(
+			75,
+			container.clientWidth / container.clientHeight,
+			0.1,
+			1000
+		);
 		camera.position.z = 5;
 		scene.add(camera);
 
@@ -19,7 +24,6 @@
 		const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 		const cube = new THREE.Mesh(geometry, material);
 		scene.add(cube);
-
 
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setSize(container.clientWidth, container.clientHeight);
@@ -33,15 +37,12 @@
 			renderer.render(scene, camera);
 		}
 		animate();
-
 	});
 </script>
 
 <div class="my-l">
 	<h2>Moebius Style Shaders</h2>
-	<p>
-		Description
-	</p>
+	<p>Description</p>
 
 	<div class="mt-xl three-container" bind:this={container}></div>
 </div>

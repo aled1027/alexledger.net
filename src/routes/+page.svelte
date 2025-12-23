@@ -68,7 +68,7 @@
 			imageUrl: MedicalNoteGenerator,
 			imageAlt: 'Screenshot of the Medical Note Generator website',
 			cardColor: '#E6E6E6',
-			link: 'https://github.com/johnyquest7/rust_med',
+			link: 'https://github.com/johnyquest7/rust_med'
 		},
 		{
 			projectName: 'Seastar',
@@ -134,11 +134,10 @@
 <section class="hero">
 	<h1 class="font-decorative size-step-7">Alex Ledger</h1>
 	<div class="size-step-2 hero-fade-in">
+		<p>I’m a freelance web developer and designer based in Portland, Oregon.</p>
 		<p>
-			I’m a freelance web developer and designer based in Portland, Oregon.
-		</p>
-		<p>
-			I  create interactive, animated websites that help businesses clearly communicate what they do and what makes them different.
+			I create interactive, animated websites that help businesses clearly communicate what they do
+			and what makes them different.
 		</p>
 	</div>
 </section>
