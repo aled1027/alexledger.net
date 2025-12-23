@@ -53,7 +53,16 @@
 
 				void main() {
 					vUv = uv;
-					gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+					float radius = -0.8;
+					vec3 center = vec3(0.,0., radius);
+					vec3 posSpherical = position - center;
+
+					// Normalize yz
+					vec2 normalizedSpherericalYZ = normalize(posSpherical.yz);
+					vec3 posSphericalNormalized = vec3(posSpherical.x, normalizedSpherericalYZ.x, normalizedSpherericalYZ.y);
+					vec3 pos = mix(position, posSphericalNormalized, uProgress);
+					gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 				}
 			`,
 				fragmentShader: `
@@ -73,7 +82,7 @@
 
 			const planeAspect = 1.289;
 			this.mesh = new THREE.Mesh(
-				new THREE.PlaneGeometry(10 * planeAspect, 10, 10, 10),
+				new THREE.PlaneGeometry(10 * planeAspect, 10, 100, 100),
 				shaderMaterial
 			);
 			this.scene.add(this.mesh);
@@ -97,7 +106,7 @@
 
 	let sketch: Sketch;
 	let container: HTMLDivElement;
-	let progress = $state(0);
+	let progress = $state(1.0);
 
 	onMount(() => {
 		sketch = new Sketch(container);
