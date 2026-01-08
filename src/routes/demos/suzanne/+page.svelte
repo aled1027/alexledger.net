@@ -44,6 +44,7 @@
 				uniform float uTime;
 				uniform float uMosaic;
 				uniform float uProgress;
+				varying vec3 vNormal;
 				void main() {
 				    vec3 pos = position;
 					vec3 posPixelated = floor(pos * uMosaic) / uMosaic;
@@ -51,17 +52,19 @@
 
 					gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 
+					vNormal = normalMatrix * normal;
 
 					vUv = uv;
 				}
 			`,
 				fragmentShader: `
 				varying vec2 vUv;
+				varying vec3 vNormal;
 				uniform float uTime;
 				uniform float uMosaic;
 				uniform float uProgress;
 				void main() {
-					gl_FragColor = vec4(vUv.y, 0.5, 0.8, 1.0);
+					gl_FragColor = vec4(vNormal, 1.0);
 				}
 			`
 			});
