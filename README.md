@@ -1,8 +1,8 @@
 # Alex Ledger
 
-## TODO:
+To view posts from before I updated alexledger.net: https://github.com/aled1027/alexledger.net/tree/c6257355cac26d7f3fa7214b7e5d6903b1da8eac/src/content/posts
 
-- Copy posts over
+## TODO:
 
 ## Checklist
 
