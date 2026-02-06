@@ -63,6 +63,26 @@
 		const videoTextures: THREE.VideoTexture[] = [];
 		const videoElements: HTMLVideoElement[] = [];
 
+		// Stretch video texture to cover the whole square face (center-crop, no letterboxing)
+		function setTextureCover(texture: THREE.VideoTexture, video: HTMLVideoElement) {
+			const w = video.videoWidth;
+			const h = video.videoHeight;
+			if (!w || !h) return;
+			const r = w / h;
+			texture.offset.set(0, 0);
+			texture.repeat.set(1, 1);
+			if (r > 1) {
+				// Landscape: crop sides to get a square
+				texture.offset.set((1 - 1 / r) / 2, 0);
+				texture.repeat.set(1 / r, 1);
+			} else if (r < 1) {
+				// Portrait: crop top/bottom to get a square
+				texture.offset.set(0, (1 - r) / 2);
+				texture.repeat.set(1, r);
+			}
+			texture.needsUpdate = true;
+		}
+
 		// Create 6 video elements, one for each face of the cube
 		for (let i = 0; i < 6; i++) {
 			const video = document.createElement('video');
@@ -84,6 +104,11 @@
 			videoTexture.anisotropy = maxAnisotropy;
 			videoTexture.format = THREE.RGBAFormat;
 			videoTextures.push(videoTexture);
+
+			// When metadata loads, stretch texture to cover the face (no letterboxing)
+			video.addEventListener('loadedmetadata', () => setTextureCover(videoTexture, video));
+			// Some sources only report dimensions after playing
+			video.addEventListener('loadeddata', () => setTextureCover(videoTexture, video));
 		}
 
 		const size = 1.5;
