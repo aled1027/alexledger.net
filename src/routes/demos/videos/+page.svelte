@@ -15,7 +15,7 @@
 		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4', label: 'Vyx' }
 	];
 
-	// BoxGeometry face normals in local space (right, left, top, bottom, front, back)
+	// BoxGeometry face normals in local space (right, left, top, bottom, front, back) — used for front-face label
 	const FACE_NORMALS = [
 		new THREE.Vector3(1, 0, 0),
 		new THREE.Vector3(-1, 0, 0),
@@ -25,18 +25,21 @@
 		new THREE.Vector3(0, 0, -1)
 	];
 
-	// Rest position (relative to group) and normal per face for explode direction. Order: right, left, top, bottom, front, back.
-	const FACE_REST_POSITIONS = [
-		new THREE.Vector3(0.75, 0, 0),
-		new THREE.Vector3(-0.75, 0, 0),
-		new THREE.Vector3(0, 0.75, 0),
-		new THREE.Vector3(0, -0.75, 0),
-		new THREE.Vector3(0, 0, 0.75),
-		new THREE.Vector3(0, 0, -0.75)
-	];
-
-	const EXPLODE_DISTANCE = 0.8;
 	const SIZE = 1.5;
+	const VOXEL_GRID_N = 4;
+	const SCATTER_DISTANCE = 1.2;
+	const SCATTER_SPREAD = 0.5;
+
+	// Seeded PRNG for deterministic scatter positions
+	function mulberry32(seed: number): () => number {
+		return () => {
+			seed |= 0;
+			let t = (seed += 0x6d2b79f5);
+			t = Math.imul(t ^ (t >>> 15), t | 1);
+			t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+			return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+		};
+	}
 
 	type BreakState = 'idle' | 'exploding' | 'scattered' | 'reassembling';
 
@@ -47,8 +50,13 @@
 		private container: HTMLDivElement;
 		private animationId: number | null = null;
 		private cubeGroup: THREE.Group;
-		private faceMeshes: THREE.Mesh[] = [];
-		private planeGeometry: THREE.PlaneGeometry;
+		private voxelGroup: THREE.Group;
+		private voxelMeshes: THREE.Mesh[] = [];
+		private voxelRestPositions: THREE.Vector3[] = [];
+		private voxelScatteredPositions: THREE.Vector3[] = [];
+		private voxelRestQuaternions: THREE.Quaternion[] = [];
+		private voxelScatteredQuaternions: THREE.Quaternion[] = [];
+		private boxGeometry: THREE.BoxGeometry;
 		private controls: OrbitControls;
 		private videoElements: HTMLVideoElement[] = [];
 		private videoTextures: THREE.VideoTexture[] = [];
@@ -125,23 +133,47 @@
 			);
 			this.updateMaterialMaps();
 
-			// Six face planes forming a box (right, left, top, bottom, front, back)
-			this.planeGeometry = new THREE.PlaneGeometry(SIZE, SIZE);
-			const faceRotations: [number, number, number][] = [
-				[0, -Math.PI / 2, 0],
-				[0, Math.PI / 2, 0],
-				[-Math.PI / 2, 0, 0],
-				[Math.PI / 2, 0, 0],
-				[0, 0, 0],
-				[0, Math.PI, 0]
-			];
+			// Voxel grid (N×N×N small cubes) with shared geometry and shared 6 materials
+			const voxelSize = SIZE / VOXEL_GRID_N;
+			this.boxGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize);
 			this.cubeGroup = new THREE.Group();
-			for (let i = 0; i < 6; i++) {
-				const mesh = new THREE.Mesh(this.planeGeometry, this.materials[i]);
-				mesh.position.copy(FACE_REST_POSITIONS[i]);
-				mesh.rotation.set(faceRotations[i][0], faceRotations[i][1], faceRotations[i][2]);
-				this.faceMeshes.push(mesh);
-				this.cubeGroup.add(mesh);
+			this.voxelGroup = new THREE.Group();
+			this.cubeGroup.add(this.voxelGroup);
+
+			const rnd = mulberry32(12345);
+			const half = (VOXEL_GRID_N - 1) * 0.5;
+			for (let i = 0; i < VOXEL_GRID_N; i++) {
+				for (let j = 0; j < VOXEL_GRID_N; j++) {
+					for (let k = 0; k < VOXEL_GRID_N; k++) {
+						const restX = (-half + i) * voxelSize;
+						const restY = (-half + j) * voxelSize;
+						const restZ = (-half + k) * voxelSize;
+						const restPos = new THREE.Vector3(restX, restY, restZ);
+						this.voxelRestPositions.push(restPos);
+
+						// Scattered: outward bias + random spread (deterministic from index)
+						const len = Math.hypot(restX, restY, restZ) || 1;
+						const outX = (restX / len) * SCATTER_DISTANCE + (rnd() - 0.5) * SCATTER_SPREAD;
+						const outY = (restY / len) * SCATTER_DISTANCE + (rnd() - 0.5) * SCATTER_SPREAD;
+						const outZ = (restZ / len) * SCATTER_DISTANCE + (rnd() - 0.5) * SCATTER_SPREAD;
+						this.voxelScatteredPositions.push(new THREE.Vector3(outX, outY, outZ));
+
+						const restQ = new THREE.Quaternion();
+						this.voxelRestQuaternions.push(restQ);
+						const scatterEuler = new THREE.Euler(
+							(rnd() - 0.5) * Math.PI * 0.5,
+							(rnd() - 0.5) * Math.PI * 0.5,
+							(rnd() - 0.5) * Math.PI * 0.5
+						);
+						const scatterQ = new THREE.Quaternion().setFromEuler(scatterEuler);
+						this.voxelScatteredQuaternions.push(scatterQ);
+
+						const mesh = new THREE.Mesh(this.boxGeometry, this.materials);
+						mesh.position.copy(restPos);
+						this.voxelMeshes.push(mesh);
+						this.voxelGroup.add(mesh);
+					}
+				}
 			}
 			this.scene.add(this.cubeGroup);
 
@@ -168,7 +200,7 @@
 			this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
 			this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 			this.raycaster.setFromCamera(this.pointer, this.camera);
-			const intersects = this.raycaster.intersectObjects(this.faceMeshes);
+			const intersects = this.raycaster.intersectObjects(this.voxelMeshes);
 			if (intersects.length > 0) {
 				this.breakState = 'exploding';
 				this.breakPhaseStartTime = performance.now();
@@ -234,17 +266,24 @@
 			return t ** 3;
 		}
 
-		private updateFacePositions(progress: number, isExploding: boolean): void {
-			for (let i = 0; i < 6; i++) {
-				const rest = FACE_REST_POSITIONS[i];
-				const exploded = new THREE.Vector3()
-					.copy(rest)
-					.add(FACE_NORMALS[i].clone().multiplyScalar(EXPLODE_DISTANCE));
-				const t = isExploding ? this.easeOutCubic(progress) : this.easeInCubic(progress);
-				const pos = isExploding
-					? new THREE.Vector3().lerpVectors(rest, exploded, t)
-					: new THREE.Vector3().lerpVectors(exploded, rest, t);
-				this.faceMeshes[i].position.copy(pos);
+		private updateVoxelPositions(progress: number, isExploding: boolean): void {
+			const t = isExploding ? this.easeOutCubic(progress) : this.easeInCubic(progress);
+			const pos = new THREE.Vector3();
+			const quat = new THREE.Quaternion();
+			for (let i = 0; i < this.voxelMeshes.length; i++) {
+				const rest = this.voxelRestPositions[i];
+				const scattered = this.voxelScatteredPositions[i];
+				const restQ = this.voxelRestQuaternions[i];
+				const scatteredQ = this.voxelScatteredQuaternions[i];
+				if (isExploding) {
+					pos.lerpVectors(rest, scattered, t);
+					quat.slerpQuaternions(restQ, scatteredQ, t);
+				} else {
+					pos.lerpVectors(scattered, rest, t);
+					quat.slerpQuaternions(scatteredQ, restQ, t);
+				}
+				this.voxelMeshes[i].position.copy(pos);
+				this.voxelMeshes[i].quaternion.copy(quat);
 			}
 		}
 
@@ -316,7 +355,7 @@
 				const elapsed = now - this.breakPhaseStartTime;
 				if (this.breakState === 'exploding') {
 					this.breakPhaseProgress = Math.min(1, elapsed / this.EXPLODE_DURATION_MS);
-					this.updateFacePositions(this.breakPhaseProgress, true);
+					this.updateVoxelPositions(this.breakPhaseProgress, true);
 					if (this.breakPhaseProgress >= 1) {
 						this.breakState = 'scattered';
 						this.breakPhaseStartTime = now;
@@ -329,7 +368,7 @@
 					}
 				} else if (this.breakState === 'reassembling') {
 					this.breakPhaseProgress = Math.min(1, elapsed / this.REASSEMBLE_DURATION_MS);
-					this.updateFacePositions(this.breakPhaseProgress, false);
+					this.updateVoxelPositions(this.breakPhaseProgress, false);
 					if (this.breakPhaseProgress >= 1) {
 						this.breakState = 'idle';
 						this.breakPhaseProgress = 0;
@@ -365,7 +404,13 @@
 			}
 			this.renderer.domElement.removeEventListener('click', this.onPointerClick);
 			this.scene.remove(this.cubeGroup);
-			this.planeGeometry.dispose();
+			this.voxelGroup.clear();
+			this.voxelMeshes.length = 0;
+			this.voxelRestPositions.length = 0;
+			this.voxelScatteredPositions.length = 0;
+			this.voxelRestQuaternions.length = 0;
+			this.voxelScatteredQuaternions.length = 0;
+			this.boxGeometry.dispose();
 			this.videoElements.forEach((v) => {
 				v.pause();
 				v.src = '';
