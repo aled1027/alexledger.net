@@ -25,18 +25,34 @@
 		new THREE.Vector3(0, 0, -1)
 	];
 
+	// Rest position (relative to group) and normal per face for explode direction. Order: right, left, top, bottom, front, back.
+	const FACE_REST_POSITIONS = [
+		new THREE.Vector3(0.75, 0, 0),
+		new THREE.Vector3(-0.75, 0, 0),
+		new THREE.Vector3(0, 0.75, 0),
+		new THREE.Vector3(0, -0.75, 0),
+		new THREE.Vector3(0, 0, 0.75),
+		new THREE.Vector3(0, 0, -0.75)
+	];
+
+	const EXPLODE_DISTANCE = 0.8;
+	const SIZE = 1.5;
+
+	type BreakState = 'idle' | 'exploding' | 'scattered' | 'reassembling';
+
 	class Sketch {
 		private scene: THREE.Scene;
 		private camera: THREE.PerspectiveCamera;
 		private renderer: THREE.WebGLRenderer;
 		private container: HTMLDivElement;
 		private animationId: number | null = null;
-		private cube: THREE.Mesh;
+		private cubeGroup: THREE.Group;
+		private faceMeshes: THREE.Mesh[] = [];
+		private planeGeometry: THREE.PlaneGeometry;
 		private controls: OrbitControls;
 		private videoElements: HTMLVideoElement[] = [];
 		private videoTextures: THREE.VideoTexture[] = [];
 		private materials: THREE.MeshBasicMaterial[] = [];
-		private geometry: THREE.BoxGeometry;
 		private cycleOffset = 0;
 		private lastCycleTime = 0;
 		private readonly CYCLE_INTERVAL_MS = 8000;
@@ -50,6 +66,14 @@
 		private reducedMotion = false;
 		private visible = true;
 		private onFrontFaceLabel: (label: string) => void;
+		private raycaster: THREE.Raycaster;
+		private pointer: THREE.Vector2;
+		private breakState: BreakState = 'idle';
+		private breakPhaseProgress = 0;
+		private readonly EXPLODE_DURATION_MS = 400;
+		private readonly SCATTERED_HOLD_MS = 200;
+		private readonly REASSEMBLE_DURATION_MS = 500;
+		private breakPhaseStartTime = 0;
 
 		constructor(container: HTMLDivElement, onFrontFaceLabel: (label: string) => void) {
 			this.container = container;
@@ -72,8 +96,6 @@
 			container.appendChild(this.renderer.domElement);
 
 			const maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
-			const size = 1.5;
-			this.geometry = new THREE.BoxGeometry(size, size, size);
 
 			for (let i = 0; i < 8; i++) {
 				const video = document.createElement('video');
@@ -103,8 +125,28 @@
 			);
 			this.updateMaterialMaps();
 
-			this.cube = new THREE.Mesh(this.geometry, this.materials);
-			this.scene.add(this.cube);
+			// Six face planes forming a box (right, left, top, bottom, front, back)
+			this.planeGeometry = new THREE.PlaneGeometry(SIZE, SIZE);
+			const faceRotations: [number, number, number][] = [
+				[0, -Math.PI / 2, 0],
+				[0, Math.PI / 2, 0],
+				[-Math.PI / 2, 0, 0],
+				[Math.PI / 2, 0, 0],
+				[0, 0, 0],
+				[0, Math.PI, 0]
+			];
+			this.cubeGroup = new THREE.Group();
+			for (let i = 0; i < 6; i++) {
+				const mesh = new THREE.Mesh(this.planeGeometry, this.materials[i]);
+				mesh.position.copy(FACE_REST_POSITIONS[i]);
+				mesh.rotation.set(faceRotations[i][0], faceRotations[i][1], faceRotations[i][2]);
+				this.faceMeshes.push(mesh);
+				this.cubeGroup.add(mesh);
+			}
+			this.scene.add(this.cubeGroup);
+
+			this.raycaster = new THREE.Raycaster();
+			this.pointer = new THREE.Vector2();
 
 			const moveDirX = 0.005;
 			const moveDirY = 0.005;
@@ -115,8 +157,24 @@
 			this.controls.enableDamping = true;
 			this.controls.dampingFactor = 0.05;
 
+			this.renderer.domElement.addEventListener('click', this.onPointerClick);
+
 			this.animate();
 		}
+
+		private onPointerClick = (event: MouseEvent): void => {
+			if (this.reducedMotion || this.breakState !== 'idle') return;
+			const rect = this.container.getBoundingClientRect();
+			this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+			this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+			this.raycaster.setFromCamera(this.pointer, this.camera);
+			const intersects = this.raycaster.intersectObjects(this.faceMeshes);
+			if (intersects.length > 0) {
+				this.breakState = 'exploding';
+				this.breakPhaseStartTime = performance.now();
+				this.breakPhaseProgress = 0;
+			}
+		};
 
 		private setMotionSpeeds(reduced: boolean): void {
 			this.reducedMotion = reduced;
@@ -168,10 +226,32 @@
 			}
 		}
 
+		private easeOutCubic(t: number): number {
+			return 1 - (1 - t) ** 3;
+		}
+
+		private easeInCubic(t: number): number {
+			return t ** 3;
+		}
+
+		private updateFacePositions(progress: number, isExploding: boolean): void {
+			for (let i = 0; i < 6; i++) {
+				const rest = FACE_REST_POSITIONS[i];
+				const exploded = new THREE.Vector3()
+					.copy(rest)
+					.add(FACE_NORMALS[i].clone().multiplyScalar(EXPLODE_DISTANCE));
+				const t = isExploding ? this.easeOutCubic(progress) : this.easeInCubic(progress);
+				const pos = isExploding
+					? new THREE.Vector3().lerpVectors(rest, exploded, t)
+					: new THREE.Vector3().lerpVectors(exploded, rest, t);
+				this.faceMeshes[i].position.copy(pos);
+			}
+		}
+
 		private getFrontFaceIndex(): number {
 			const worldQuaternion = new THREE.Quaternion();
-			this.cube.getWorldQuaternion(worldQuaternion);
-			const toCamera = new THREE.Vector3().subVectors(this.camera.position, this.cube.position).normalize();
+			this.cubeGroup.getWorldQuaternion(worldQuaternion);
+			const toCamera = new THREE.Vector3().subVectors(this.camera.position, this.cubeGroup.position).normalize();
 			let maxDot = -Infinity;
 			let frontIndex = 0;
 			for (let i = 0; i < 6; i++) {
@@ -204,8 +284,8 @@
 					this.updateMaterialMaps();
 				}
 
-				// Screensaver motion (skip when reduced motion)
-				if (!this.reducedMotion) {
+				// Screensaver motion (skip when reduced motion; skip during break-apart)
+				if (!this.reducedMotion && this.breakState === 'idle') {
 					this.pos.add(this.vel);
 					if (this.pos.x <= -this.MOVE_BOUNDS) {
 						this.pos.x = -this.MOVE_BOUNDS;
@@ -223,12 +303,41 @@
 						this.pos.y = this.MOVE_BOUNDS;
 						this.vel.y = -Math.abs(this.vel.y);
 					}
-					this.cube.position.copy(this.pos);
+					this.cubeGroup.position.copy(this.pos);
 
-					this.cube.rotation.x += this.rotSpeedX;
-					this.cube.rotation.y += this.rotSpeedY;
-					this.cube.rotation.z += this.rotSpeedZ;
+					this.cubeGroup.rotation.x += this.rotSpeedX;
+					this.cubeGroup.rotation.y += this.rotSpeedY;
+					this.cubeGroup.rotation.z += this.rotSpeedZ;
 				}
+			}
+
+			// Break-apart state machine and face animation
+			if (this.breakState !== 'idle') {
+				const elapsed = now - this.breakPhaseStartTime;
+				if (this.breakState === 'exploding') {
+					this.breakPhaseProgress = Math.min(1, elapsed / this.EXPLODE_DURATION_MS);
+					this.updateFacePositions(this.breakPhaseProgress, true);
+					if (this.breakPhaseProgress >= 1) {
+						this.breakState = 'scattered';
+						this.breakPhaseStartTime = now;
+					}
+				} else if (this.breakState === 'scattered') {
+					if (elapsed >= this.SCATTERED_HOLD_MS) {
+						this.breakState = 'reassembling';
+						this.breakPhaseStartTime = now;
+						this.breakPhaseProgress = 0;
+					}
+				} else if (this.breakState === 'reassembling') {
+					this.breakPhaseProgress = Math.min(1, elapsed / this.REASSEMBLE_DURATION_MS);
+					this.updateFacePositions(this.breakPhaseProgress, false);
+					if (this.breakPhaseProgress >= 1) {
+						this.breakState = 'idle';
+						this.breakPhaseProgress = 0;
+					}
+				}
+			}
+
+			if (this.visible) {
 
 				// Update video textures only when frame data is ready
 				for (let i = 0; i < this.videoElements.length; i++) {
@@ -245,6 +354,7 @@
 				this.onFrontFaceLabel(videos[videoIndex].label);
 			}
 
+			this.controls.enabled = this.breakState === 'idle';
 			this.controls.update();
 			this.renderer.render(this.scene, this.camera);
 		};
@@ -253,6 +363,9 @@
 			if (this.animationId !== null) {
 				cancelAnimationFrame(this.animationId);
 			}
+			this.renderer.domElement.removeEventListener('click', this.onPointerClick);
+			this.scene.remove(this.cubeGroup);
+			this.planeGeometry.dispose();
 			this.videoElements.forEach((v) => {
 				v.pause();
 				v.src = '';
@@ -260,7 +373,6 @@
 			});
 			this.videoTextures.forEach((t) => t.dispose());
 			this.materials.forEach((m) => m.dispose());
-			this.geometry.dispose();
 			this.renderer.dispose();
 			if (this.container.contains(this.renderer.domElement)) {
 				this.container.removeChild(this.renderer.domElement);
@@ -314,7 +426,7 @@
 
 <div class="my-l">
 	<h2>The Video Screensaver</h2>
-	<p class="description">Drag to rotate the cube. All 8 videos cycle onto the six faces.</p>
+	<p class="description">Drag to rotate the cube. Click the cube to break it apart and reassemble. All 8 videos cycle onto the six faces.</p>
 
 	<div class="mt-xl three-container" bind:this={container}>
 		{#if frontFaceLabel}
