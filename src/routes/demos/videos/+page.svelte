@@ -160,7 +160,11 @@
 
 		private updateMaterialMaps(): void {
 			for (let i = 0; i < 6; i++) {
-				this.materials[i].map = this.videoTextures[(this.cycleOffset + i) % 8];
+				const textureIndex = (this.cycleOffset + i) % 8;
+				// Only assign texture when video has frame data ready; avoids a dark face while loading
+				if (this.videoElements[textureIndex].readyState >= 2) {
+					this.materials[i].map = this.videoTextures[textureIndex];
+				}
 			}
 		}
 
@@ -232,6 +236,9 @@
 						this.videoTextures[i].needsUpdate = true;
 					}
 				}
+
+				// Reassign face textures when cycled-in videos become ready (avoids one face staying dark)
+				this.updateMaterialMaps();
 
 				const frontFace = this.getFrontFaceIndex();
 				const videoIndex = (this.cycleOffset + frontFace) % 8;
