@@ -36,6 +36,11 @@
 			title: 'Whiteboard',
 			date: 'December 18, 2025',
 			link: '/demos/whiteboard'
+		},
+		{
+			title: 'Videos',
+			date: 'February 6, 2026',
+			link: '/demos/videos'
 		}
 	];
 
