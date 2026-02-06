@@ -82,12 +82,13 @@
 		private readonly SCATTERED_HOLD_MS = 200;
 		private readonly REASSEMBLE_DURATION_MS = 500;
 		private breakPhaseStartTime = 0;
+		private pointerWasOverCube = false;
 
 		constructor(container: HTMLDivElement, onFrontFaceLabel: (label: string) => void) {
 			this.container = container;
 			this.onFrontFaceLabel = onFrontFaceLabel;
 			this.scene = new THREE.Scene();
-			this.scene.background = new THREE.Color(0x0a0a0a);
+			this.scene.background = null;
 
 			this.camera = new THREE.PerspectiveCamera(
 				75,
@@ -98,7 +99,8 @@
 			this.camera.position.z = 3;
 			this.scene.add(this.camera);
 
-			this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+			this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			this.renderer.setClearColor(0x000000, 0);
 			this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			this.renderer.setSize(container.clientWidth, container.clientHeight);
 			container.appendChild(this.renderer.domElement);
@@ -189,23 +191,25 @@
 			this.controls.enableDamping = true;
 			this.controls.dampingFactor = 0.05;
 
-			this.renderer.domElement.addEventListener('click', this.onPointerClick);
+			this.renderer.domElement.addEventListener('pointermove', this.onPointerMove);
 
 			this.animate();
 		}
 
-		private onPointerClick = (event: MouseEvent): void => {
+		private onPointerMove = (event: MouseEvent): void => {
 			if (this.reducedMotion || this.breakState !== 'idle') return;
 			const rect = this.container.getBoundingClientRect();
 			this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
 			this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 			this.raycaster.setFromCamera(this.pointer, this.camera);
 			const intersects = this.raycaster.intersectObjects(this.voxelMeshes);
-			if (intersects.length > 0) {
+			const overCube = intersects.length > 0;
+			if (overCube && !this.pointerWasOverCube) {
 				this.breakState = 'exploding';
 				this.breakPhaseStartTime = performance.now();
 				this.breakPhaseProgress = 0;
 			}
+			this.pointerWasOverCube = overCube;
 		};
 
 		private setMotionSpeeds(reduced: boolean): void {
@@ -402,7 +406,7 @@
 			if (this.animationId !== null) {
 				cancelAnimationFrame(this.animationId);
 			}
-			this.renderer.domElement.removeEventListener('click', this.onPointerClick);
+			this.renderer.domElement.removeEventListener('pointermove', this.onPointerMove);
 			this.scene.remove(this.cubeGroup);
 			this.voxelGroup.clear();
 			this.voxelMeshes.length = 0;
@@ -471,7 +475,7 @@
 
 <div class="my-l">
 	<h2>The Video Screensaver</h2>
-	<p class="description">Drag to rotate the cube. Click the cube to break it apart and reassemble. All 8 videos cycle onto the six faces.</p>
+	<p class="description">Drag to rotate the cube. Hover over the cube to break it apart and reassemble. All 8 videos cycle onto the six faces.</p>
 
 	<div class="mt-xl three-container" bind:this={container}>
 		{#if frontFaceLabel}
@@ -486,11 +490,8 @@
 	}
 
 	.three-container {
-		position: relative;
-		width: 100%;
-		max-width: 900px;
-		height: 60vh;
-		margin-inline: auto;
+		position: fixed;
+		inset: 0;
 		cursor: grab;
 
 		&:active {
