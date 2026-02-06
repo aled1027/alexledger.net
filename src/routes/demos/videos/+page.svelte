@@ -321,12 +321,6 @@
 			<div class="face-label" aria-live="polite">{frontFaceLabel}</div>
 		{/if}
 	</div>
-
-	<ul class="video-list" aria-label="Videos on the cube">
-		{#each videos as v}
-			<li class:current={v.label === frontFaceLabel}>{v.label}</li>
-		{/each}
-	</ul>
 </div>
 
 <style lang="scss">
@@ -341,9 +335,6 @@
 		height: 60vh;
 		margin-inline: auto;
 		cursor: grab;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		border-radius: 8px;
-		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 
 		&:active {
 			cursor: grabbing;
