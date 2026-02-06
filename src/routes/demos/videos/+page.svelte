@@ -48,7 +48,7 @@
 			0.1,
 			1000
 		);
-		camera.position.z = 2;
+		camera.position.z = 3;
 		scene.add(camera);
 
 		// Create renderer first so we can use its capabilities for texture quality
@@ -97,11 +97,49 @@
 		const cube = new THREE.Mesh(geometry, materials);
 		scene.add(cube);
 
-		const controls = new OrbitControls(camera, renderer.domElement);
+		// ——— Screensaver parameters (adjust these) ———
+		const MOVE_BOUNDS = 2.5;           // half-width of movement box (keep cube in frame)
+		const MOVE_SPEED = 0.0015;            // units per frame
+		const MOVE_DIR_X = 0.005;             // velocity direction X (normalized with Y)
+		const MOVE_DIR_Y = 0.005;             // velocity direction Y
+		const ROT_SPEED_X = 0.0020;          // radians per frame
+		const ROT_SPEED_Y = 0.0020;
+		const ROT_SPEED_Z = 0.0010;
+		// —————————————————————————————————────────————
+
+		const moveDirLen = Math.hypot(MOVE_DIR_X, MOVE_DIR_Y) || 1;
+		const velX = (MOVE_SPEED * MOVE_DIR_X) / moveDirLen;
+		const velY = (MOVE_SPEED * MOVE_DIR_Y) / moveDirLen;
+
+		let pos = new THREE.Vector3(0, 0, 0);
+		const vel = new THREE.Vector3(velX, velY, 0);
 
 		function animate() {
 			requestAnimationFrame(animate);
-			controls.update();
+
+			pos.add(vel);
+			if (pos.x <= -MOVE_BOUNDS) {
+				pos.x = -MOVE_BOUNDS;
+				vel.x = Math.abs(vel.x);
+			}
+			if (pos.x >= MOVE_BOUNDS) {
+				pos.x = MOVE_BOUNDS;
+				vel.x = -Math.abs(vel.x);
+			}
+			if (pos.y <= -MOVE_BOUNDS) {
+				pos.y = -MOVE_BOUNDS;
+				vel.y = Math.abs(vel.y);
+			}
+			if (pos.y >= MOVE_BOUNDS) {
+				pos.y = MOVE_BOUNDS;
+				vel.y = -Math.abs(vel.y);
+			}
+			cube.position.copy(pos);
+
+			cube.rotation.x += ROT_SPEED_X;
+			cube.rotation.y += ROT_SPEED_Y;
+			cube.rotation.z += ROT_SPEED_Z;
+
 			renderer.render(scene, camera);
 		}
 		animate();
@@ -120,7 +158,7 @@
 		width: 100%;
 		height: 60vh;
 		margin-inline: auto;
-		cursor: grab;
+		cursor: default;
 		border: 1px solid black;
 	}
 </style>
