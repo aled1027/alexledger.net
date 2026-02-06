@@ -475,7 +475,7 @@
 
 <div class="my-l">
 	<h2>The Video Screensaver</h2>
-	<p class="description">Drag to rotate the cube. Hover over the cube to break it apart and reassemble. All 8 videos cycle onto the six faces.</p>
+	<p class="description">An interactive 3D cube with video on each face. Drag to orbit the camera; hover over the cube to trigger an explosion and reassembly. Eight videos cycle across the six faces.</p>
 
 	<div class="mt-xl three-container" bind:this={container}>
 		{#if frontFaceLabel}
