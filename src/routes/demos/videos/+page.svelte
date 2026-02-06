@@ -82,7 +82,10 @@
 		private readonly SCATTERED_HOLD_MS = 200;
 		private readonly REASSEMBLE_DURATION_MS = 500;
 		private breakPhaseStartTime = 0;
-		private pointerWasOverCube = false;
+		private isDraggingCube = false;
+		private readonly dragPlane = new THREE.Plane();
+		private readonly dragPlaneNormal = new THREE.Vector3();
+		private readonly dragIntersection = new THREE.Vector3();
 
 		constructor(container: HTMLDivElement, onFrontFaceLabel: (label: string) => void) {
 			this.container = container;
@@ -192,24 +195,66 @@
 			this.controls.dampingFactor = 0.05;
 
 			this.renderer.domElement.addEventListener('pointermove', this.onPointerMove);
+			this.renderer.domElement.addEventListener('pointerdown', this.onPointerDown);
+			this.renderer.domElement.addEventListener('pointerup', this.onPointerUp);
+			this.renderer.domElement.addEventListener('pointercancel', this.onPointerUp);
 
 			this.animate();
 		}
 
-		private onPointerMove = (event: MouseEvent): void => {
-			if (this.reducedMotion || this.breakState !== 'idle') return;
+		private setPointerFromEvent(event: { clientX: number; clientY: number }): void {
 			const rect = this.container.getBoundingClientRect();
 			this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
 			this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+		}
+
+		private onPointerDown = (event: PointerEvent): void => {
+			if (event.button !== 0 || this.reducedMotion || this.breakState !== 'idle') return;
+			this.setPointerFromEvent(event);
 			this.raycaster.setFromCamera(this.pointer, this.camera);
 			const intersects = this.raycaster.intersectObjects(this.voxelMeshes);
-			const overCube = intersects.length > 0;
-			if (overCube && !this.pointerWasOverCube) {
+			if (intersects.length === 0) return;
+			if (event.shiftKey) {
 				this.breakState = 'exploding';
 				this.breakPhaseStartTime = performance.now();
 				this.breakPhaseProgress = 0;
+				return;
 			}
-			this.pointerWasOverCube = overCube;
+			this.isDraggingCube = true;
+			this.camera.getWorldDirection(this.dragPlaneNormal);
+			this.dragPlane.setFromNormalAndCoplanarPoint(
+				this.dragPlaneNormal,
+				this.cubeGroup.position.clone()
+			);
+		};
+
+		private onPointerUp = (): void => {
+			if (!this.isDraggingCube) return;
+			this.isDraggingCube = false;
+			this.pos.copy(this.cubeGroup.position);
+			this.vel.set(0, 0, 0);
+		};
+
+		private onPointerMove = (event: MouseEvent): void => {
+			if (this.reducedMotion || this.breakState !== 'idle') return;
+			this.setPointerFromEvent(event);
+			if (this.isDraggingCube) {
+				this.raycaster.setFromCamera(this.pointer, this.camera);
+				const hit = this.raycaster.ray.intersectPlane(this.dragPlane, this.dragIntersection);
+				if (hit) {
+					this.dragIntersection.x = Math.max(
+						-this.MOVE_BOUNDS,
+						Math.min(this.MOVE_BOUNDS, this.dragIntersection.x)
+					);
+					this.dragIntersection.y = Math.max(
+						-this.MOVE_BOUNDS,
+						Math.min(this.MOVE_BOUNDS, this.dragIntersection.y)
+					);
+					this.cubeGroup.position.copy(this.dragIntersection);
+					this.pos.copy(this.cubeGroup.position);
+				}
+				return;
+			}
 		};
 
 		private setMotionSpeeds(reduced: boolean): void {
@@ -327,8 +372,8 @@
 					this.updateMaterialMaps();
 				}
 
-				// Screensaver motion (skip when reduced motion; skip during break-apart)
-				if (!this.reducedMotion && this.breakState === 'idle') {
+				// Screensaver motion (skip when reduced motion; skip during break-apart or drag)
+				if (!this.reducedMotion && this.breakState === 'idle' && !this.isDraggingCube) {
 					this.pos.add(this.vel);
 					if (this.pos.x <= -this.MOVE_BOUNDS) {
 						this.pos.x = -this.MOVE_BOUNDS;
@@ -397,7 +442,7 @@
 				this.onFrontFaceLabel(videos[videoIndex].label);
 			}
 
-			this.controls.enabled = this.breakState === 'idle';
+			this.controls.enabled = this.breakState === 'idle' && !this.isDraggingCube;
 			this.controls.update();
 			this.renderer.render(this.scene, this.camera);
 		};
@@ -407,6 +452,9 @@
 				cancelAnimationFrame(this.animationId);
 			}
 			this.renderer.domElement.removeEventListener('pointermove', this.onPointerMove);
+			this.renderer.domElement.removeEventListener('pointerdown', this.onPointerDown);
+			this.renderer.domElement.removeEventListener('pointerup', this.onPointerUp);
+			this.renderer.domElement.removeEventListener('pointercancel', this.onPointerUp);
 			this.scene.remove(this.cubeGroup);
 			this.voxelGroup.clear();
 			this.voxelMeshes.length = 0;
@@ -475,7 +523,9 @@
 
 <div class="my-l">
 	<h2>The Video Screensaver</h2>
-	<p class="description">An interactive 3D cube with video on each face. Drag to orbit the camera; hover over the cube to trigger an explosion and reassembly. Eight videos cycle across the six faces.</p>
+	<p class="description">
+		An interactive 3D cube with video on each face. Drag the background to orbit the camera; click and drag the cube to move it; shift-click the cube to trigger an explosion and reassembly. Eight videos cycle across the six faces.
+	</p>
 
 	<div class="mt-xl three-container" bind:this={container}>
 		{#if frontFaceLabel}
