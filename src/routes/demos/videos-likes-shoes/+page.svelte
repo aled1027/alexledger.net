@@ -17,6 +17,44 @@
 		minCubeY: 5
 	};
 
+	const videos = [
+		{
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4',
+			label: 'Anna Neshyba'
+		},
+		{
+			videoUrl:
+				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4',
+			label: 'Ethyca Product Animation'
+		},
+		{
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4',
+			label: 'Max Life Foundation'
+		},
+		{
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4',
+			label: 'Incontext Learning'
+		},
+		{
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4',
+			label: 'Cat and Alex'
+		},
+		{
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4',
+			label: 'Cat Nesh'
+		},
+		{
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
+			label: 'Cosmic Fronter'
+		},
+		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4', label: 'Vyx' }
+	];
+
+	function randomInt(min: number, max: number): number {
+		// Min is inclusive and max is exclusive
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
+
 	class Sketch {
 		private container: HTMLDivElement;
 		private scene: THREE.Scene;
@@ -24,6 +62,9 @@
 		private renderer: THREE.WebGLRenderer;
 		private controls: OrbitControls;
 		private animationId: number | null = null;
+		private videoElements: HTMLVideoElement[] = [];
+		private videoTextures: THREE.VideoTexture[] = [];
+		private videoMaterials: THREE.MeshBasicMaterial[] = [];
 
 		constructor(container: HTMLDivElement) {
 			this.container = container;
@@ -69,21 +110,54 @@
 				}
 			}
 
+			const maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
+
+			for (let i = 0; i < videos.length; i++) {
+				const video = document.createElement('video');
+				video.src = videos[i].videoUrl;
+				video.crossOrigin = 'anonymous';
+				video.loop = true;
+				video.muted = true;
+				video.autoplay = true;
+				video.playsInline = true;
+				video.style.display = 'none';
+				document.body.appendChild(video);
+				this.videoElements.push(video);
+
+				const videoTexture = new THREE.VideoTexture(video);
+				videoTexture.minFilter = THREE.LinearFilter;
+				videoTexture.magFilter = THREE.LinearFilter;
+				videoTexture.anisotropy = maxAnisotropy;
+				this.videoTextures.push(videoTexture);
+
+				video.addEventListener('loadedmetadata', () => this.setTextureCover(videoTexture, video));
+				video.addEventListener('loadeddata', () => this.setTextureCover(videoTexture, video));
+
+				const videoMaterial = new THREE.MeshBasicMaterial({
+					map: videoTexture,
+					side: THREE.FrontSide
+				});
+				this.videoMaterials.push(videoMaterial);
+			}
+
 			for (const pos of cubePositions) {
-			
-			
-			
+				const randVideoIdx = randomInt(0, videos.length);
+				const material = this.videoMaterials[randVideoIdx];
 				const cube = new THREE.Mesh(geometry, material);
 				cube.position.set(pos.x, pos.y, pos.z);
 				this.scene.add(cube);
-				
-				
 			}
 			this.animate();
 		}
 
 		private animate = (): void => {
 			this.animationId = requestAnimationFrame(this.animate);
+
+			// Update the video textures
+			for (const videoTexture of this.videoTextures) {
+				videoTexture.needsUpdate = true;
+			}
+
 			this.controls.update();
 			this.renderer.render(this.scene, this.camera);
 		};
@@ -103,6 +177,22 @@
 			this.renderer.dispose();
 			if (this.container.contains(this.renderer.domElement)) {
 				this.container.removeChild(this.renderer.domElement);
+			}
+		}
+
+		private setTextureCover(texture: THREE.VideoTexture, video: HTMLVideoElement): void {
+			const w = video.videoWidth;
+			const h = video.videoHeight;
+			if (!w || !h) return;
+			const r = w / h;
+			texture.offset.set(0, 0);
+			texture.repeat.set(1, 1);
+			if (r > 1) {
+				texture.offset.set((1 - 1 / r) / 2, 0);
+				texture.repeat.set(1 / r, 1);
+			} else if (r < 1) {
+				texture.offset.set(0, (1 - r) / 2);
+				texture.repeat.set(1, r);
 			}
 		}
 	}
