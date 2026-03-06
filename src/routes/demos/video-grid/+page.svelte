@@ -229,8 +229,13 @@
 </script>
 
 <div class="my-l">
-	<h2>Videos Likes Shoes</h2>
-	<p>Description goes here</p>
+	<h2>Video Grid</h2>
+	<p>
+		This demo explored a verison of <a
+			href="https://tympanus.net/codrops/2026/02/24/from-flat-to-spatial-creating-a-3d-product-grid-with-react-three-fiber/"
+			>3d shoe grid</a
+		> but videos instead of shoes.
+	</p>
 </div>
 
 <div class="sketch" bind:this={container}></div>
@@ -238,7 +243,7 @@
 <style lang="scss">
 	.sketch {
 		position: absolute;
-		top: 20vh;
+		top: 30vh;
 		bottom: 0;
 		left: 0;
 		right: 0;

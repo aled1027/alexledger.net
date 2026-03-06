@@ -41,6 +41,11 @@
 			title: 'Videos',
 			date: 'February 6, 2026',
 			link: '/demos/videos'
+		},
+		{
+			title: 'Video Grid',
+			date: 'March 5, 2026',
+			link: '/demos/video-grid'
 		}
 	];
 
