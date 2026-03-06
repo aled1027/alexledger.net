@@ -89,8 +89,7 @@
 			this.controls.enableDamping = true;
 
 			const itemSize = CONFIG.itemSize;
-			const geometry = new THREE.BoxGeometry(itemSize, itemSize, 0.1);
-			const material = new THREE.MeshNormalMaterial();
+			const itemGeometry = new THREE.BoxGeometry(itemSize, itemSize, 0.1);
 
 			const icosahedronGeometry = new THREE.IcosahedronGeometry(
 				CONFIG.icosahedronRadius,
@@ -100,67 +99,64 @@
 			console.log(icosPositions);
 
 			// Put 10 cubes in a grid
-			const cubePositions = [];
+			const itemPositions = [];
 			for (let i = 0; i < icosPositions.count; i++) {
 				const x = icosPositions.getX(i);
 				const y = icosPositions.getY(i);
 				const z = icosPositions.getZ(i);
 				if (z >= CONFIG.minCubeY) {
-					cubePositions.push(new THREE.Vector3(x, y, z));
+					itemPositions.push(new THREE.Vector3(x, y, z));
 				}
 			}
 
 			const maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
 
-			for (let j = 0; j < 3; ++j) {
-				for (let i = 0; i < videos.length; i++) {
-					const video = document.createElement('video');
-					video.src = videos[i].videoUrl;
-					video.crossOrigin = 'anonymous';
-					video.loop = true;
-					video.muted = true;
-					video.autoplay = true;
-					video.playsInline = true;
-					video.style.display = 'none';
-					document.body.appendChild(video);
-					this.videoElements.push(video);
-					video.play().catch((err) => {
-						console.warn('Video playback blocked until user interaction:', err);
-					});
+			for (let i = 0; i < videos.length; i++) {
+				const video = document.createElement('video');
+				video.src = videos[i].videoUrl;
+				video.crossOrigin = 'anonymous';
+				video.loop = true;
+				video.muted = true;
+				video.autoplay = true;
+				video.playsInline = true;
+				video.style.display = 'none';
+				document.body.appendChild(video);
+				this.videoElements.push(video);
+				video.play().catch((err) => {
+					console.warn('Video playback blocked until user interaction:', err);
+				});
 
-					const videoTexture = new THREE.VideoTexture(video);
-					videoTexture.minFilter = THREE.LinearFilter;
-					videoTexture.magFilter = THREE.LinearFilter;
-					videoTexture.anisotropy = maxAnisotropy;
-					this.videoTextures.push(videoTexture);
+				const videoTexture = new THREE.VideoTexture(video);
+				videoTexture.minFilter = THREE.LinearFilter;
+				videoTexture.magFilter = THREE.LinearFilter;
+				videoTexture.anisotropy = maxAnisotropy;
+				this.videoTextures.push(videoTexture);
 
-					video.loop = true;
-					video.muted = true;
-					video.autoplay = true;
-					video.playsInline = true;
+				video.loop = true;
+				video.muted = true;
+				video.autoplay = true;
+				video.playsInline = true;
 
-					video.addEventListener('loadedmetadata', () => {
-						const randomStart = Math.random() * video.duration;
-						video.currentTime = randomStart;
-						this.setTextureCover(videoTexture, video);
-					});
-					video.addEventListener('loadeddata', () => this.setTextureCover(videoTexture, video));
+				video.addEventListener('loadedmetadata', () => {
+					// if we want to start at a random time:
+					// video.currentTime = Math.random() * video.duration;
+					this.setTextureCover(videoTexture, video);
+				});
+				video.addEventListener('loadeddata', () => this.setTextureCover(videoTexture, video));
 
-					const videoMaterial = new THREE.MeshBasicMaterial({
-						map: videoTexture,
-						side: THREE.FrontSide
-					});
-					this.videoMaterials.push(videoMaterial);
-				}
+				const videoMaterial = new THREE.MeshBasicMaterial({
+					map: videoTexture,
+					side: THREE.FrontSide
+				});
+				this.videoMaterials.push(videoMaterial);
 			}
 
-			let i = 0;
-			for (const pos of cubePositions) {
-				i++;
-				const randVideoIdx = randomInt(0, this.videoMaterials.length);
-				// const material = this.videoMaterials[i];
-				const material = this.videoMaterials[randVideoIdx];
-				const cube = new THREE.Mesh(geometry, material);
+			for (let i = 0; i < itemPositions.length; i++) {
+				const pos = itemPositions[i];
+				// I don't understand why, but the video selections look unevenly distributed. Very much so
+				// Like everything in the same column has the same video
+				const material = this.videoMaterials[i % this.videoMaterials.length];
+				const cube = new THREE.Mesh(itemGeometry, material);
 				cube.position.set(2 * pos.x, 2 * pos.y, pos.z);
 				this.scene.add(cube);
 			}
