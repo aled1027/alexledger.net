@@ -11,10 +11,10 @@
 	}
 
 	const CONFIG: Config = {
-		itemSize: 0.75,
+		itemSize: 3,
 		icosahedronRadius: 8,
 		icosahedronDetail: 4,
-		minCubeY: 5
+		minCubeY: 4
 	};
 
 	const videos = [
@@ -112,39 +112,56 @@
 
 			const maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
 
-			for (let i = 0; i < videos.length; i++) {
-				const video = document.createElement('video');
-				video.src = videos[i].videoUrl;
-				video.crossOrigin = 'anonymous';
-				video.loop = true;
-				video.muted = true;
-				video.autoplay = true;
-				video.playsInline = true;
-				video.style.display = 'none';
-				document.body.appendChild(video);
-				this.videoElements.push(video);
+			for (let j = 0; j < 3; ++j) {
+				for (let i = 0; i < videos.length; i++) {
+					const video = document.createElement('video');
+					video.src = videos[i].videoUrl;
+					video.crossOrigin = 'anonymous';
+					video.loop = true;
+					video.muted = true;
+					video.autoplay = true;
+					video.playsInline = true;
+					video.style.display = 'none';
+					document.body.appendChild(video);
+					this.videoElements.push(video);
+					video.play().catch((err) => {
+						console.warn('Video playback blocked until user interaction:', err);
+					});
 
-				const videoTexture = new THREE.VideoTexture(video);
-				videoTexture.minFilter = THREE.LinearFilter;
-				videoTexture.magFilter = THREE.LinearFilter;
-				videoTexture.anisotropy = maxAnisotropy;
-				this.videoTextures.push(videoTexture);
+					const videoTexture = new THREE.VideoTexture(video);
+					videoTexture.minFilter = THREE.LinearFilter;
+					videoTexture.magFilter = THREE.LinearFilter;
+					videoTexture.anisotropy = maxAnisotropy;
+					this.videoTextures.push(videoTexture);
 
-				video.addEventListener('loadedmetadata', () => this.setTextureCover(videoTexture, video));
-				video.addEventListener('loadeddata', () => this.setTextureCover(videoTexture, video));
+					video.loop = true;
+					video.muted = true;
+					video.autoplay = true;
+					video.playsInline = true;
 
-				const videoMaterial = new THREE.MeshBasicMaterial({
-					map: videoTexture,
-					side: THREE.FrontSide
-				});
-				this.videoMaterials.push(videoMaterial);
+					video.addEventListener('loadedmetadata', () => {
+						const randomStart = Math.random() * video.duration;
+						video.currentTime = randomStart;
+						this.setTextureCover(videoTexture, video);
+					});
+					video.addEventListener('loadeddata', () => this.setTextureCover(videoTexture, video));
+
+					const videoMaterial = new THREE.MeshBasicMaterial({
+						map: videoTexture,
+						side: THREE.FrontSide
+					});
+					this.videoMaterials.push(videoMaterial);
+				}
 			}
 
+			let i = 0;
 			for (const pos of cubePositions) {
-				const randVideoIdx = randomInt(0, videos.length);
+				i++;
+				const randVideoIdx = randomInt(0, this.videoMaterials.length);
+				// const material = this.videoMaterials[i];
 				const material = this.videoMaterials[randVideoIdx];
 				const cube = new THREE.Mesh(geometry, material);
-				cube.position.set(pos.x, pos.y, pos.z);
+				cube.position.set(2 * pos.x, 2 * pos.y, pos.z);
 				this.scene.add(cube);
 			}
 			this.animate();
@@ -223,17 +240,15 @@
 <div class="sketch" bind:this={container}></div>
 
 <style lang="scss">
-	.page {
-		padding: 1.5rem;
-	}
-
 	.sketch {
-		width: 100%;
-		height: 70vh;
+		position: absolute;
+		top: 20vh;
+		bottom: 0;
+		left: 0;
+		right: 0;
 		border-radius: 0.75rem;
 		overflow: hidden;
 		cursor: grab;
-		border: 1px solid steelblue;
 
 		&:active {
 			cursor: grabbing;
