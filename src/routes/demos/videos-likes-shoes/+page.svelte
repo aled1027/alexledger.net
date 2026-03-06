@@ -40,7 +40,7 @@
 			container.appendChild(this.renderer.domElement);
 
 			const itemSize = CONFIG.itemSize;
-			const geometry = new THREE.BoxGeometry(itemSize, itemSize, itemSize);
+			const geometry = new THREE.BoxGeometry(itemSize, itemSize, 0.1);
 			const material = new THREE.MeshNormalMaterial();
 
 			// Put 10 cubes in a grid
