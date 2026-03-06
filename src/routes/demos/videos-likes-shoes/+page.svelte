@@ -12,9 +12,9 @@
 
 	const CONFIG: Config = {
 		itemSize: 0.75,
-		icosahedronRadius: 6,
-		icosahedronDetail: 3,
-		minCubeY: 3
+		icosahedronRadius: 8,
+		icosahedronDetail: 4,
+		minCubeY: 5
 	};
 
 	class Sketch {
@@ -38,7 +38,8 @@
 			);
 			this.camera.position.set(0, 0, 20);
 
-			this.renderer = new THREE.WebGLRenderer({ antialias: true });
+			this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			this.renderer.setClearColor(0x000000, 0);
 			this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			this.renderer.setSize(container.clientWidth, container.clientHeight);
 			container.appendChild(this.renderer.domElement);
@@ -69,9 +70,14 @@
 			}
 
 			for (const pos of cubePositions) {
+			
+			
+			
 				const cube = new THREE.Mesh(geometry, material);
 				cube.position.set(pos.x, pos.y, pos.z);
 				this.scene.add(cube);
+				
+				
 			}
 			this.animate();
 		}
@@ -137,6 +143,7 @@
 		border-radius: 0.75rem;
 		overflow: hidden;
 		cursor: grab;
+		border: 1px solid steelblue;
 
 		&:active {
 			cursor: grabbing;
