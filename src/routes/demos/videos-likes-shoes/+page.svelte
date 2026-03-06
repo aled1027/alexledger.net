@@ -1,17 +1,20 @@
 <script lang="ts">
 	import * as THREE from 'three';
+	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { onMount } from 'svelte';
 
 	interface Config {
-		gridCols: number;
-		gridRows: number;
 		itemSize: number;
+		icosahedronRadius: number;
+		icosahedronDetail: number;
+		minCubeY: number;
 	}
 
 	const CONFIG: Config = {
-		gridRows: 4,
-		gridCols: 6,
-		itemSize: 2
+		itemSize: 0.75,
+		icosahedronRadius: 6,
+		icosahedronDetail: 3,
+		minCubeY: 3
 	};
 
 	class Sketch {
@@ -19,12 +22,13 @@
 		private scene: THREE.Scene;
 		private camera: THREE.PerspectiveCamera;
 		private renderer: THREE.WebGLRenderer;
+		private controls: OrbitControls;
 		private animationId: number | null = null;
 
 		constructor(container: HTMLDivElement) {
 			this.container = container;
 			this.scene = new THREE.Scene();
-			this.scene.background = new THREE.Color('#0f0f12');
+			this.scene.background = null;
 
 			this.camera = new THREE.PerspectiveCamera(
 				60,
@@ -39,43 +43,42 @@
 			this.renderer.setSize(container.clientWidth, container.clientHeight);
 			container.appendChild(this.renderer.domElement);
 
+			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+			this.controls.enableDamping = true;
+
 			const itemSize = CONFIG.itemSize;
 			const geometry = new THREE.BoxGeometry(itemSize, itemSize, 0.1);
 			const material = new THREE.MeshNormalMaterial();
 
-			// Put 10 cubes in a grid
+			const icosahedronGeometry = new THREE.IcosahedronGeometry(
+				CONFIG.icosahedronRadius,
+				CONFIG.icosahedronDetail
+			);
+			const icosPositions = icosahedronGeometry.attributes.position;
+			console.log(icosPositions);
 
-			for (
-				let x = -CONFIG.gridCols * itemSize + itemSize;
-				x <= CONFIG.gridCols * itemSize - itemSize;
-				x += 2 * itemSize
-			) {
-				for (
-					let y = -CONFIG.gridRows * itemSize + itemSize;
-					y <= CONFIG.gridRows * itemSize - itemSize;
-					y += 2 * itemSize
-				) {
-					const cube = new THREE.Mesh(geometry, material);
-					cube.position.set(x, y, 0);
-					this.scene.add(cube);
+			// Put 10 cubes in a grid
+			const cubePositions = [];
+			for (let i = 0; i < icosPositions.count; i++) {
+				const x = icosPositions.getX(i);
+				const y = icosPositions.getY(i);
+				const z = icosPositions.getZ(i);
+				if (z >= CONFIG.minCubeY) {
+					cubePositions.push(new THREE.Vector3(x, y, z));
 				}
 			}
 
-			// put a tiny cube at 0 0 0 that's red
-			// const tinySize = 2 * itemSize;
-			// const tinyMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-			// const tinyCube = new THREE.Mesh(
-			// 	new THREE.BoxGeometry(tinySize, tinySize, tinySize),
-			// 	tinyMaterial
-			// );
-			// tinyCube.position.set(0, 0, 0);
-			// this.scene.add(tinyCube);
-
+			for (const pos of cubePositions) {
+				const cube = new THREE.Mesh(geometry, material);
+				cube.position.set(pos.x, pos.y, pos.z);
+				this.scene.add(cube);
+			}
 			this.animate();
 		}
 
 		private animate = (): void => {
 			this.animationId = requestAnimationFrame(this.animate);
+			this.controls.update();
 			this.renderer.render(this.scene, this.camera);
 		};
 
@@ -90,6 +93,7 @@
 			if (this.animationId !== null) {
 				cancelAnimationFrame(this.animationId);
 			}
+			this.controls.dispose();
 			this.renderer.dispose();
 			if (this.container.contains(this.renderer.domElement)) {
 				this.container.removeChild(this.renderer.domElement);
@@ -132,5 +136,10 @@
 		height: 70vh;
 		border-radius: 0.75rem;
 		overflow: hidden;
+		cursor: grab;
+
+		&:active {
+			cursor: grabbing;
+		}
 	}
 </style>
