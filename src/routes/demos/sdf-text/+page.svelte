@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as THREE from 'three';
+	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 	import { onMount } from 'svelte';
 	import { Text } from 'troika-three-text';
 
@@ -8,6 +9,7 @@
 		private scene: THREE.Scene;
 		private camera: THREE.PerspectiveCamera;
 		private renderer: THREE.WebGLRenderer;
+		private controls: OrbitControls;
 		private animationId: number | null = null;
 
 		constructor(container: HTMLDivElement) {
@@ -38,11 +40,15 @@
 			this.renderer.setSize(container.clientWidth, container.clientHeight);
 			container.appendChild(this.renderer.domElement);
 
+			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+			this.controls.enableDamping = true;
+
 			this.animate();
 		}
 
 		private animate = (): void => {
 			this.animationId = requestAnimationFrame(this.animate);
+			this.controls.update();
 			this.renderer.render(this.scene, this.camera);
 		};
 
@@ -57,6 +63,7 @@
 			if (this.animationId !== null) {
 				cancelAnimationFrame(this.animationId);
 			}
+			this.controls.dispose();
 			this.renderer.dispose();
 			if (this.container.contains(this.renderer.domElement)) {
 				this.container.removeChild(this.renderer.domElement);
