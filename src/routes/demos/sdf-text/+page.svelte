@@ -177,6 +177,10 @@
 <div class="my-l">
 	<h2>Troika SDF Goo</h2>
 	<p>Hold mouse down or press space to increase goopiness.</p>
+	<p>
+		This demo uses Troika's signed distance field (SDF) text rendering to animate letter spacing,
+		stroke, and outline blur so the characters morph into a gooey connected shape.
+	</p>
 </div>
 
 <div class="sketch" bind:this={container}></div>
