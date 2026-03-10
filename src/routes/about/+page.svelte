@@ -4,8 +4,8 @@
 <section class="about" data-narrow-main>
 	<h1>Alex Ledger</h1>
 	<p>
-		I'm a web designer and developer from Portland, Oregon. I work with businesses to design and
-		build websites.
+		I'm a freelance web designer and developer from Portland, Oregon. I work with businesses to
+		design and build websites.
 	</p>
 	<p>
 		I have worked in software development for over 10 years. In that time, I've worked with
@@ -23,13 +23,7 @@
 		experience fun and attention-grabbing.
 	</p>
 	<p>
-		My web design business is
-		<a href="fuzzyrabbitlabs.com">Fuzzy Rabbit Labs</a>, where I work with clients to create custom
-		websites that meet their business needs.
-	</p>
-	<p>
-		You can read me on my
-		<a href="https://alexledger.substack.com">substack</a> or follow me on
-		<a href="https://bsky.app/profile/alexledger.bsky.social">bluesky</a>.
+		You can read and follow me on my
+		<a href="https://alexledger.substack.com">substack</a>.
 	</p>
 </section>
