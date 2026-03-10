@@ -46,6 +46,11 @@
 			title: 'Video Grid',
 			date: 'March 5, 2026',
 			link: '/demos/video-grid'
+		},
+		{
+			title: 'Gooey Text',
+			date: 'March 9, 2026',
+			link: '/demos/gooey-text'
 		}
 	];
 

@@ -4,6 +4,9 @@
 	import { onMount } from 'svelte';
 	import { Text } from 'troika-three-text';
 
+	let gooVelocity = 0.002;
+	let targetGooiness = $state(0.5);
+
 	class Sketch {
 		private container: HTMLDivElement;
 		private scene: THREE.Scene;
@@ -13,8 +16,7 @@
 		private animationId: number | null = null;
 
 		private text: Text;
-		private goopiness = 0;
-		private targetGoopiness = 0;
+		private gooiness = 0;
 
 		constructor(container: HTMLDivElement) {
 			this.container = container;
@@ -53,62 +55,36 @@
 			// Higher glyph resolution helps the edges stay nice as we blur/outline them.
 			this.text.sdfGlyphSize = 128;
 
-			// Base fill color
-			this.text.color = 0x00ffff;
-
-			// Troika SDF-native styling; these get animated by "goopiness"
+			// Troika SDF-native styling; these get animated by "gooiness"
+			this.text.letterSpacing = 0;
 			this.text.fillOpacity = 1;
-			this.text.strokeColor = 0x00ffff;
+			this.text.color = '#7CFF00';
+			this.text.strokeColor = '#7CFF00';
 			this.text.strokeWidth = 0;
 			this.text.strokeOpacity = 1;
 
-			this.text.outlineColor = 0x00ffff;
+			this.text.outlineColor = '#7CFF00';
 			this.text.outlineWidth = '0%';
 			this.text.outlineBlur = '0%';
 			this.text.outlineOpacity = 1;
 
-			this.text.letterSpacing = 0;
-			this.text.material = new THREE.MeshBasicMaterial({
-				color: 0x00ffff,
-				transparent: true
-			});
-
 			this.scene.add(this.text);
 			this.text.sync();
-
-			this.renderer.domElement.addEventListener('pointerdown', this.onPointerDown);
-			window.addEventListener('pointerup', this.onPointerUp);
-			window.addEventListener('keydown', this.onKeyDown);
 
 			this.animate();
 		}
 
-		private onPointerDown = (): void => {
-			this.targetGoopiness = 1;
-		};
-
-		private onPointerUp = (): void => {
-			this.targetGoopiness = 0;
-		};
-
-		private onKeyDown = (event: KeyboardEvent): void => {
-			if (event.code === 'Space') {
-				event.preventDefault();
-				this.targetGoopiness = this.targetGoopiness > 0.5 ? 0 : 1;
-			}
-		};
-
-		private applyGoopiness(): void {
-			const g = this.goopiness;
+		private applyGooiness(): void {
+			const g = this.gooiness;
 
 			// Pull letters together
 			this.text.letterSpacing = THREE.MathUtils.lerp(0.0, -0.11, g);
 
 			// Add inner body thickness
-			this.text.strokeWidth = `${THREE.MathUtils.lerp(0, 7, g).toFixed(2)}%`;
+			this.text.strokeWidth = `${THREE.MathUtils.lerp(0, 17, g).toFixed(2)}%`;
 
 			// Add outer field / halo that helps neighboring letters visually connect
-			this.text.outlineWidth = `${THREE.MathUtils.lerp(0, 10, g).toFixed(2)}%`;
+			this.text.outlineWidth = `${THREE.MathUtils.lerp(0, 12, g).toFixed(2)}%`;
 			this.text.outlineBlur = `${THREE.MathUtils.lerp(0, 1, g).toFixed(2)}%`;
 			// Troika recommends sync after layout-affecting changes.
 			this.text.sync();
@@ -117,12 +93,21 @@
 		private animate = (): void => {
 			this.animationId = requestAnimationFrame(this.animate);
 
+			targetGooiness = targetGooiness + gooVelocity;
+			if (targetGooiness > 1) {
+				gooVelocity *= -1;
+				targetGooiness = 1;
+			} else if (targetGooiness < 0) {
+				gooVelocity *= -1;
+				targetGooiness = 0;
+			}
+
 			this.controls.update();
 
-			// Ease goopiness
-			this.goopiness += (this.targetGoopiness - this.goopiness) * 0.08;
+			// Ease gooiness
+			this.gooiness += (targetGooiness - this.gooiness) * 0.08;
 
-			this.applyGoopiness();
+			this.applyGooiness();
 			this.renderer.render(this.scene, this.camera);
 		};
 
@@ -141,10 +126,6 @@
 			if (this.animationId !== null) {
 				cancelAnimationFrame(this.animationId);
 			}
-
-			this.renderer.domElement.removeEventListener('pointerdown', this.onPointerDown);
-			window.removeEventListener('pointerup', this.onPointerUp);
-			window.removeEventListener('keydown', this.onKeyDown);
 
 			this.controls.dispose();
 			this.text.dispose();
@@ -174,26 +155,39 @@
 	});
 </script>
 
-<div class="my-l">
-	<h2>Troika SDF Goo</h2>
-	<p>Hold mouse down or press space to increase goopiness.</p>
-	<p>
-		This demo uses Troika's signed distance field (SDF) text rendering to animate letter spacing,
-		stroke, and outline blur so the characters morph into a gooey connected shape.
-	</p>
+<div class="isolate">
+	<div class="my-l anchor">
+		<h2>Gooey Text</h2>
+		<p>Uses Troika's SDF text rendering to create gooey text.</p>
+		<div class="my-s">
+			<label for="gooiness"
+				>Gooiness
+				{` (${targetGooiness.toFixed(2)})`}
+			</label>
+			<input type="range" min="0" max="1" step="0.01" bind:value={targetGooiness} id="gooiness" />
+		</div>
+	</div>
+
+	<div class="sketch" bind:this={container}></div>
 </div>
 
-<div class="sketch" bind:this={container}></div>
-
 <style lang="scss">
+	.isolate {
+		position: relative;
+		isolation: isolate;
+		min-height: 85lvh;
+	}
+	.anchor {
+		anchor-name: --sketch-anchor;
+	}
+
 	.sketch {
 		position: absolute;
-		top: 30vh;
-		bottom: 0;
+		position-anchor: --sketch-anchor;
+		top: anchor(--sketch-anchor bottom);
 		left: 0;
 		right: 0;
-		border-radius: 0.75rem;
-		overflow: hidden;
+		bottom: 0;
 		cursor: grab;
 
 		&:active {
