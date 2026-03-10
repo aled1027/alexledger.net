@@ -5,10 +5,9 @@
 	<h1 class="font-decorative">Contact</h1>
 	<p>I'd love to chat with you about how I can help you with your website.</p>
 	<p>
-		You can book an initial call by filling out the form below or emailing me at
-		hello@alexledger.net.
+		You can book a free call or just connect to learn more by emailing me at hello@alexledger.net.
 	</p>
-	<form class="mt-l" name="contact" method="POST" data-netlify="true">
+	<!-- <form class="mt-l" name="contact" method="POST" data-netlify="true">
 		<input type="hidden" name="form-name" value="contact" />
 		<div class="input-group">
 			<label for="name">Name</label>
@@ -23,11 +22,11 @@
 			<textarea id="message" name="message" required></textarea>
 		</div>
 		<button class="button mt-m" type="submit">Submit</button>
-	</form>
+	</form> -->
 </section>
 
 <style>
-	.contact button {
+	/*.contact button {
 		padding-inline: 1.5em;
 		padding-block: 1em;
 		font-weight: var(--font-bold);
@@ -37,5 +36,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-2xs);
-	}
+	}*/
 </style>
