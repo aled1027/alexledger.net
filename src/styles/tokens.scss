@@ -71,7 +71,9 @@
 	--focus-offset: 0.2em;
 
 	/* Z-index */
-	--header-nav-z-index: 100;
+	--header-nav-z-index: 100; // TODO: should be unused; remove
+	--z-header-nav: 1000;
+	--z-header-inner: 1001;
 
 	/* Others */
 	--hr-stroke: var(--stroke);

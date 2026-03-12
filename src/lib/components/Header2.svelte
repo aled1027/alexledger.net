@@ -55,28 +55,27 @@
 			</svg>
 		</button>
 	</div>
-
-	<nav class="header2__nav" id="primary-nav" data-visible={isMenuExpanded}>
-		<ul role="list">
-			{#each navItems as item (item.href)}
-				<li>
-					<a href={item.href} data-current={item.isCurrent}>
-						{item.label}
-					</a>
-				</li>
-			{/each}
-		</ul>
-	</nav>
 </header>
+
+<nav class="header2__nav" id="primary-nav" data-visible={isMenuExpanded}>
+	<ul role="list">
+		{#each navItems as item (item.href)}
+			<li>
+				<a href={item.href} data-current={item.isCurrent}>
+					{item.label}
+				</a>
+			</li>
+		{/each}
+	</ul>
+</nav>
 
 <style lang="scss">
 	.header2 {
-		--z-header: 100;
 
 		position: fixed;
 		top: 1rem;
 		right: 1rem;
-		z-index: var(--z-header);
+		z-index: var(--z-header-inner);
 		color: #fff;
 		mix-blend-mode: difference;
 	}
@@ -84,7 +83,6 @@
 	.header2__inner {
 		display: flex;
 		align-items: center;
-		color: inherit;
 	}
 
 	.header2__inner .menu-toggle {
@@ -133,7 +131,7 @@
 	.header2__nav[data-visible='true'] {
 		display: block;
 		position: fixed;
-		z-index: calc(var(--z-header) - 1);
+		z-index: var(--z-header-nav);
 		inset: 0;
 		// TODO: can make this radiate out
 		background: var(--body-bg);

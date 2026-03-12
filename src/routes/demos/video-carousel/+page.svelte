@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Header2 from '$lib/components/Header2.svelte';
 
 	// TODO: convert to webm
 	// Make these gradients or bgs more alive. Perhaps with a shader.
@@ -191,8 +190,6 @@
 		};
 	});
 </script>
-
-<Header2 />
 
 <div
 	bind:this={carouselEl}
