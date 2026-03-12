@@ -1,18 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	// Step 1: Layout
-	// - I want to play with elements being at the bottom of the screen
-	//   that often feels artsy
-	// - I want to follow a grid-like system
-	// Step 2: Ambience and Mileue
-	// Step 3: Transitions
 
-	function clamp(value: number, min: number, max: number): number {
-		return Math.min(Math.max(value, min), max);
-	}
 	interface Item {
 		label: string;
 		videoUrl: string;
+	}
+
+	function clamp(value: number, min: number, max: number): number {
+		return Math.min(Math.max(value, min), max);
 	}
 
 	const items: Item[] = [
@@ -45,31 +40,22 @@
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
 			label: 'Cosmic Fronter'
 		},
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4', label: 'Vyx' }
+		{
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4',
+			label: 'Vyx'
+		}
 	];
 
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
-	let progress = $state(0);
-	let curItemIdx = $derived(Math.min(Math.floor(progress * items.length), items.length - 1));
+	let stepProgress = $state(0);
 
-	let itemProgresses = $derived.by(() => {
-		const numItems = items.length;
+	// Current centered-ish item
+	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, items.length - 1));
 
-		if (numItems === 0) return [];
-		if (numItems === 1) return [0];
-
-		const segmentSize = 1 / numItems;
-		const res = items.map((_, i) => {
-			// Center each item within its scroll segment
-			// Use -1 for entering, 0 for centered, 1 for leaving
-			const center = (i + 0.5) * segmentSize;
-			const offset = progress - center;
-			return clamp(offset / segmentSize, -1, 1);
-		});
-
-		return res;
-	});
+	// Signed offset in "item steps"
+	// 0 = centered, -1 = one step below, 1 = one step above
+	let itemOffsets = $derived.by(() => items.map((_, i) => stepProgress - i));
 
 	function updateProgress() {
 		if (!carouselEl) return;
@@ -78,9 +64,13 @@
 		const viewportHeight = window.innerHeight - headerHeight;
 		const totalScrollable = rect.height - viewportHeight;
 
-		if (totalScrollable > 0) {
-			progress = clamp(-rect.top / totalScrollable, 0, 1);
+		if (totalScrollable <= 0) {
+			stepProgress = 0;
+			return;
 		}
+
+		const normalized = clamp(-rect.top / totalScrollable, 0, 1);
+		stepProgress = normalized * (items.length - 1);
 	}
 
 	onMount(() => {
@@ -116,16 +106,19 @@
 					playsinline
 					src={item.videoUrl}
 					style="
-						--item-progress: {itemProgresses[idx]};
-						--item-dist: {Math.abs(itemProgresses[idx])};
+						--item-offset: {itemOffsets[idx]};
+						--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};
 					"
 				></video>
 			{/each}
 		</div>
+
 		<div class="carousel__labels">
 			<p class="carousel__title">Portfolio</p>
 			{#each items as item, idx (idx)}
-				<p class="carousel__label" data-cur-item={idx === curItemIdx}>{item.label}</p>
+				<p class="carousel__label" data-cur-item={idx === curItemIdx}>
+					{item.label}
+				</p>
 			{/each}
 		</div>
 	</div>
@@ -136,29 +129,27 @@
 		--carousel-font-size: var(--size-1);
 		--carousel-font-weight: 400;
 
+		/* Tune these */
 		--video-height: 50vh;
-		--video-gap: 1rem;
+		--video-gap: 5vh;
 		--video-step: calc(var(--video-height) + var(--video-gap));
 
-		--item-height: 30vh;
-
 		position: relative;
-		height: calc(max(100vh - var(--header-height, 0px), var(--items) * var(--item-height)));
+
+		/* One viewport to show the sticky stage + one step per transition */
+		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--video-step)));
 	}
+
 	.carousel__inner {
 		position: sticky;
 		top: var(--header-height, 0px);
-		bottom: 0;
-		left: 0;
-		right: 0;
-		/* height: var(--item-height); */
 		height: calc(100vh - var(--header-height));
 
 		display: grid;
 		grid-template-areas:
-			'asset asset asset . '
-			'asset asset asset label '
-			'asset asset asset . ';
+			'asset asset asset .'
+			'asset asset asset label'
+			'asset asset asset .';
 		grid-template-rows: auto 1fr auto;
 		overflow: hidden;
 	}
@@ -178,11 +169,14 @@
 			pointer-events: none;
 			transform-origin: left center;
 
-			/* 1 at center, smaller away from center */
-			--scale-x: calc(1 - var(--item-dist) * 0.4);
-			transform: translateY(calc(-50% + (var(--item-progress) * -1 * 100vh))) scaleX(var(--scale-x));
+			/* Full width at center, narrower away from center */
+			--scale: calc(1 - var(--item-dist) * 0.3);
+
+			transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--video-step))))
+				scale(var(--scale));
 		}
 	}
+
 	.carousel__labels {
 		grid-area: label;
 		align-self: center;
