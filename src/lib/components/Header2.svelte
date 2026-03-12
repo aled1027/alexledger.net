@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
-	import { Menu, X } from '@lucide/svelte';
 
 	// A good, but dense, guide for menus is this:
 	// https://piccalil.li/blog/build-a-fully-responsive-progressively-enhanced-burger-menu/
@@ -46,13 +45,14 @@
 			aria-label={isMenuExpanded ? 'Close menu' : 'Open menu'}
 			aria-controls="primary-nav"
 			aria-expanded={isMenuExpanded}
+			data-expanded={isMenuExpanded}
 			onclick={() => (isMenuExpanded = !isMenuExpanded)}
 		>
-			{#if isMenuExpanded}
-				<X color="#000" />
-			{:else}
-				<Menu color="#fff" />
-			{/if}
+			<svg class="menu-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+				<line class="line line--top" x1="3" y1="6" x2="21" y2="6" />
+				<line class="line line--middle" x1="3" y1="12" x2="21" y2="12" />
+				<line class="line line--bottom" x1="3" y1="18" x2="21" y2="18" />
+			</svg>
 		</button>
 	</div>
 
@@ -88,7 +88,39 @@
 
 	.header2__inner .menu-toggle {
 		border: none;
+		color: #fff;
 		z-index: var(--z-header-menu-button);
+	}
+
+	.header2__inner .menu-toggle[data-expanded='true'] {
+		color: #000;
+	}
+
+	.header2__inner .menu-toggle .menu-icon {
+		display: block;
+		width: 1.5rem;
+		height: 1.5rem;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+
+	.header2__inner .menu-toggle .line {
+		transform-box: fill-box;
+		transform-origin: center;
+		transition: transform 200ms ease, opacity 200ms ease;
+	}
+
+	.header2__inner .menu-toggle[data-expanded='true'] .line--top {
+		transform: translateY(6px) rotate(45deg);
+	}
+
+	.header2__inner .menu-toggle[data-expanded='true'] .line--middle {
+		opacity: 0;
+	}
+
+	.header2__inner .menu-toggle[data-expanded='true'] .line--bottom {
+		transform: translateY(-6px) rotate(-45deg);
 	}
 
 	.header2__inner a {
