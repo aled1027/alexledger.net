@@ -61,6 +61,15 @@
 	onNavigate(() => {
 		isMenuExpanded = false;
 	});
+
+	$effect(() => {
+		// Lock background scrolling while the fullscreen menu is open.
+		document.body.style.overflow = isMenuExpanded ? 'hidden' : '';
+
+		return () => {
+			document.body.style.overflow = '';
+		};
+	});
 </script>
 
 <header class="header2">
