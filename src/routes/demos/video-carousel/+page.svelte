@@ -175,7 +175,7 @@
 		height: 100vh;
 		top: 0;
 		left: calc(50% - 50vw);
-		transition: background-color 1.5s ease;
+		transition: background-color 1.5s ease-in;
 		background-color: var(--active-bg, transparent);
 	}
 
@@ -211,6 +211,7 @@
 
 		color: white;
 		mix-blend-mode: difference;
+		transition: color 0.5s ease-in;
 
 		font-size: var(--carousel-font-size);
 		font-weight: var(--carousel-font-weight);
