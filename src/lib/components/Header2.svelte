@@ -160,7 +160,8 @@
 		position: fixed;
 		z-index: var(--z-header-nav);
 		inset: 0;
-		background: var(--body-bg);
+		background: var(--color-gray-900);
+		color: var(--color-gray-100);
 		// Start as a zero-radius circle at the button center.
 		clip-path: circle(0px at var(--menu-origin-x) var(--menu-origin-y));
 		visibility: hidden;
