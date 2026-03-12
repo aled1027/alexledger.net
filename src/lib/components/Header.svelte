@@ -220,20 +220,16 @@
 	}
 
 	@media (max-width: 48rem) {
-		// On small viewports, disable the clip-path reveal and keep only opacity transition.
+		// On small viewports, disable the clip-path reveal and make open/close instant.
 		.header__nav {
 			clip-path: none;
-			will-change: opacity;
-			transition:
-				opacity 240ms ease,
-				visibility 0ms linear 240ms;
+			will-change: auto;
+			transition: none;
 		}
 
 		.header__nav[data-visible='true'] {
 			clip-path: none;
-			transition:
-				opacity 240ms ease,
-				visibility 0ms;
+			transition: none;
 		}
 	}
 
