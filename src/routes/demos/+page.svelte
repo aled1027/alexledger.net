@@ -1,215 +1,208 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	/** Warm up ideas
-	 *
-	 * */
-	// https://ebisu.money/
+	interface Item {
+		label: string;
+		videoUrl: string;
+	}
 
-	const demos = [
+	function clamp(value: number, min: number, max: number): number {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	const items: Item[] = [
 		{
-			title: 'Marquee',
-			date: 'June 17, 2025',
-			link: '/demos/marquee'
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4',
+			label: 'Anna Neshyba'
 		},
 		{
-			title: 'Eyes Watching the Universe',
-			date: 'June 18, 2025',
-			link: '/demos/eyes'
+			videoUrl:
+				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4',
+			label: 'Ethyca Product Animation'
 		},
 		{
-			title: 'Ripple Text',
-			date: 'June 30, 2025',
-			link: '/demos/ripple-text'
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4',
+			label: 'Max Life Foundation'
 		},
 		{
-			title: 'Hover Animations on Line',
-			date: 'August 18, 2025',
-			link: '/demos/hover-animations-on-line'
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4',
+			label: 'Incontext Learning'
 		},
 		{
-			title: 'Asciied Video',
-			date: 'September 26, 2025',
-			link: '/demos/asciied-video'
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4',
+			label: 'Cat and Alex'
 		},
 		{
-			title: 'Whiteboard',
-			date: 'December 18, 2025',
-			link: '/demos/whiteboard'
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4',
+			label: 'Cat Nesh'
 		},
 		{
-			title: 'Videos',
-			date: 'February 6, 2026',
-			link: '/demos/videos'
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
+			label: 'Cosmic Fronter'
 		},
 		{
-			title: 'Video Grid',
-			date: 'March 5, 2026',
-			link: '/demos/video-grid'
-		},
-		{
-			title: 'Gooey Text',
-			date: 'March 9, 2026',
-			link: '/demos/gooey-text'
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4',
+			label: 'Vyx'
 		}
 	];
 
-	let randomLink = demos[0].link; // Default to the first demo link
+	let headerHeight = $state(0);
+	let carouselEl: HTMLElement;
+	let stepProgress = $state(0);
+
+	// Current centered-ish item
+	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, items.length - 1));
+
+	// Signed offset in "item steps"
+	// 0 = centered, -1 = one step below, 1 = one step above
+	let itemOffsets = $derived.by(() => items.map((_, i) => stepProgress - i));
+
+	function updateProgress() {
+		if (!carouselEl) return;
+
+		const rect = carouselEl.getBoundingClientRect();
+		const viewportHeight = window.innerHeight - headerHeight;
+		const totalScrollable = rect.height - viewportHeight;
+
+		if (totalScrollable <= 0) {
+			stepProgress = 0;
+			return;
+		}
+
+		const normalized = clamp(-rect.top / totalScrollable, 0, 1);
+		stepProgress = normalized * (items.length - 1);
+	}
+
 	onMount(() => {
-		const randomIndex = Math.floor(Math.random() * demos.length);
-		randomLink = demos[randomIndex].link;
+		const headerElement = document.querySelector('header');
+		if (headerElement) {
+			headerHeight = headerElement.offsetHeight;
+		}
+
+		updateProgress();
+
+		window.addEventListener('scroll', updateProgress, { passive: true });
+		window.addEventListener('resize', updateProgress);
+
+		return () => {
+			window.removeEventListener('scroll', updateProgress);
+			window.removeEventListener('resize', updateProgress);
+		};
 	});
 </script>
 
-<div class="full-bleed demo-wrapper full-bleed pt-xl">
-	<div class="demo">
-		<div class="logo">
-			<h1>Demos</h1>
-		</div>
-		<div class="launch">
-			<a class="demo-button" href={randomLink}>Random</a>
-		</div>
-
-		<div class="marquee">
-			<p class="m-0">Fun demos exploring new ideas and technologies.</p>
-		</div>
-
-		<div class="main">
-			<ol>
-				{#each demos as demo}
-					<li>
-						<a href={demo.link}>{demo.title}</a>
-						<span class="size-step--2">&nbsp;{demo.date}</span>
-					</li>
-				{/each}
-			</ol>
+<div
+	bind:this={carouselEl}
+	class="carousel"
+	style="--header-height: {headerHeight}px; --items: {items.length}"
+>
+	<div class="carousel__inner">
+		<div class="carousel__asset">
+			{#each items as item, idx (idx)}
+				<video
+					autoplay
+					muted
+					loop
+					playsinline
+					src={item.videoUrl}
+					style="
+						--item-offset: {itemOffsets[idx]};
+						--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};
+					"
+				></video>
+			{/each}
 		</div>
 
-		<div class="bottom"></div>
+		<div class="carousel__labels">
+			<p class="carousel__title">Portfolio</p>
+			{#each items as item, idx (idx)}
+				<p class="carousel__label" data-cur-item={idx === curItemIdx}>
+					{item.label}
+				</p>
+			{/each}
+		</div>
 	</div>
 </div>
 
-<style>
-	.demo-wrapper {
-		--accent: #364b7c;
-		/* --bg: #fcf7f3; */
-		--border: 1px solid rgba(0, 0, 0, 0.6);
-		background: var(--bg);
-		min-height: 100vh;
-		border-collapse: collapse;
-		font-weight: 300;
+<style lang="scss">
+	.carousel {
+		--carousel-font-size: var(--size-1);
+		--carousel-font-weight: 400;
+
+		/* Tune these */
+		--video-height: 50vh;
+		--video-gap: 1rem;
+		--video-step: calc(var(--video-height) + var(--video-gap));
+
+		position: relative;
+
+		/* One viewport to show the sticky stage + one step per transition */
+		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--video-step)));
 	}
 
-	.demo {
+	.carousel__inner {
+		position: sticky;
+		top: var(--header-height, 0px);
+		height: calc(100vh - var(--header-height));
+
 		display: grid;
 		grid-template-areas:
-			'logo . . . launch'
-			'marquee marquee marquee marquee marquee'
-			'main main main main main'
-			'bottom bottom bottom bottom bottom';
-		grid-template-rows: auto auto auto auto;
-		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-		width: var(--content-width);
-		margin-inline: auto;
-		border: var(--border);
-		overflow: auto;
-	}
-
-	h1 {
-		font-size: 2rem;
-		font-weight: bold;
-		color: var(--accent);
-	}
-
-	.logo {
-		grid-area: logo;
-		display: flex;
-		align-items: center;
-		padding-block: 1rem;
-		padding-inline: 2rem;
-	}
-
-	.launch {
-		grid-area: launch;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-left: var(--border);
-	}
-
-	.demo-button {
-		/* background: var(--accent); */
-		border: none;
-		padding: 8px 13px;
-		border-radius: 3px;
-		cursor: pointer;
-		text-decoration: none;
-		font-weight: 300;
-		display: inline-flex;
-		align-items: center;
-		white-space: nowrap;
-	}
-
-	.demo-button::after {
-		content: '';
-		display: inline-block;
-		vertical-align: middle;
-		width: 1.5em;
-		height: 1.5em;
-		margin-left: 0.25em;
-		background: no-repeat center/contain
-			url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M10 5l3 3-3 3"/></svg>');
-	}
-
-	.demo-button:hover {
-		opacity: 0.9;
-	}
-
-	.marquee {
-		grid-area: marquee;
-		padding: 1rem;
+			'asset asset asset .'
+			'asset asset asset label'
+			'asset asset asset .';
+		grid-template-rows: auto 1fr auto;
 		overflow: hidden;
-		white-space: nowrap;
-		border-top: var(--border);
-		border-bottom: var(--border);
 	}
 
-	.marquee p {
-		animation: scroll 30s linear infinite;
-		width: 100%;
-		font-size: 0.875rem;
-		white-space: nowrap;
-	}
+	.carousel__asset {
+		grid-area: asset;
+		position: relative;
+		overflow: hidden;
 
-	.main {
-		grid-area: main;
-		padding-block-start: 1rem;
-		padding-inline-start: 1rem;
-		min-height: 50vh;
-	}
+		video {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			width: 100%;
+			height: var(--video-height);
+			object-fit: cover;
+			pointer-events: none;
+			transform-origin: left center;
 
-	.main li {
-		padding-inline-start: 1ch;
-		margin-block-start: 0.5ch;
-	}
+			/* Full width at center, narrower away from center */
+			--scale-x: calc(1 - var(--item-dist) * 0.4);
 
-	.bottom {
-		grid-area: bottom;
-		padding: 1rem;
-		text-align: center;
-		border-top: var(--border);
-	}
-
-	@keyframes scroll {
-		0% {
-			transform: translateX(100%);
-		}
-		100% {
-			transform: translateX(-100%);
+			transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--video-step))))
+				scaleX(var(--scale-x));
 		}
 	}
 
-	.m-0 {
+	.carousel__labels {
+		grid-area: label;
+		align-self: center;
+		text-align: right;
+
+		font-size: var(--carousel-font-size);
+		font-weight: var(--carousel-font-weight);
+
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.carousel__title {
 		margin: 0;
+		font-size: var(--carousel-font-size);
+		font-weight: var(--carousel-font-weight);
+	}
+
+	.carousel__label {
+		margin: 0;
+		opacity: 0.35;
+
+		&[data-cur-item='true'] {
+			font-weight: 700;
+			opacity: 1;
+		}
 	}
 </style>
