@@ -197,7 +197,7 @@
 		visibility: visible;
 		pointer-events: auto;
 		transition:
-			clip-path 500ms cubic-bezier(0.25, 1, 0.5, 1),
+			clip-path 500ms ease-in,
 			opacity 120ms linear,
 			visibility 0ms;
 	}
