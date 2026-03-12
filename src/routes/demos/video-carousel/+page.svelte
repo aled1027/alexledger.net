@@ -175,16 +175,9 @@
 	}
 
 	onMount(() => {
-		const headerElement = document.querySelector('.site-header');
-		if (headerElement) {
-			headerElement.style.display = 'none';
-			headerHeight = 0;
-			// headerHeight = headerElement.offsetHeight;
-		}
-
 		const main = document.querySelector('main');
 		if (main) {
-			main.style.marginTop = `${headerHeight}px`;
+			main.style.marginTop = `${0}px`;
 		}
 
 		updateProgress();
