@@ -5,15 +5,67 @@
 	// Make these gradients or bgs more alive. Perhaps with a shader.
 
 	interface Item {
+		// Human-readable label shown in the right-side list.
 		label: string;
+		// Source URL for the looping video shown in the carousel stack.
 		videoUrl: string;
+		// Gradient start color (top-left / leading edge of the base linear gradient).
 		bgFrom: string;
+		// Gradient end color (bottom-right / trailing edge of the base linear gradient).
 		bgTo: string;
+		// Accent color used by radial glow layers to add depth and atmosphere.
 		bgGlow: string;
 	}
 
 	function clamp(value: number, min: number, max: number): number {
 		return Math.min(Math.max(value, min), max);
+	}
+
+	// Simple RGB shape for color interpolation.
+	type RGB = { r: number; g: number; b: number };
+
+	// Parses #rgb, #rrggbb, and rgb(...) strings into numeric channels.
+	function parseColor(color: string): RGB {
+		if (color.startsWith('#')) {
+			const hex = color.slice(1);
+			const normalized =
+				hex.length === 3
+					? hex
+							.split('')
+							.map((char) => char + char)
+							.join('')
+					: hex;
+
+			return {
+				r: parseInt(normalized.slice(0, 2), 16),
+				g: parseInt(normalized.slice(2, 4), 16),
+				b: parseInt(normalized.slice(4, 6), 16)
+			};
+		}
+
+		const rgbMatch = color.match(/\d+(?:\.\d+)?/g);
+		if (!rgbMatch || rgbMatch.length < 3) {
+			return { r: 0, g: 0, b: 0 };
+		}
+
+		return {
+			r: Number(rgbMatch[0]),
+			g: Number(rgbMatch[1]),
+			b: Number(rgbMatch[2])
+		};
+	}
+
+	// Linearly interpolates between two colors and returns an rgb(...) string.
+	function mixColor(from: string, to: string, amount: number): string {
+		const t = clamp(amount, 0, 1);
+		const a = parseColor(from);
+		const b = parseColor(to);
+
+		const r = Math.round(a.r + (b.r - a.r) * t);
+		const g = Math.round(a.g + (b.g - a.g) * t);
+		const bCh = Math.round(a.b + (b.b - a.b) * t);
+
+		return `rgb(${r}, ${g}, ${bCh})`;
 	}
 
 	const items: Item[] = [
@@ -87,6 +139,22 @@
 	// 0 = centered, -1 = one step below, 1 = one step above
 	let itemOffsets = $derived.by(() => items.map((_, i) => stepProgress - i));
 
+	// Blend background colors between adjacent items using fractional scroll progress.
+	// This keeps gradient transitions smooth instead of snapping at item boundaries.
+	let activeBg = $derived.by(() => {
+		const lowerIdx = clamp(Math.floor(stepProgress), 0, items.length - 1);
+		const upperIdx = clamp(Math.ceil(stepProgress), 0, items.length - 1);
+		const t = stepProgress - lowerIdx;
+		const lower = items[lowerIdx];
+		const upper = items[upperIdx];
+
+		return {
+			from: mixColor(lower.bgFrom, upper.bgFrom, t),
+			to: mixColor(lower.bgTo, upper.bgTo, t),
+			glow: mixColor(lower.bgGlow, upper.bgGlow, t)
+		};
+	});
+
 	function updateProgress() {
 		if (!carouselEl) return;
 
@@ -125,9 +193,9 @@
 	bind:this={carouselEl}
 	class="carousel"
 	style="--header-height: {headerHeight}px; --items: {items.length};
-	--bg-from: {items[curItemIdx].bgFrom};
-	--bg-to: {items[curItemIdx].bgTo};
-	--bg-glow: {items[curItemIdx].bgGlow};"
+	--bg-from: {activeBg.from};
+	--bg-to: {activeBg.to};
+	--bg-glow: {activeBg.glow};"
 >
 	<div class="carousel__inner">
 		<div class="carousel__asset">
@@ -188,6 +256,7 @@
 		grid-template-rows: auto 1fr auto;
 	}
 
+	/* Gradient backdrop: two soft glow layers + one directional base gradient. */
 	.carousel__inner::before {
 		content: '';
 		display: block;
@@ -213,6 +282,7 @@
 		transition: background 1s ease, filter 1s ease;
 	}
 
+	/* Subtle grain overlay to avoid flat digital gradients. */
 	.carousel__inner::after {
 		content: '';
 		display: block;
