@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Menu, X } from '@lucide/svelte';
 
 	// TODO: convert to webm
 	// Make these gradients or bgs more alive. Perhaps with a shader.
+	// Add a 3-d curve the movements
+	// Make the right side more of a rolodex
 
 	interface Item {
 		// Human-readable label shown in the right-side list.
@@ -70,7 +73,7 @@
 
 	const items: Item[] = [
 		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4',
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.webm',
 			label: 'Anna Neshyba',
 			bgFrom: '#31453f',
 			bgTo: '#161c1f',
@@ -78,49 +81,49 @@
 		},
 		{
 			videoUrl:
-				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4',
+				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.webm',
 			label: 'Ethyca Product Animation',
 			bgFrom: '#364052',
 			bgTo: '#171b24',
 			bgGlow: '#8aa7d8'
 		},
 		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4',
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.webm',
 			label: 'Max Life Foundation',
 			bgFrom: '#57367b',
 			bgTo: '#1e1731',
 			bgGlow: '#cb94ff'
 		},
 		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4',
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.webm',
 			label: 'Incontext Learning',
 			bgFrom: '#7a6e63',
 			bgTo: '#27211d',
 			bgGlow: '#dbc2a7'
 		},
 		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4',
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.webm',
 			label: 'Cat and Alex',
 			bgFrom: '#644183',
 			bgTo: '#221632',
 			bgGlow: '#d8b0ff'
 		},
 		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4',
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.webm',
 			label: 'Cat Nesh',
 			bgFrom: '#4f5b3e',
 			bgTo: '#1b2115',
 			bgGlow: '#b7ce8e'
 		},
 		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.webm',
 			label: 'Cosmic Fronter',
 			bgFrom: '#171f3d',
 			bgTo: '#070910',
 			bgGlow: '#6f87ff'
 		},
 		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4',
+			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.webm',
 			label: 'Vyx',
 			bgFrom: '#535a62',
 			bgTo: '#1a1d21',
@@ -172,9 +175,16 @@
 	}
 
 	onMount(() => {
-		const headerElement = document.querySelector('header');
+		const headerElement = document.querySelector('.site-header');
 		if (headerElement) {
-			headerHeight = headerElement.offsetHeight;
+			headerElement.style.display = 'none';
+			headerHeight = 0;
+			// headerHeight = headerElement.offsetHeight;
+		}
+
+		const main = document.querySelector('main');
+		if (main) {
+			main.style.marginTop = `${headerHeight}px`;
 		}
 
 		updateProgress();
@@ -188,6 +198,13 @@
 		};
 	});
 </script>
+
+<heading>
+	<a href="/">Alex Ledger</a>
+	<button class="button menu-toggle" data-type="ghost">
+		<Menu color="white" />
+	</button>
+</heading>
 
 <div
 	bind:this={carouselEl}
@@ -236,10 +253,11 @@
 		--video-gap: 3vh;
 		--video-step: calc(var(--video-height) + var(--video-gap));
 
-		position: relative;
-
 		/* One viewport to show the sticky stage + one step per transition */
 		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--video-step)));
+		position: relative;
+
+		font-family: 'Manrope', sans-serif;
 	}
 
 	.carousel__inner {
@@ -355,5 +373,23 @@
 			font-weight: 700;
 			opacity: 1;
 		}
+	}
+
+	heading {
+		--z-heading: 100;
+
+		position: fixed;
+		top: 1rem;
+		right: 1rem;
+		z-index: var(--z-heading);
+
+		display: flex;
+		align-items: center;
+	}
+
+	heading .menu-toggle {
+		color: white;
+		mix-blend-mode: difference;
+		border: none;
 	}
 </style>
