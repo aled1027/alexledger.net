@@ -49,6 +49,32 @@
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
 	let stepProgress = $state(0);
+	let itemColors = $state<string[]>(items.map(() => 'transparent'));
+
+	function sampleVideoColor(video: HTMLVideoElement, idx: number) {
+		try {
+			const canvas = document.createElement('canvas');
+			canvas.width = 64;
+			canvas.height = 36;
+			const ctx = canvas.getContext('2d');
+			if (!ctx) return;
+			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+			const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+			let r = 0,
+				g = 0,
+				b = 0;
+			const pixelCount = canvas.width * canvas.height;
+			for (let i = 0; i < data.length; i += 4) {
+				r += data[i];
+				g += data[i + 1];
+				b += data[i + 2];
+			}
+			itemColors[idx] =
+				`rgb(${Math.round(r / pixelCount)}, ${Math.round(g / pixelCount)}, ${Math.round(b / pixelCount)})`;
+		} catch {
+			// CORS or other error — leave as transparent
+		}
+	}
 
 	// Current centered-ish item
 	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, items.length - 1));
@@ -94,7 +120,10 @@
 <div
 	bind:this={carouselEl}
 	class="carousel"
-	style="--header-height: {headerHeight}px; --items: {items.length}"
+	style="--header-height: {headerHeight}px; --items: {items.length}; --active-bg: {itemColors[
+		curItemIdx
+	]};
+		"
 >
 	<div class="carousel__inner">
 		<div class="carousel__asset">
@@ -104,7 +133,9 @@
 					muted
 					loop
 					playsinline
+					crossorigin="anonymous"
 					src={item.videoUrl}
+					onloadeddata={(e) => sampleVideoColor(e.currentTarget, idx)}
 					style="
 						--item-offset: {itemOffsets[idx]};
 						--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};
@@ -138,6 +169,18 @@
 
 		/* One viewport to show the sticky stage + one step per transition */
 		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--video-step)));
+	}
+
+	.carousel::before {
+		// TODO: not working
+		content: '';
+		display: block;
+		position: relative;
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		/* transition: background-color 0.8s ease; */
+		/* background-color: var(--active-bg, transparent); */
+		background: red;
 	}
 
 	.carousel__inner {
