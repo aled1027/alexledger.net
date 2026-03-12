@@ -2,9 +2,7 @@
 set -euo pipefail
 
 BASE_URL="https://pub-57309283dfae43be93171f41b37f356c.r2.dev"
-ENDPOINT="https://a01c65f155d0baa742619b910d75998d.r2.cloudflarestorage.com"
-BUCKET="public"
-TMPDIR="$(mktemp -d)"
+TMPDIR="$(mktemp -d "$PWD/convert-to-webm.XXXXXX")"
 
 echo "Working in $TMPDIR"
 
@@ -20,16 +18,15 @@ convert_and_upload() {
     curl -fsSL "$BASE_URL/${name}.mp4" -o "$mp4"
 
     echo "  Converting to webm..."
-    ffmpeg -i "$mp4" -c:v libvpx-vp9 -crf 33 -b:v 0 -an "$webm" -y -loglevel warning
+    ffmpeg -i "$mp4" -c:v libvpx-vp9 -crf 33 -b:v 0 -an "$webm" -y -loglevel info -stats
 
-    echo "  Uploading..."
-    aws s3 cp "$webm" "s3://${BUCKET}/${name}.webm" \
-        --endpoint-url "$ENDPOINT"
+    echo "  Uploading via upload2cfpublic..."
+    zsh -ic "source ~/.zshrc && upload2cfpublic '$webm'"
 
     echo "  Done: ${BASE_URL}/${name}.webm"
 }
 
-convert_and_upload "anna-neshyba-edited"
+# convert_and_upload "anna-neshyba-edited"
 convert_and_upload "ethyca-animation-demo-video"
 convert_and_upload "maxlifefoundation"
 convert_and_upload "incontextlearning"
