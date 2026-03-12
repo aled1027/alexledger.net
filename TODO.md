@@ -1,3 +1,4 @@
+- Remove old Header and site-header.css
 The plan:
 
 Make a bold, bombastic, loud website. 
