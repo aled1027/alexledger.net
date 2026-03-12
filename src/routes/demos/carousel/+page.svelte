@@ -6,6 +6,10 @@
 	// - I want to follow a grid-like system
 	// Step 2: Ambience and Mileue
 	// Step 3: Transitions
+
+	function clamp(value: number, min: number, max: number): number {
+		return Math.min(Math.max(value, min), max);
+	}
 	interface Item {
 		label: string;
 		alt: string;
@@ -43,31 +47,22 @@
 	let itemProgresses = $derived.by(() => {
 		const numItems = items.length;
 
-		// Handle trivial cases
 		if (numItems === 0) return [];
 		if (numItems === 1) return [0];
 
-		// Distance between item centers in normalized progress space (0..1)
-		const spacing = 1 / (numItems - 1);
+		const segmentSize = 1 / numItems;
 
 		return items.map((_, i) => {
-			// Each item has a center point along the scroll range
-			const center = i * spacing;
+			// Center each item within its scroll segment
+			const center = (i + 0.5) * segmentSize;
 
-			// Signed distance from this item's center
+			// Signed distance from the item's center
 			const offset = progress - center;
 
-			// Normalize so that:
-			// -1 → entering
-			//  0 → centered
-			//  1 → leaving
-			return clamp(offset / spacing, -1, 1);
+			// -1 entering, 0 centered, 1 leaving
+			return clamp(offset / segmentSize, -1, 1);
 		});
 	});
-
-	function clamp(value: number, min: number, max: number): number {
-		return Math.min(Math.max(value, min), max);
-	}
 
 	function updateProgress() {
 		if (!carouselEl) return;
@@ -172,7 +167,7 @@
 			inset: 25% 0;
 			width: 100%;
 			height: 50%;
-			object-fit: contain;
+			object-fit: cover;
 
 			opacity: 1;
 			pointer-events: none;
