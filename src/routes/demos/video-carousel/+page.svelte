@@ -109,8 +109,17 @@
 	<div class="carousel__inner">
 		<div class="carousel__asset">
 			{#each items as item, idx (idx)}
-				<video autoplay muted style="--item-progress: {itemProgresses[idx]}" src={item.videoUrl}>
-				</video>
+				<video
+					autoplay
+					muted
+					loop
+					playsinline
+					src={item.videoUrl}
+					style="
+						--item-progress: {itemProgresses[idx]};
+						--item-dist: {Math.abs(itemProgresses[idx])};
+					"
+				></video>
 			{/each}
 		</div>
 		<div class="carousel__labels">
@@ -126,10 +135,15 @@
 	.carousel {
 		--carousel-font-size: var(--size-1);
 		--carousel-font-weight: 400;
-		--item-height: calc(100vh - var(--header-height, 0px));
+
+		--video-height: 50vh;
+		--video-gap: 1rem;
+		--video-step: calc(var(--video-height) + var(--video-gap));
+
+		--item-height: 30vh;
 
 		position: relative;
-		height: calc(var(--items) * var(--item-height));
+		height: calc(max(100vh - var(--header-height, 0px), var(--items) * var(--item-height)));
 	}
 	.carousel__inner {
 		position: sticky;
@@ -137,7 +151,8 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		height: var(--item-height);
+		/* height: var(--item-height); */
+		height: calc(100vh - var(--header-height));
 
 		display: grid;
 		grid-template-areas:
@@ -155,24 +170,17 @@
 
 		video {
 			position: absolute;
-			inset: 25% 0;
+			top: 50%;
+			left: 0;
 			width: 100%;
-			height: 50%;
+			height: var(--video-height);
 			object-fit: cover;
-
-			opacity: 1;
 			pointer-events: none;
-			/* transform: translateY(calc(160% * -1 * var(--item-progress))); */
-			/* width: calc(calc(1 - abs(var(--item-progress))) * 100%); */
 			transform-origin: left center;
 
-			/* how far from center */
-			--dist: abs(var(--item-progress));
-
-			/* horizontal scaling */
-			--scale: calc(1 - var(--dist) * 0.9);
-
-			transform: translateY(calc(160% * -1 * var(--item-progress))) scale(var(--scale));
+			/* 1 at center, smaller away from center */
+			--scale-x: calc(1 - var(--item-dist) * 0.4);
+			transform: translateY(calc(-50% + (var(--item-progress) * -1 * 100vh))) scaleX(var(--scale-x));
 		}
 	}
 	.carousel__labels {
