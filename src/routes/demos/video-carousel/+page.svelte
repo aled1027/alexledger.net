@@ -18,18 +18,18 @@
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4',
 			label: 'Anna Neshyba',
-			bgColor: 'rgb(81, 81, 61)'
+			bgColor: '#b3c3b8'
 		},
 		{
 			videoUrl:
 				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4',
 			label: 'Ethyca Product Animation',
-			bgColor: 'rgb(43, 45, 51)'
+			bgColor: '#c0c3cb'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4',
 			label: 'Max Life Foundation',
-			bgColor: 'rgb(216, 212, 217)'
+			bgColor: '#d4a7fd'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4',
@@ -39,12 +39,12 @@
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4',
 			label: 'Cat and Alex',
-			bgColor: 'rgb(208, 203, 201)'
+			bgColor: '#ddbffa'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4',
 			label: 'Cat Nesh',
-			bgColor: 'rgb(205, 207, 205)'
+			bgColor: '#B7C29B'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
