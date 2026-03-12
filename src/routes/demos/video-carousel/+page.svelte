@@ -279,7 +279,9 @@
 			),
 			linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
 		filter: saturate(1.05) contrast(1.03);
-		transition: background 1s ease, filter 1s ease;
+		transition:
+			background 1s ease,
+			filter 1s ease;
 	}
 
 	/* Subtle grain overlay to avoid flat digital gradients. */
