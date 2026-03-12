@@ -162,8 +162,9 @@
 		inset: 0;
 		background: var(--color-gray-900);
 		color: var(--color-gray-100);
-		// Start as a zero-radius circle at the button center.
-		clip-path: circle(0px at var(--menu-origin-x) var(--menu-origin-y));
+		// Keep a small visible circle at the button center when collapsed.
+		--menu-min-radius: 5rem;
+		clip-path: circle(var(--menu-min-radius) at var(--menu-origin-x) var(--menu-origin-y));
 		visibility: hidden;
 		pointer-events: none;
 		will-change: clip-path;
