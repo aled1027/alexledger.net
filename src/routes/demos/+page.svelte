@@ -51,6 +51,17 @@
 			title: 'Gooey Text',
 			date: 'March 9, 2026',
 			link: '/demos/gooey-text'
+		},
+		{
+			title: 'Image Scroll Carousel',
+			date: 'March 12, 2026',
+			link: '/demos/carousel'
+		},
+
+		{
+			title: 'Video Scroll Carousel',
+			date: 'March 12, 2026',
+			link: '/demos/video-carousel'
 		}
 	];
 
