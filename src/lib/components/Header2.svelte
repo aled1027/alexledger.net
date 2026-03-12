@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
+	import { onMount } from 'svelte';
 
 	// A good, but dense, guide for menus is this:
 	// https://piccalil.li/blog/build-a-fully-responsive-progressively-enhanced-burger-menu/
@@ -28,6 +29,32 @@
 		}
 	]);
 	let isMenuExpanded = $state(false);
+	let menuToggleButton: HTMLButtonElement | null = null;
+	// CSS custom-property inputs for the radial reveal animation.
+	let menuCenterX = $state(0);
+	let menuCenterY = $state(0);
+	let menuRadius = $state(0);
+
+	function toggleMenu() {
+		isMenuExpanded = !isMenuExpanded;
+	}
+
+	onMount(() => {
+		if (menuToggleButton) {
+			const { left, top, width, height } = menuToggleButton.getBoundingClientRect();
+			// Reveal should originate from the center of the menu button.
+			const centerX = left + width / 2;
+			const centerY = top + height / 2;
+
+			menuCenterX = centerX;
+			menuCenterY = centerY;
+			// Radius must be large enough to reach the furthest viewport corner.
+			menuRadius = Math.hypot(
+				Math.max(centerX, window.innerWidth - centerX),
+				Math.max(centerY, window.innerHeight - centerY)
+			);
+		}
+	});
 
 	onNavigate(() => {
 		isMenuExpanded = false;
@@ -46,7 +73,8 @@
 			aria-controls="primary-nav"
 			aria-expanded={isMenuExpanded}
 			data-expanded={isMenuExpanded}
-			onclick={() => (isMenuExpanded = !isMenuExpanded)}
+			bind:this={menuToggleButton}
+			onclick={toggleMenu}
 		>
 			<svg class="menu-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 				<line class="line line--top" x1="3" y1="6" x2="21" y2="6" />
@@ -57,7 +85,12 @@
 	</div>
 </header>
 
-<nav class="header2__nav" id="primary-nav" data-visible={isMenuExpanded}>
+<nav
+	class="header2__nav"
+	id="primary-nav"
+	data-visible={isMenuExpanded}
+	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px;`}
+>
 	<ul role="list">
 		{#each navItems as item (item.href)}
 			<li>
@@ -71,8 +104,7 @@
 
 <style lang="scss">
 	.header2 {
-
-		position: fixed;
+		position: absolute;
 		top: 1rem;
 		right: 1rem;
 		z-index: var(--z-header-inner);
@@ -125,16 +157,20 @@
 	}
 
 	.header2__nav {
-		display: none;
-	}
-
-	.header2__nav[data-visible='true'] {
-		display: block;
 		position: fixed;
 		z-index: var(--z-header-nav);
 		inset: 0;
-		// TODO: can make this radiate out
 		background: var(--body-bg);
+		// Start as a zero-radius circle at the button center.
+		clip-path: circle(0px at var(--menu-origin-x) var(--menu-origin-y));
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		will-change: clip-path;
+		transition:
+			clip-path 450ms ease,
+			opacity 200ms ease,
+			visibility 0ms linear 450ms;
 
 		& ul {
 			display: flex;
@@ -151,6 +187,26 @@
 
 		& a:hover {
 			text-decoration: underline;
+		}
+	}
+
+	.header2__nav[data-visible='true'] {
+		// Expand to the computed viewport-covering radius.
+		clip-path: circle(var(--menu-radius) at var(--menu-origin-x) var(--menu-origin-y));
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transition:
+			clip-path 500ms cubic-bezier(0.25, 1, 0.5, 1),
+			opacity 120ms linear,
+			visibility 0ms;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.header2__nav,
+		.header2__nav[data-visible='true'] {
+			clip-path: none;
+			transition: opacity 120ms linear;
 		}
 	}
 </style>
