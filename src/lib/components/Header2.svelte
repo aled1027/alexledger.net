@@ -165,13 +165,14 @@
 		// Keep a small visible circle at the button center when collapsed.
 		--menu-min-radius: 5rem;
 		clip-path: circle(var(--menu-min-radius) at var(--menu-origin-x) var(--menu-origin-y));
+		opacity: 0;
 		visibility: hidden;
 		pointer-events: none;
-		will-change: clip-path;
-		// Closing uses the reverse-feeling easing.
-		/* --menu-clip-ease: cubic-bezier(0.5, 0, 0.75, 0); */
+		will-change: clip-path, opacity;
 		transition:
 			clip-path 500ms ease-in,
+			// Fade only near the end so close feels less jumpy.
+			opacity 300ms ease-in 350ms,
 			visibility 0ms linear 500ms;
 
 		& ul {
@@ -195,10 +196,12 @@
 	.header2__nav[data-visible='true'] {
 		// Expand to the computed viewport-covering radius.
 		clip-path: circle(var(--menu-radius) at var(--menu-origin-x) var(--menu-origin-y));
+		opacity: 1;
 		visibility: visible;
 		pointer-events: auto;
 		transition:
 			clip-path 500ms ease-out,
+			opacity 300ms ease-out,
 			visibility 0ms;
 	}
 
