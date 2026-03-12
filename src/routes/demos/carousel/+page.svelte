@@ -40,7 +40,7 @@
 	];
 
 	let headerHeight = $state(0);
-	let carouselEl: HTMLElement | null = null;
+	let carouselEl: HTMLElement;
 	let progress = $state(0);
 	let curItemIdx = $derived(Math.min(Math.floor(progress * items.length), items.length - 1));
 
@@ -51,15 +51,11 @@
 		if (numItems === 1) return [0];
 
 		const segmentSize = 1 / numItems;
-
 		const res = items.map((_, i) => {
 			// Center each item within its scroll segment
+			// Use -1 for entering, 0 for centered, 1 for leaving
 			const center = (i + 0.5) * segmentSize;
-
-			// Signed distance from the item's center
 			const offset = progress - center;
-
-			// -1 entering, 0 centered, 1 leaving
 			return clamp(offset / segmentSize, -1, 1);
 		});
 
@@ -73,13 +69,9 @@
 		const viewportHeight = window.innerHeight - headerHeight;
 		const totalScrollable = rect.height - viewportHeight;
 
-		if (totalScrollable <= 0) {
-			curItemIdx = 0;
-			return;
+		if (totalScrollable > 0) {
+			progress = clamp(-rect.top / totalScrollable, 0, 1);
 		}
-
-		const rawProgress = -rect.top / totalScrollable;
-		progress = clamp(rawProgress, 0, 1);
 	}
 
 	onMount(() => {
