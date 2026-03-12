@@ -1,5 +1,3 @@
-- Rename header2 to header
-
 The plan:
 
 Make a bold, bombastic, loud website. 

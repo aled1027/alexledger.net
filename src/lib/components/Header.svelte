@@ -72,9 +72,9 @@
 	});
 </script>
 
-<header class="header2">
+<header class="header">
 	<a class="skip-link visually-hidden" href="#content">Skip to main content</a>
-	<div class="header2__inner">
+	<div class="header__inner">
 		<a href="/">Alex Ledger</a>
 		<button
 			class="button menu-toggle"
@@ -97,7 +97,7 @@
 </header>
 
 <nav
-	class="header2__nav"
+	class="header__nav"
 	id="primary-nav"
 	data-visible={isMenuExpanded}
 	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px; --menu-min-radius: ${menuMinRadius};`}
@@ -114,7 +114,7 @@
 </nav>
 
 <style lang="scss">
-	.header2 {
+	.header {
 		position: absolute;
 		top: 1rem;
 		right: 1rem;
@@ -123,17 +123,17 @@
 		mix-blend-mode: difference;
 	}
 
-	.header2__inner {
+	.header__inner {
 		display: flex;
 		align-items: center;
 	}
 
-	.header2__inner .menu-toggle {
+	.header__inner .menu-toggle {
 		border: none;
 		color: currentColor;
 	}
 
-	.header2__inner .menu-toggle .menu-icon {
+	.header__inner .menu-toggle .menu-icon {
 		display: block;
 		width: 1.5rem;
 		height: 1.5rem;
@@ -142,7 +142,7 @@
 		stroke-linecap: round;
 	}
 
-	.header2__inner .menu-toggle .line {
+	.header__inner .menu-toggle .line {
 		transform-box: fill-box;
 		transform-origin: center;
 		transition:
@@ -150,24 +150,24 @@
 			opacity 200ms ease;
 	}
 
-	.header2__inner .menu-toggle[data-expanded='true'] .line--top {
+	.header__inner .menu-toggle[data-expanded='true'] .line--top {
 		transform: translateY(6px) rotate(45deg);
 	}
 
-	.header2__inner .menu-toggle[data-expanded='true'] .line--middle {
+	.header__inner .menu-toggle[data-expanded='true'] .line--middle {
 		opacity: 0;
 	}
 
-	.header2__inner .menu-toggle[data-expanded='true'] .line--bottom {
+	.header__inner .menu-toggle[data-expanded='true'] .line--bottom {
 		transform: translateY(-6px) rotate(-45deg);
 	}
 
-	.header2__inner a {
+	.header__inner a {
 		color: currentColor;
 		text-decoration: none;
 	}
 
-	.header2__nav {
+	.header__nav {
 		position: fixed;
 		z-index: var(--z-header-nav);
 		inset: 0;
@@ -207,7 +207,7 @@
 		}
 	}
 
-	.header2__nav[data-visible='true'] {
+	.header__nav[data-visible='true'] {
 		// Expand to the computed viewport-covering radius.
 		clip-path: circle(var(--menu-radius) at var(--menu-origin-x) var(--menu-origin-y));
 		opacity: 1;
@@ -221,7 +221,7 @@
 
 	@media (max-width: 48rem) {
 		// On small viewports, disable the clip-path reveal and keep only opacity transition.
-		.header2__nav {
+		.header__nav {
 			clip-path: none;
 			will-change: opacity;
 			transition:
@@ -229,7 +229,7 @@
 				visibility 0ms linear 240ms;
 		}
 
-		.header2__nav[data-visible='true'] {
+		.header__nav[data-visible='true'] {
 			clip-path: none;
 			transition:
 				opacity 240ms ease,
@@ -238,8 +238,8 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.header2__nav,
-		.header2__nav[data-visible='true'] {
+		.header__nav,
+		.header__nav[data-visible='true'] {
 			clip-path: none;
 			transition: none;
 		}
