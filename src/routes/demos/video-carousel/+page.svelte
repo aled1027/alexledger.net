@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Menu, X } from '@lucide/svelte';
+	import Header2 from '$lib/components/Header2.svelte';
 
 	// TODO: convert to webm
 	// Make these gradients or bgs more alive. Perhaps with a shader.
@@ -199,12 +199,7 @@
 	});
 </script>
 
-<heading>
-	<a href="/">Alex Ledger</a>
-	<button class="button menu-toggle" data-type="ghost">
-		<Menu color="white" />
-	</button>
-</heading>
+<Header2 />
 
 <div
 	bind:this={carouselEl}
@@ -373,23 +368,5 @@
 			font-weight: 700;
 			opacity: 1;
 		}
-	}
-
-	heading {
-		--z-heading: 100;
-
-		position: fixed;
-		top: 1rem;
-		right: 1rem;
-		z-index: var(--z-heading);
-
-		display: flex;
-		align-items: center;
-	}
-
-	heading .menu-toggle {
-		color: white;
-		mix-blend-mode: difference;
-		border: none;
 	}
 </style>
