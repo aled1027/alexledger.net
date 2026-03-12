@@ -1,4 +1,11 @@
+- The cirlce in the header flashes for a second on slow & initial loads
+  - prevent this
+  - I thought i had with setting the min radius in onmount, but i guess that didn't do it
+
+
+
 The plan:
+
 
 Make a bold, bombastic, loud website. 
 Like everything everywhere, comic book elements (thinking about lizard boy)
