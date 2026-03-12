@@ -72,28 +72,24 @@
 <style lang="scss">
 	.header2 {
 		--z-header: 100;
-		--z-header-menu: 101;
-		--z-header-menu-button: 102;
 
 		position: fixed;
 		top: 1rem;
 		right: 1rem;
 		z-index: var(--z-header);
+		color: #fff;
+		mix-blend-mode: difference;
 	}
 
 	.header2__inner {
 		display: flex;
 		align-items: center;
+		color: inherit;
 	}
 
 	.header2__inner .menu-toggle {
 		border: none;
-		color: #fff;
-		z-index: var(--z-header-menu-button);
-	}
-
-	.header2__inner .menu-toggle[data-expanded='true'] {
-		color: #000;
+		color: currentColor;
 	}
 
 	.header2__inner .menu-toggle .menu-icon {
@@ -108,7 +104,9 @@
 	.header2__inner .menu-toggle .line {
 		transform-box: fill-box;
 		transform-origin: center;
-		transition: transform 200ms ease, opacity 200ms ease;
+		transition:
+			transform 200ms ease,
+			opacity 200ms ease;
 	}
 
 	.header2__inner .menu-toggle[data-expanded='true'] .line--top {
@@ -124,7 +122,7 @@
 	}
 
 	.header2__inner a {
-		color: white;
+		color: currentColor;
 		text-decoration: none;
 	}
 
@@ -135,7 +133,7 @@
 	.header2__nav[data-visible='true'] {
 		display: block;
 		position: fixed;
-		z-index: var(--z-header-menu);
+		z-index: calc(var(--z-header) - 1);
 		inset: 0;
 		// TODO: can make this radiate out
 		background: var(--body-bg);
