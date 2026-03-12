@@ -42,32 +42,28 @@
 
 	let itemProgresses = $derived.by(() => {
 		const numItems = items.length;
-		// split progress evenly into numItems segments
-		const segmentSize = 1.0 / numItems;
+		if (numItems === 0) return [];
 
-		const result = [];
-		for (let i = 0; i < numItems; i++) {
-			const segStart = i * segmentSize;
-			const segEnd = (i + 1) * segmentSize;
+		const segmentSize = 1 / numItems;
+		const results = items.map((_, i) => {
+			const center = (i + 0.5) * segmentSize;
+			const distance = Math.abs(progress - center);
 
-			let segProgress = 0;
-			if (segStart <= progress && progress < segEnd) {
-				segProgress = clamp((progress - segStart) / (segEnd - segStart), 0, 1);
-			} else if (segEnd <= progress && progress < segEnd + segmentSize) {
-				// If we're in the next segement, then lower it
-				const start = segEnd;
-				const end = segEnd + segmentSize;
-				segProgress = 1 - clamp((progress - start) / (end - start), 0, 1);
-			} else if (segStart - segmentSize <= progress && progress < segStart) {
-				// if we're in the previous segment
-				const start = segStart - segmentSize;
-				const end = segStart;
-				segProgress = 1 - clamp((progress - start) / (end - start), 0, 1);
-			}
+			// full influence at center, fades to 0 one segment away
+			return clamp(1 - distance / segmentSize, 0, 1);
+		});
 
-			result.push(segProgress);
+		// if everything is 0 except the 0th item, set the 0th item to 1
+		if (results.every((p, i) => i === 0 || p === 0)) {
+			results[0] = 1;
 		}
-		return result;
+
+		// if everything is 0 except the last item, set the last item to 1
+		if (results.every((p, i) => i === numItems - 1 || p === 0)) {
+			results[numItems - 1] = 1;
+		}
+
+		return results;
 	});
 
 	$inspect(itemProgresses);
