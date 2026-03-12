@@ -7,7 +7,9 @@
 	interface Item {
 		label: string;
 		videoUrl: string;
-		bgColor: string;
+		bgFrom: string;
+		bgTo: string;
+		bgGlow: string;
 	}
 
 	function clamp(value: number, min: number, max: number): number {
@@ -18,43 +20,59 @@
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4',
 			label: 'Anna Neshyba',
-			bgColor: '#b3c3b8'
+			bgFrom: '#31453f',
+			bgTo: '#161c1f',
+			bgGlow: '#93c6b3'
 		},
 		{
 			videoUrl:
 				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4',
 			label: 'Ethyca Product Animation',
-			bgColor: '#c0c3cb'
+			bgFrom: '#364052',
+			bgTo: '#171b24',
+			bgGlow: '#8aa7d8'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4',
 			label: 'Max Life Foundation',
-			bgColor: '#d4a7fd'
+			bgFrom: '#57367b',
+			bgTo: '#1e1731',
+			bgGlow: '#cb94ff'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4',
 			label: 'Incontext Learning',
-			bgColor: 'rgb(240, 236, 232)'
+			bgFrom: '#7a6e63',
+			bgTo: '#27211d',
+			bgGlow: '#dbc2a7'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4',
 			label: 'Cat and Alex',
-			bgColor: '#ddbffa'
+			bgFrom: '#644183',
+			bgTo: '#221632',
+			bgGlow: '#d8b0ff'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4',
 			label: 'Cat Nesh',
-			bgColor: '#B7C29B'
+			bgFrom: '#4f5b3e',
+			bgTo: '#1b2115',
+			bgGlow: '#b7ce8e'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
 			label: 'Cosmic Fronter',
-			bgColor: 'rgb(10, 11, 20)'
+			bgFrom: '#171f3d',
+			bgTo: '#070910',
+			bgGlow: '#6f87ff'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4',
 			label: 'Vyx',
-			bgColor: 'rgb(251, 251, 251)'
+			bgFrom: '#535a62',
+			bgTo: '#1a1d21',
+			bgGlow: '#d5dde7'
 		}
 	];
 
@@ -107,7 +125,9 @@
 	bind:this={carouselEl}
 	class="carousel"
 	style="--header-height: {headerHeight}px; --items: {items.length};
-	--active-bg: {items[curItemIdx].bgColor};"
+	--bg-from: {items[curItemIdx].bgFrom};
+	--bg-to: {items[curItemIdx].bgTo};
+	--bg-glow: {items[curItemIdx].bgGlow};"
 >
 	<div class="carousel__inner">
 		<div class="carousel__asset">
@@ -158,6 +178,7 @@
 		position: sticky;
 		top: var(--header-height, 0px);
 		height: calc(100vh - var(--header-height));
+		isolation: isolate;
 
 		display: grid;
 		grid-template-areas:
@@ -171,12 +192,39 @@
 		content: '';
 		display: block;
 		position: absolute;
+		z-index: -2;
 		width: 100vw;
 		height: 100vh;
 		top: 0;
 		left: calc(50% - 50vw);
-		transition: background-color 1.5s ease-in;
-		background-color: var(--active-bg, transparent);
+		background:
+			radial-gradient(
+				70% 55% at 15% 20%,
+				color-mix(in srgb, var(--bg-glow) 42%, transparent),
+				transparent 70%
+			),
+			radial-gradient(
+				55% 45% at 85% 75%,
+				color-mix(in srgb, var(--bg-glow) 28%, transparent),
+				transparent 75%
+			),
+			linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
+		filter: saturate(1.05) contrast(1.03);
+		transition: background 1s ease, filter 1s ease;
+	}
+
+	.carousel__inner::after {
+		content: '';
+		display: block;
+		position: absolute;
+		z-index: -1;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: calc(50% - 50vw);
+		pointer-events: none;
+		opacity: 0.07;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 	}
 
 	.carousel__asset {
