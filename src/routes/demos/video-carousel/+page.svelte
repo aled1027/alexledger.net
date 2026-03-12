@@ -131,7 +131,7 @@
 
 		/* Tune these */
 		--video-height: 50vh;
-		--video-gap: 5vh;
+		--video-gap: 3vh;
 		--video-step: calc(var(--video-height) + var(--video-gap));
 
 		position: relative;
@@ -168,6 +168,8 @@
 			object-fit: cover;
 			pointer-events: none;
 			transform-origin: left center;
+			border: 1px solid var(--color-color-300);
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 
 			/* Full width at center, narrower away from center */
 			--scale: calc(1 - var(--item-dist) * 0.3);
