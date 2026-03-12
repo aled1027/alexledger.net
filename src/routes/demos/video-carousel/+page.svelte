@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 
 	// TODO: convert to webm
-	// Color mix the text
+	// Make these gradients or bgs more alive. Perhaps with a shader.
 
 	interface Item {
 		label: string;
