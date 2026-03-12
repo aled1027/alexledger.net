@@ -15,3 +15,6 @@ With some layered z-index elements between the lines. And then on scroll, it for
 
 
 Note: no sdf text because the tools weren't working well. we could do simulations of it
+
+
+the min radius might be missng up initial load. try setting in onmount to save things.

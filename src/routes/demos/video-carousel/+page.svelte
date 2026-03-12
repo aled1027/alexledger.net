@@ -116,7 +116,7 @@
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.webm',
-			label: 'Cosmic Fronter',
+			label: 'Cosmic Frontier',
 			bgFrom: '#171f3d',
 			bgTo: '#070910',
 			bgGlow: '#6f87ff'

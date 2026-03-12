@@ -45,7 +45,7 @@
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
-			label: 'Cosmic Fronter'
+			label: 'Cosmic Frontier'
 		},
 		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4', label: 'Vyx' }
 	];
