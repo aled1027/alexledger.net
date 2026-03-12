@@ -1,6 +1,6 @@
-/* 
-  Global styles 
-  Low-specificity, global styles that apply to the whole 
+/*
+  Global styles
+  Low-specificity, global styles that apply to the whole
   project: https://cube.fyi/css.html
 */
 
@@ -27,6 +27,7 @@
 
 :root {
 	view-transition-name: root;
+	interpolate-size: allow-keywords;
 }
 
 body {

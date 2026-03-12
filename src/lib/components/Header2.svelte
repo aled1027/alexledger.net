@@ -163,14 +163,14 @@
 		background: var(--body-bg);
 		// Start as a zero-radius circle at the button center.
 		clip-path: circle(0px at var(--menu-origin-x) var(--menu-origin-y));
-		opacity: 0;
 		visibility: hidden;
 		pointer-events: none;
 		will-change: clip-path;
+		// Closing uses the reverse-feeling easing.
+		/* --menu-clip-ease: cubic-bezier(0.5, 0, 0.75, 0); */
 		transition:
-			clip-path 450ms ease,
-			opacity 200ms ease,
-			visibility 0ms linear 450ms;
+			clip-path 500ms ease-in,
+			visibility 0ms linear 500ms;
 
 		& ul {
 			display: flex;
@@ -193,12 +193,10 @@
 	.header2__nav[data-visible='true'] {
 		// Expand to the computed viewport-covering radius.
 		clip-path: circle(var(--menu-radius) at var(--menu-origin-x) var(--menu-origin-y));
-		opacity: 1;
 		visibility: visible;
 		pointer-events: auto;
 		transition:
-			clip-path 500ms ease-in,
-			opacity 120ms linear,
+			clip-path 500ms ease-out,
 			visibility 0ms;
 	}
 
@@ -206,7 +204,7 @@
 		.header2__nav,
 		.header2__nav[data-visible='true'] {
 			clip-path: none;
-			transition: opacity 120ms linear;
+			transition: none;
 		}
 	}
 </style>
