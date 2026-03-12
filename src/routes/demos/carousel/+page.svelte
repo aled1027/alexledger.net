@@ -52,7 +52,7 @@
 
 		const segmentSize = 1 / numItems;
 
-		return items.map((_, i) => {
+		const res = items.map((_, i) => {
 			// Center each item within its scroll segment
 			const center = (i + 0.5) * segmentSize;
 
@@ -62,6 +62,8 @@
 			// -1 entering, 0 centered, 1 leaving
 			return clamp(offset / segmentSize, -1, 1);
 		});
+
+		return res;
 	});
 
 	function updateProgress() {
@@ -100,19 +102,19 @@
 
 <div
 	bind:this={carouselEl}
-	class="carousel full-bleed"
+	class="carousel"
 	style="--header-height: {headerHeight}px; --items: {items.length}"
 >
 	<div class="carousel__inner">
-		<h2 class="carousel__title">Portfolio</h2>
 		<div class="carousel__asset">
 			{#each items as item, idx (idx)}
 				<img style="--item-progress: {itemProgresses[idx]}" src={item.src} alt={item.alt} />
 			{/each}
 		</div>
-		<div class="carousel__label">
+		<div class="carousel__labels">
+			<p class="carousel__title">Portfolio</p>
 			{#each items as item, idx (idx)}
-				<p data-cur-item={idx === curItemIdx}>{item.label}</p>
+				<p class="carousel__label" data-cur-item={idx === curItemIdx}>{item.label}</p>
 			{/each}
 		</div>
 	</div>
@@ -137,24 +139,11 @@
 
 		display: grid;
 		grid-template-areas:
-			'asset asset asset asset . title '
-			'asset asset asset asset . . '
-			'asset asset asset asset . label ';
+			'asset asset asset . '
+			'asset asset asset label '
+			'asset asset asset . ';
 		grid-template-rows: auto 1fr auto;
 		overflow: hidden;
-	}
-
-	.carousel__title {
-		grid-area: title;
-		text-align: right;
-		padding-block-start: 2rem;
-		padding-inline-end: 2rem;
-		margin: 0;
-		width: fit-content;
-		justify-self: end;
-
-		font-size: var(--carousel-font-size);
-		font-weight: var(--carousel-font-weight);
 	}
 
 	.carousel__asset {
@@ -171,17 +160,23 @@
 
 			opacity: 1;
 			pointer-events: none;
-			transform: translateY(calc(160% * -1 * var(--item-progress)));
+			/* transform: translateY(calc(160% * -1 * var(--item-progress))); */
+			/* width: calc(calc(1 - abs(var(--item-progress))) * 100%); */
+			transform-origin: left center;
 
-			width: calc(calc(1 - abs(var(--item-progress))) * 100%);
+			/* how far from center */
+			--dist: abs(var(--item-progress));
+
+			/* horizontal scaling */
+			--scale-x: calc(1 - var(--dist) * 0.4);
+
+			transform: translateY(calc(160% * -1 * var(--item-progress))) scaleX(var(--scale-x));
 		}
 	}
-	.carousel__label {
+	.carousel__labels {
 		grid-area: label;
-		align-self: end;
+		align-self: center;
 		text-align: right;
-		padding-block-end: 2rem;
-		padding-inline-end: 2rem;
 
 		font-size: var(--carousel-font-size);
 		font-weight: var(--carousel-font-weight);
@@ -189,13 +184,19 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+	}
 
-		p {
-			margin: 0;
-			opacity: 0.35;
-		}
+	.carousel__title {
+		margin: 0;
+		font-size: var(--carousel-font-size);
+		font-weight: var(--carousel-font-weight);
+	}
 
-		p[data-cur-item='true'] {
+	.carousel__label {
+		margin: 0;
+		opacity: 0.35;
+
+		&[data-cur-item='true'] {
 			font-weight: 700;
 			opacity: 1;
 		}
