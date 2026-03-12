@@ -42,37 +42,34 @@
 
 	let itemProgresses = $derived.by(() => {
 		const numItems = items.length;
+
+		// Handle trivial cases
 		if (numItems === 0) return [];
+		if (numItems === 1) return [0];
 
-		const segmentSize = 1 / numItems;
-		const results = items.map((_, i) => {
-			const center = (i + 0.5) * segmentSize;
-			const distance = Math.abs(progress - center);
+		// Distance between item centers in normalized progress space (0..1)
+		const spacing = 1 / (numItems - 1);
 
-			// full influence at center, fades to 0 one segment away
-			return clamp(1 - distance / segmentSize, 0, 1);
+		return items.map((_, i) => {
+			// Each item has a center point along the scroll range
+			const center = i * spacing;
+
+			// Signed distance from this item's center
+			const offset = progress - center;
+
+			// Normalize so that:
+			// -1 → entering
+			//  0 → centered
+			//  1 → leaving
+			return clamp(offset / spacing, -1, 1);
 		});
-
-		// if everything is 0 except the 0th item, set the 0th item to 1
-		if (results.every((p, i) => i === 0 || p === 0)) {
-			results[0] = 1;
-		}
-
-		// if everything is 0 except the last item, set the last item to 1
-		if (results.every((p, i) => i === numItems - 1 || p === 0)) {
-			results[numItems - 1] = 1;
-		}
-
-		return results;
 	});
-
-	$inspect(itemProgresses);
 
 	function clamp(value: number, min: number, max: number): number {
 		return Math.min(Math.max(value, min), max);
 	}
 
-	function updateCarousel() {
+	function updateProgress() {
 		if (!carouselEl) return;
 
 		const rect = carouselEl.getBoundingClientRect();
@@ -94,14 +91,14 @@
 			headerHeight = headerElement.offsetHeight;
 		}
 
-		updateCarousel();
+		updateProgress();
 
-		window.addEventListener('scroll', updateCarousel, { passive: true });
-		window.addEventListener('resize', updateCarousel);
+		window.addEventListener('scroll', updateProgress, { passive: true });
+		window.addEventListener('resize', updateProgress);
 
 		return () => {
-			window.removeEventListener('scroll', updateCarousel);
-			window.removeEventListener('resize', updateCarousel);
+			window.removeEventListener('scroll', updateProgress);
+			window.removeEventListener('resize', updateProgress);
 		};
 	});
 </script>
@@ -112,7 +109,7 @@
 	style="--header-height: {headerHeight}px; --items: {items.length}"
 >
 	<div class="carousel__inner">
-		<h2 class="carousel__title">Carousel</h2>
+		<h2 class="carousel__title">Portfolio</h2>
 		<div class="carousel__asset">
 			{#each items as item, idx (idx)}
 				<img style="--item-progress: {itemProgresses[idx]}" src={item.src} alt={item.alt} />
@@ -130,10 +127,10 @@
 	.carousel {
 		--carousel-font-size: var(--size-1);
 		--carousel-font-weight: 400;
-		--step-height: 100vh;
+		--item-height: calc(100vh - var(--header-height, 0px));
 
 		position: relative;
-		height: calc(var(--items) * var(--step-height));
+		height: calc(var(--items) * var(--item-height));
 	}
 	.carousel__inner {
 		position: sticky;
@@ -141,13 +138,13 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		height: calc(100vh - var(--header-height, 0px));
+		height: var(--item-height);
 
 		display: grid;
 		grid-template-areas:
-			'asset asset asset asset title . '
-			'asset asset asset asset ..... . '
-			'asset asset asset asset label . ';
+			'asset asset asset asset . title '
+			'asset asset asset asset . . '
+			'asset asset asset asset . label ';
 		grid-template-rows: auto 1fr auto;
 		overflow: hidden;
 	}
@@ -156,6 +153,7 @@
 		grid-area: title;
 		text-align: right;
 		padding-block-start: 2rem;
+		padding-inline-end: 2rem;
 		margin: 0;
 		width: fit-content;
 		justify-self: end;
@@ -171,14 +169,16 @@
 
 		img {
 			position: absolute;
-			inset: 0;
+			inset: 25% 0;
 			width: 100%;
-			height: 100%;
-			object-fit: cover;
+			height: 50%;
+			object-fit: contain;
 
 			opacity: 1;
 			pointer-events: none;
-			width: calc(100% * var(--item-progress));
+			transform: translateY(calc(160% * -1 * var(--item-progress)));
+
+			width: calc(calc(1 - abs(var(--item-progress))) * 100%);
 		}
 	}
 	.carousel__label {
@@ -186,6 +186,7 @@
 		align-self: end;
 		text-align: right;
 		padding-block-end: 2rem;
+		padding-inline-end: 2rem;
 
 		font-size: var(--carousel-font-size);
 		font-weight: var(--carousel-font-weight);
