@@ -220,19 +220,19 @@
 	}
 
 	@media (max-width: 48rem) {
-		// On small viewports, disable the clip path animation
+		// On small viewports, disable the clip-path reveal and keep only opacity transition.
 		.header2__nav {
 			clip-path: none;
 			will-change: opacity;
 			transition:
-				opacity 300ms ease-in,
-				visibility 0ms linear 300ms;
+				opacity 240ms ease,
+				visibility 0ms linear 240ms;
 		}
 
 		.header2__nav[data-visible='true'] {
 			clip-path: none;
 			transition:
-				opacity 300ms ease-out,
+				opacity 240ms ease,
 				visibility 0ms;
 		}
 	}
