@@ -172,15 +172,12 @@
 	}
 
 	.carousel::before {
-		// TODO: not working
 		content: '';
 		display: block;
-		position: relative;
-		width: 100vw;
-		margin-left: calc(50% - 50vw);
-		/* transition: background-color 0.8s ease; */
-		/* background-color: var(--active-bg, transparent); */
-		background: red;
+		position: fixed;
+		inset: 0;
+		transition: background-color 0.8s ease;
+		background-color: var(--active-bg, transparent);
 	}
 
 	.carousel__inner {
