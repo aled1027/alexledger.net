@@ -154,15 +154,6 @@
 		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--video-step)));
 	}
 
-	.carousel::before {
-		content: '';
-		display: block;
-		position: fixed;
-		inset: 0;
-		transition: background-color 0.8s ease;
-		background-color: var(--active-bg, transparent);
-	}
-
 	.carousel__inner {
 		position: sticky;
 		top: var(--header-height, 0px);
@@ -174,7 +165,18 @@
 			'asset asset asset label'
 			'asset asset asset .';
 		grid-template-rows: auto 1fr auto;
-		overflow: hidden;
+	}
+
+	.carousel__inner::before {
+		content: '';
+		display: block;
+		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: calc(50% - 50vw);
+		transition: background-color 1.5s ease;
+		background-color: var(--active-bg, transparent);
 	}
 
 	.carousel__asset {
@@ -207,6 +209,9 @@
 		align-self: center;
 		text-align: right;
 
+		color: white;
+		mix-blend-mode: difference;
+
 		font-size: var(--carousel-font-size);
 		font-weight: var(--carousel-font-weight);
 
@@ -223,7 +228,7 @@
 
 	.carousel__label {
 		margin: 0;
-		opacity: 0.35;
+		opacity: 0.55;
 
 		&[data-cur-item='true'] {
 			font-weight: 700;
