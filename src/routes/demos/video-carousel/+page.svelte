@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	// TODO: convert to webm
+	// Color mix the text
+
 	interface Item {
 		label: string;
 		videoUrl: string;
+		bgColor: string;
 	}
 
 	function clamp(value: number, min: number, max: number): number {
@@ -13,68 +17,50 @@
 	const items: Item[] = [
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4',
-			label: 'Anna Neshyba'
+			label: 'Anna Neshyba',
+			bgColor: 'rgb(81, 81, 61)'
 		},
 		{
 			videoUrl:
 				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4',
-			label: 'Ethyca Product Animation'
+			label: 'Ethyca Product Animation',
+			bgColor: 'rgb(43, 45, 51)'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4',
-			label: 'Max Life Foundation'
+			label: 'Max Life Foundation',
+			bgColor: 'rgb(216, 212, 217)'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4',
-			label: 'Incontext Learning'
+			label: 'Incontext Learning',
+			bgColor: 'rgb(240, 236, 232)'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4',
-			label: 'Cat and Alex'
+			label: 'Cat and Alex',
+			bgColor: 'rgb(208, 203, 201)'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4',
-			label: 'Cat Nesh'
+			label: 'Cat Nesh',
+			bgColor: 'rgb(205, 207, 205)'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
-			label: 'Cosmic Fronter'
+			label: 'Cosmic Fronter',
+			bgColor: 'rgb(10, 11, 20)'
 		},
 		{
 			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4',
-			label: 'Vyx'
+			label: 'Vyx',
+			bgColor: 'rgb(251, 251, 251)'
 		}
 	];
 
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
 	let stepProgress = $state(0);
-	let itemColors = $state<string[]>(items.map(() => 'transparent'));
-
-	function sampleVideoColor(video: HTMLVideoElement, idx: number) {
-		try {
-			const canvas = document.createElement('canvas');
-			canvas.width = 64;
-			canvas.height = 36;
-			const ctx = canvas.getContext('2d');
-			if (!ctx) return;
-			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-			const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-			let r = 0,
-				g = 0,
-				b = 0;
-			const pixelCount = canvas.width * canvas.height;
-			for (let i = 0; i < data.length; i += 4) {
-				r += data[i];
-				g += data[i + 1];
-				b += data[i + 2];
-			}
-			itemColors[idx] =
-				`rgb(${Math.round(r / pixelCount)}, ${Math.round(g / pixelCount)}, ${Math.round(b / pixelCount)})`;
-		} catch {
-			// CORS or other error — leave as transparent
-		}
-	}
 
 	// Current centered-ish item
 	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, items.length - 1));
@@ -120,10 +106,8 @@
 <div
 	bind:this={carouselEl}
 	class="carousel"
-	style="--header-height: {headerHeight}px; --items: {items.length}; --active-bg: {itemColors[
-		curItemIdx
-	]};
-		"
+	style="--header-height: {headerHeight}px; --items: {items.length};
+	--active-bg: {items[curItemIdx].bgColor};"
 >
 	<div class="carousel__inner">
 		<div class="carousel__asset">
@@ -135,7 +119,6 @@
 					playsinline
 					crossorigin="anonymous"
 					src={item.videoUrl}
-					onloadeddata={(e) => sampleVideoColor(e.currentTarget, idx)}
 					style="
 						--item-offset: {itemOffsets[idx]};
 						--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};
