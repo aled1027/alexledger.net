@@ -36,8 +36,45 @@
 	];
 
 	let headerHeight = $state(0);
-	let curItemIdx = $state(0);
 	let carouselEl: HTMLElement | null = null;
+	let progress = $state(0);
+	let curItemIdx = $derived(Math.min(Math.floor(progress * items.length), items.length - 1));
+
+	let itemProgresses = $derived.by(() => {
+		const numItems = items.length;
+		// split progress evenly into numItems segments
+		const segmentSize = 1.0 / numItems;
+
+		const result = [];
+		for (let i = 0; i < numItems; i++) {
+			const segStart = i * segmentSize;
+			const segEnd = (i + 1) * segmentSize;
+
+			let segProgress = 0;
+			if (segStart <= progress && progress < segEnd) {
+				segProgress = clamp((progress - segStart) / (segEnd - segStart), 0, 1);
+			} else if (segEnd <= progress && progress < segEnd + segmentSize) {
+				// If we're in the next segement, then lower it
+				const start = segEnd;
+				const end = segEnd + segmentSize;
+				segProgress = 1 - clamp((progress - start) / (end - start), 0, 1);
+			} else if (segStart - segmentSize <= progress && progress < segStart) {
+				// if we're in the previous segment
+				const start = segStart - segmentSize;
+				const end = segStart;
+				segProgress = 1 - clamp((progress - start) / (end - start), 0, 1);
+			}
+
+			result.push(segProgress);
+		}
+		return result;
+	});
+
+	$inspect(itemProgresses);
+
+	function clamp(value: number, min: number, max: number): number {
+		return Math.min(Math.max(value, min), max);
+	}
 
 	function updateCarousel() {
 		if (!carouselEl) return;
@@ -52,8 +89,7 @@
 		}
 
 		const rawProgress = -rect.top / totalScrollable;
-		const progress = Math.min(Math.max(rawProgress, 0), 1);
-		curItemIdx = Math.min(Math.floor(progress * items.length), items.length - 1);
+		progress = clamp(rawProgress, 0, 1);
 	}
 
 	onMount(() => {
@@ -83,7 +119,7 @@
 		<h2 class="carousel__title">Carousel</h2>
 		<div class="carousel__asset">
 			{#each items as item, idx (idx)}
-				<img src={item.src} alt={item.alt} data-cur-item={idx === curItemIdx} />
+				<img style="--item-progress: {itemProgresses[idx]}" src={item.src} alt={item.alt} />
 			{/each}
 		</div>
 		<div class="carousel__label">
@@ -113,9 +149,9 @@
 
 		display: grid;
 		grid-template-areas:
-			'asset asset asset title title . '
-			'asset asset asset ..... ..... . '
-			'asset asset asset label label . ';
+			'asset asset asset asset title . '
+			'asset asset asset asset ..... . '
+			'asset asset asset asset label . ';
 		grid-template-rows: auto 1fr auto;
 		overflow: hidden;
 	}
@@ -144,17 +180,9 @@
 			height: 100%;
 			object-fit: cover;
 
-			opacity: 0.5;
-			transform: scale(1.03);
-			transition:
-				opacity 300ms ease,
-				transform 300ms ease;
-			pointer-events: none;
-		}
-
-		img[data-cur-item='true'] {
 			opacity: 1;
-			transform: scale(1);
+			pointer-events: none;
+			width: calc(100% * var(--item-progress));
 		}
 	}
 	.carousel__label {
