@@ -1,6 +1,9 @@
 - The cirlce in the header flashes for a second on slow & initial loads
   - prevent this
   - I thought i had with setting the min radius in onmount, but i guess that didn't do it
+  
+- Could have the header change into something as we scroll
+  - this is a light version of it: https://nostalgic-css.github.io/NES.css/
 
 
 
