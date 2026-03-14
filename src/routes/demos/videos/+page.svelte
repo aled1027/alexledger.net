@@ -5,8 +5,8 @@
 	import { onMount } from 'svelte';
 	import { portfolio, type PortfolioItem } from '$lib/portfolio';
 
-	const videos = portfolio.filter(
-		(item): item is PortfolioItem & { videoUrl: string } => Boolean(item.videoUrl)
+	const videos = portfolio.filter((item): item is PortfolioItem & { videoUrl: string } =>
+		Boolean(item.videoUrl)
 	);
 	const videoCount = videos.length;
 
@@ -128,9 +128,9 @@
 			}
 
 			// Cube shows first 6 videos; we cycle which 6 via material.map
-			this.materials = this.videoTextures.slice(0, 6).map(
-				(texture) => new THREE.MeshBasicMaterial({ map: texture, side: THREE.FrontSide })
-			);
+			this.materials = this.videoTextures
+				.slice(0, 6)
+				.map((texture) => new THREE.MeshBasicMaterial({ map: texture, side: THREE.FrontSide }));
 			this.updateMaterialMaps();
 
 			// Voxel grid (N×N×N small cubes) with shared geometry and shared 6 materials
@@ -183,7 +183,11 @@
 			const moveDirX = 0.005;
 			const moveDirY = 0.005;
 			const moveDirLen = Math.hypot(moveDirX, moveDirY) || 1;
-			this.vel = new THREE.Vector3((this.moveSpeed * moveDirX) / moveDirLen, (this.moveSpeed * moveDirY) / moveDirLen, 0);
+			this.vel = new THREE.Vector3(
+				(this.moveSpeed * moveDirX) / moveDirLen,
+				(this.moveSpeed * moveDirY) / moveDirLen,
+				0
+			);
 
 			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 			this.controls.enableDamping = true;
@@ -265,7 +269,11 @@
 			const moveDirX = 0.005;
 			const moveDirY = 0.005;
 			const moveDirLen = Math.hypot(moveDirX, moveDirY) || 1;
-			this.vel.set((this.moveSpeed * moveDirX) / moveDirLen, (this.moveSpeed * moveDirY) / moveDirLen, 0);
+			this.vel.set(
+				(this.moveSpeed * moveDirX) / moveDirLen,
+				(this.moveSpeed * moveDirY) / moveDirLen,
+				0
+			);
 		}
 
 		setVisible(visible: boolean): void {
@@ -334,7 +342,9 @@
 		private getFrontFaceIndex(): number {
 			const worldQuaternion = new THREE.Quaternion();
 			this.cubeGroup.getWorldQuaternion(worldQuaternion);
-			const toCamera = new THREE.Vector3().subVectors(this.camera.position, this.cubeGroup.position).normalize();
+			const toCamera = new THREE.Vector3()
+				.subVectors(this.camera.position, this.cubeGroup.position)
+				.normalize();
 			let maxDot = -Infinity;
 			let frontIndex = 0;
 			for (let i = 0; i < 6; i++) {
@@ -421,7 +431,6 @@
 			}
 
 			if (this.visible) {
-
 				// Update video textures only when frame data is ready
 				for (let i = 0; i < this.videoElements.length; i++) {
 					if (this.videoElements[i].readyState >= 2) {
@@ -519,7 +528,9 @@
 <div class="my-l">
 	<h2>The Video Screensaver</h2>
 	<p class="description">
-		An interactive 3D cube with video on each face. Drag the background to orbit the camera; click and drag the cube to move it; shift-click the cube to trigger an explosion and reassembly. Eight videos cycle across the six faces.
+		An interactive 3D cube with video on each face. Drag the background to orbit the camera; click
+		and drag the cube to move it; shift-click the cube to trigger an explosion and reassembly. Eight
+		videos cycle across the six faces.
 	</p>
 
 	<div class="mt-xl three-container" bind:this={container}>

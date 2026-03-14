@@ -76,7 +76,6 @@
 				suzanneGeometry.computeVertexNormals();
 				const suzanne = new THREE.Mesh(suzanneGeometry, this.suzanneMaterial);
 				this.scene.add(suzanne);
-
 			});
 
 			this.renderer = new THREE.WebGLRenderer({ antialias: true });

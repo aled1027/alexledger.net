@@ -57,8 +57,8 @@
 		return `rgb(${r}, ${g}, ${bCh})`;
 	}
 
-	const items = portfolio.filter(
-		(item): item is PortfolioItem & { videoUrl: string } => Boolean(item.videoUrl)
+	const items = portfolio.filter((item): item is PortfolioItem & { videoUrl: string } =>
+		Boolean(item.videoUrl)
 	);
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;

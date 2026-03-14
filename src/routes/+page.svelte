@@ -5,9 +5,8 @@
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 
 	const projects: Project[] = portfolio
-		.filter(
-			(item): item is PortfolioItem & { imageUrl: any; imageAlt: string; link: string } =>
-				Boolean(item.imageUrl && item.imageAlt && item.link)
+		.filter((item): item is PortfolioItem & { imageUrl: any; imageAlt: string; link: string } =>
+			Boolean(item.imageUrl && item.imageAlt && item.link)
 		)
 		.map((item) => ({
 			projectName: item.label,

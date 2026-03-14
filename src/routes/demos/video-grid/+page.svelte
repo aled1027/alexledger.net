@@ -18,8 +18,8 @@
 		minCubeY: 4
 	};
 
-	const videos = portfolio.filter(
-		(item): item is PortfolioItem & { videoUrl: string } => Boolean(item.videoUrl)
+	const videos = portfolio.filter((item): item is PortfolioItem & { videoUrl: string } =>
+		Boolean(item.videoUrl)
 	);
 
 	function randomInt(min: number, max: number): number {
