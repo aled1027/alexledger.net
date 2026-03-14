@@ -1,119 +1,22 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import type { Project } from '$lib/types';
+	import { portfolio, type PortfolioItem } from '$lib/portfolio';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
-	// @ts-ignore -- Image imports with query parameters
-	import AnnaNeshyba from '$lib/assets/anna-neshyba.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import Metrion from '$lib/assets/metrion.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import Seastar from '$lib/assets/seastar.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import GiveMaxLife from '$lib/assets/give-max-life.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import Incontext from '$lib/assets/incontext.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import LittleCompass from '$lib/assets/little-compass.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import CatAndAlex from '$lib/assets/catandalex.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import LlmToolsAnki from '$lib/assets/llm-tools-anki.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import CatNeshyba from '$lib/assets/catneshyba.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import Vyx from '$lib/assets/vyx.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import MedicalNoteGenerator from '$lib/assets/medical-note-generator.png?enhanced&format=webp';
-	// @ts-ignore -- Image imports with query parameters
-	import Ethyca from '$lib/assets/ethyca.png?enhanced&format=webp';
 
-	const projects: Project[] = [
-		{
-			projectName: 'Anna Neshyba',
-			imageUrl: AnnaNeshyba,
-			imageAlt: 'Screenshot of the Anna Neshyba website',
-			cardColor: '#D3DCD9',
-			link: 'https://annaneshyba.com/'
-		},
-		{
-			projectName: 'Metrion',
-			imageUrl: Metrion,
-			imageAlt: 'Screenshot of the Metrion website',
-			cardColor: '#8992cb',
-			link: 'https://metrion.space'
-		},
-		{
-			projectName: 'Give Max Life',
-			imageUrl: GiveMaxLife,
-			imageAlt: 'Screenshot of the Give Max Life website',
-			cardColor: '#9335D1',
-			link: 'https://givemaxlife.com/'
-		},
-		{
-			projectName: 'Vyx',
-			imageUrl: Vyx,
-			imageAlt: 'Screenshot of the Vyx website',
-			cardColor: '#8B8B8B',
-			link: 'https://vyx.gg'
-		},
-		{
-			projectName: 'Ethyca Product Animation',
-			imageUrl: Ethyca,
-			imageAlt: 'Screenshot of the Ethyca Product Animation',
-			cardColor: '#E8E8E8',
-			link: '/ethyca.mp4'
-		},
-		{
-			projectName: 'Medical Note Generator',
-			imageUrl: MedicalNoteGenerator,
-			imageAlt: 'Screenshot of the Medical Note Generator website',
-			cardColor: '#E6E6E6',
-			link: 'https://github.com/johnyquest7/rust_med'
-		},
-		{
-			projectName: 'Seastar',
-			imageUrl: Seastar,
-			imageAlt: 'Screenshot of the Seastar website',
-			cardColor: '#464D36',
-			link: 'https://seastar-coaching.com'
-		},
-		{
-			projectName: 'inContext Learning',
-			imageUrl: Incontext,
-			imageAlt: 'Screenshot of the incontext website',
-			// cardColor: '#6546B8'
-			cardColor: '#EDEFF2',
-			link: 'https://incontextlearning.com'
-		},
-		{
-			projectName: 'The Little Compass',
-			imageUrl: LittleCompass,
-			imageAlt: 'Screenshot of the Seastar website',
-			cardColor: '#DDD4FD',
-			link: 'https://thelittlecompass.com'
-		},
-		{
-			projectName: "Cat & Alex's Wedding",
-			imageUrl: CatAndAlex,
-			imageAlt: 'Screenshot of the Cat and Alex website',
-			cardColor: '#9080D0',
-			link: 'https://catandalex.net'
-		},
-		{
-			projectName: 'llm-tools-anki',
-			imageUrl: LlmToolsAnki,
-			imageAlt: 'Screenshot of the llm-tools-anki website',
-			cardColor: '#1B883E',
-			link: 'https://github.com/aled1027/llm-tools-anki'
-		},
-		{
-			projectName: 'Cat Neshyba',
-			imageUrl: CatNeshyba,
-			imageAlt: 'Screenshot of the Cat Neshyba website',
-			cardColor: '#CED2D5',
-			link: 'https://catneshyba.com'
-		}
-	];
+	const projects: Project[] = portfolio
+		.filter(
+			(item): item is PortfolioItem & { imageUrl: any; imageAlt: string; link: string } =>
+				Boolean(item.imageUrl && item.imageAlt && item.link)
+		)
+		.map((item) => ({
+			projectName: item.label,
+			imageUrl: item.imageUrl,
+			imageAlt: item.imageAlt,
+			link: item.link,
+			cardColor: item.cardColor
+		}));
+
 	let substackSection: HTMLElement;
 	let iframeWidth = $state(200);
 	function updateIFrameWidth() {

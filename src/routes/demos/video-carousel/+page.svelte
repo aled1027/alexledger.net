@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { portfolio } from '$lib/portfolio.ts';
+	import { portfolio, type PortfolioItem } from '$lib/portfolio';
 
 	// Make these gradients or bgs more alive. Perhaps with a shader.
 	// Add a 3-d curve the movements
@@ -57,7 +57,9 @@
 		return `rgb(${r}, ${g}, ${bCh})`;
 	}
 
-	const items = portfolio;
+	const items = portfolio.filter(
+		(item): item is PortfolioItem & { videoUrl: string } => Boolean(item.videoUrl)
+	);
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
 	let stepProgress = $state(0);
