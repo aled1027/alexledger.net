@@ -29,33 +29,21 @@
 		}
 	]);
 	let isMenuExpanded = $state(false);
-	let menuToggleButton: HTMLButtonElement | null = null;
+
 	// CSS custom-property inputs for the radial reveal animation.
 	let menuCenterX = $state(0);
 	let menuCenterY = $state(0);
 	let menuRadius = $state(0);
-	let menuMinRadius = $state('0rem');
 
 	function toggleMenu() {
 		isMenuExpanded = !isMenuExpanded;
 	}
 
 	onMount(() => {
-		if (menuToggleButton) {
-			const { left, top, width, height } = menuToggleButton.getBoundingClientRect();
-			// Reveal should originate from the center of the menu button.
-			const centerX = left + width / 2;
-			const centerY = top + height / 2;
-
-			menuCenterX = centerX;
-			menuCenterY = centerY;
-			// Radius must be large enough to reach the furthest viewport corner.
-			menuRadius = Math.hypot(
-				Math.max(centerX, window.innerWidth - centerX),
-				Math.max(centerY, window.innerHeight - centerY)
-			);
-			menuMinRadius = '5rem';
-		}
+		menuCenterX = window.innerWidth;
+		menuCenterY = 0;
+		// Radius must be large enough to reach the furthest viewport corner.
+		menuRadius = Math.hypot(window.innerWidth, window.innerHeight);
 	});
 
 	onNavigate(() => {
@@ -84,7 +72,6 @@
 			aria-controls="primary-nav"
 			aria-expanded={isMenuExpanded}
 			data-expanded={isMenuExpanded}
-			bind:this={menuToggleButton}
 			onclick={toggleMenu}
 		>
 			<svg class="menu-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -100,7 +87,7 @@
 	class="header__nav"
 	id="primary-nav"
 	data-visible={isMenuExpanded}
-	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px; --menu-min-radius: ${menuMinRadius};`}
+	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px; --menu-min-radius: 120px;`}
 >
 	<ul role="list">
 		{#each navItems as item (item.href)}
