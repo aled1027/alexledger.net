@@ -34,6 +34,7 @@
 	let menuCenterX = $state(0);
 	let menuCenterY = $state(0);
 	let menuRadius = $state(0);
+	let menuMinRadius = $state(0);
 
 	function toggleMenu() {
 		isMenuExpanded = !isMenuExpanded;
@@ -44,6 +45,11 @@
 		menuCenterY = 0;
 		// Radius must be large enough to reach the furthest viewport corner.
 		menuRadius = Math.hypot(window.innerWidth, window.innerHeight);
+
+		// Don't set for this 1 second after load to prevent some flashing
+		setTimeout(() => {
+			menuMinRadius = 120;
+		}, 1000);
 	});
 
 	onNavigate(() => {
@@ -53,7 +59,6 @@
 	$effect(() => {
 		// Lock background scrolling while the fullscreen menu is open.
 		document.body.style.overflow = isMenuExpanded ? 'hidden' : '';
-
 		return () => {
 			document.body.style.overflow = '';
 		};
@@ -87,7 +92,7 @@
 	class="header__nav"
 	id="primary-nav"
 	data-visible={isMenuExpanded}
-	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px; --menu-min-radius: 120px;`}
+	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px; --menu-min-radius: ${menuMinRadius}px;`}
 >
 	<ul role="list">
 		{#each navItems as item (item.href)}
