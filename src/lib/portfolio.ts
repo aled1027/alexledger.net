@@ -19,29 +19,29 @@ export interface PortfolioItem {
 	bgGlow: string;
 }
 
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import AnnaNeshyba from '$lib/assets/anna-neshyba.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import Metrion from '$lib/assets/metrion.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import Seastar from '$lib/assets/seastar.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import GiveMaxLife from '$lib/assets/give-max-life.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import Incontext from '$lib/assets/incontext.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import LittleCompass from '$lib/assets/little-compass.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import CatAndAlex from '$lib/assets/catandalex.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import LlmToolsAnki from '$lib/assets/llm-tools-anki.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import CatNeshyba from '$lib/assets/catneshyba.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import Vyx from '$lib/assets/vyx.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import MedicalNoteGenerator from '$lib/assets/medical-note-generator.png?enhanced&format=webp';
-// @ts-ignore -- Image imports with query parameters
+// @ts-expect-error -- Image imports with query parameters
 import Ethyca from '$lib/assets/ethyca.png?enhanced&format=webp';
 
 export const portfolio: PortfolioItem[] = [
