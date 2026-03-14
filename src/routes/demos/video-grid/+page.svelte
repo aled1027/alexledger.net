@@ -2,6 +2,7 @@
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { onMount } from 'svelte';
+	import { portfolio, type PortfolioItem } from '$lib/portfolio';
 
 	interface Config {
 		itemSize: number;
@@ -17,38 +18,9 @@
 		minCubeY: 4
 	};
 
-	const videos = [
-		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4',
-			label: 'Anna Neshyba'
-		},
-		{
-			videoUrl:
-				'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4',
-			label: 'Ethyca Product Animation'
-		},
-		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4',
-			label: 'Max Life Foundation'
-		},
-		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4',
-			label: 'Incontext Learning'
-		},
-		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4',
-			label: 'Cat and Alex'
-		},
-		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4',
-			label: 'Cat Nesh'
-		},
-		{
-			videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4',
-			label: 'Cosmic Frontier'
-		},
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4', label: 'Vyx' }
-	];
+	const videos = portfolio.filter(
+		(item): item is PortfolioItem & { videoUrl: string } => Boolean(item.videoUrl)
+	);
 
 	function randomInt(min: number, max: number): number {
 		// Min is inclusive and max is exclusive

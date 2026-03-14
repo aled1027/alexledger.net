@@ -3,17 +3,12 @@
 	// @ts-ignore
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 	import { onMount } from 'svelte';
+	import { portfolio, type PortfolioItem } from '$lib/portfolio';
 
-	const videos = [
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.mp4', label: 'Anna Neshyba' },
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.mp4', label: 'Ethyca Product Animation' },
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.mp4', label: 'Max Life Foundation' },
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.mp4', label: 'Incontext Learning' },
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.mp4', label: 'Cat and Alex' },
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.mp4', label: 'Cat Nesh' },
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.mp4', label: 'Cosmic Fronter' },
-		{ videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.mp4', label: 'Vyx' }
-	];
+	const videos = portfolio.filter(
+		(item): item is PortfolioItem & { videoUrl: string } => Boolean(item.videoUrl)
+	);
+	const videoCount = videos.length;
 
 	// BoxGeometry face normals in local space (right, left, top, bottom, front, back) — used for front-face label
 	const FACE_NORMALS = [
@@ -110,7 +105,7 @@
 
 			const maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
 
-			for (let i = 0; i < 8; i++) {
+			for (let i = 0; i < videoCount; i++) {
 				const video = document.createElement('video');
 				video.src = videos[i].videoUrl;
 				video.crossOrigin = 'anonymous';
@@ -299,7 +294,7 @@
 
 		private updateMaterialMaps(): void {
 			for (let i = 0; i < 6; i++) {
-				const textureIndex = (this.cycleOffset + i) % 8;
+				const textureIndex = (this.cycleOffset + i) % videoCount;
 				// Only assign texture when video has frame data ready; avoids a dark face while loading
 				if (this.videoElements[textureIndex].readyState >= 2) {
 					this.materials[i].map = this.videoTextures[textureIndex];
@@ -365,10 +360,10 @@
 
 			const now = performance.now();
 			if (this.visible) {
-				// Cycle which 6 of 8 videos are on the cube
+				// Cycle which 6 videos are on the cube
 				if (now - this.lastCycleTime >= this.CYCLE_INTERVAL_MS) {
 					this.lastCycleTime = now;
-					this.cycleOffset = (this.cycleOffset + 1) % 8;
+					this.cycleOffset = (this.cycleOffset + 1) % videoCount;
 					this.updateMaterialMaps();
 				}
 
@@ -438,7 +433,7 @@
 				this.updateMaterialMaps();
 
 				const frontFace = this.getFrontFaceIndex();
-				const videoIndex = (this.cycleOffset + frontFace) % 8;
+				const videoIndex = (this.cycleOffset + frontFace) % videoCount;
 				this.onFrontFaceLabel(videos[videoIndex].label);
 			}
 
