@@ -1,3 +1,9 @@
+Inspired by https://thatshubham.com/blog/news-audit,
+I think we put images in the carousel, maybe stacked images.
+And then have an on-demand video that can load.
+
+---
+
 - The cirlce in the header flashes for a second on slow & initial loads
   - prevent this
   - I thought i had with setting the min radius in onmount, but i guess that didn't do it

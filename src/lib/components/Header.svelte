@@ -34,7 +34,6 @@
 	let menuCenterX = $state(0);
 	let menuCenterY = $state(0);
 	let menuRadius = $state(0);
-	let menuMinRadius = $state('0rem');
 
 	function toggleMenu() {
 		isMenuExpanded = !isMenuExpanded;
@@ -54,7 +53,6 @@
 				Math.max(centerX, window.innerWidth - centerX),
 				Math.max(centerY, window.innerHeight - centerY)
 			);
-			menuMinRadius = '5rem';
 		}
 	});
 
@@ -100,7 +98,7 @@
 	class="header__nav"
 	id="primary-nav"
 	data-visible={isMenuExpanded}
-	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px; --menu-min-radius: ${menuMinRadius};`}
+	style={`--menu-origin-x: ${menuCenterX}px; --menu-origin-y: ${menuCenterY}px; --menu-radius: ${menuRadius}px;`}
 >
 	<ul role="list">
 		{#each navItems as item (item.href)}
@@ -173,12 +171,6 @@
 		inset: 0;
 		background: var(--color-gray-900);
 		color: var(--color-gray-100);
-
-		// Keep a small visible circle at the button center when collapsed.
-		// that's what menu-min-radius does
-		// Don't set menu-min-radius directly, set it in onMount, so we dont get a flash
-		// on page load
-		clip-path: circle(var(--menu-min-radius) at var(--menu-origin-x) var(--menu-origin-y));
 		opacity: 0;
 		visibility: hidden;
 		pointer-events: none;
@@ -209,7 +201,9 @@
 
 	.header__nav[data-visible='true'] {
 		// Expand to the computed viewport-covering radius.
-		clip-path: circle(var(--menu-radius) at var(--menu-origin-x) var(--menu-origin-y));
+		clip-path: circle(
+			var(--menu-radius, '0px') at var(--menu-origin-x, '0px') var(--menu-origin-y, '0px')
+		);
 		opacity: 1;
 		visibility: visible;
 		pointer-events: auto;
