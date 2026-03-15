@@ -1,18 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { portfolio, type PortfolioItem } from '$lib/portfolio';
+	import { portfolio } from '$lib/portfolio';
 	import { mixColor, clamp } from '$lib/utils';
+
+	console.log(portfolio[0]);
 
 	// Make these gradients or bgs more alive. Perhaps with a shader.
 	// Add a 3-d curve the movements
 	// Make the right side more of a rolodex
-	//
 
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
 	let stepProgress = $state(0);
-
-	// Current centered-ish item
 	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, portfolio.length - 1));
 
 	// Signed offset in "item steps"
@@ -80,18 +79,17 @@
 	<div class="carousel__inner">
 		<div class="carousel__asset">
 			{#each portfolio as item, idx (idx)}
-				<video
-					autoplay
-					muted
-					loop
-					playsinline
-					crossorigin="anonymous"
-					src={item.videoUrl}
+				<div
+					class="carousel__asset__item"
 					style="
-						--item-offset: {itemOffsets[idx]};
-						--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};
-					"
-				></video>
+				--item-offset: {itemOffsets[idx]};
+				--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};"
+				>
+					<!-- <video autoplay muted loop playsinline crossorigin="anonymous" src={item.videoUrl}
+					></video> -->
+
+					<img src={item.imageUrl} alt={item.imageAlt} />
+				</div>
 			{/each}
 		</div>
 
@@ -184,24 +182,32 @@
 		grid-area: asset;
 		position: relative;
 		overflow: hidden;
+	}
 
-		video {
+	.carousel__asset__item {
+		position: absolute;
+		top: 50%;
+		left: 0;
+		width: 100%;
+		height: var(--video-height);
+		transform-origin: left center;
+		border: 1px solid var(--color-color-300);
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+		/* Full width at center, narrower away from center */
+		--scale: calc(1 - var(--item-dist) * 0.3);
+
+		transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--video-step))))
+			scale(var(--scale));
+		pointer-events: none;
+
+		video,
+		img {
 			position: absolute;
-			top: 50%;
-			left: 0;
+			inset: 0;
 			width: 100%;
-			height: var(--video-height);
+			height: 100%;
 			object-fit: cover;
-			pointer-events: none;
-			transform-origin: left center;
-			border: 1px solid var(--color-color-300);
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-
-			/* Full width at center, narrower away from center */
-			--scale: calc(1 - var(--item-dist) * 0.3);
-
-			transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--video-step))))
-				scale(var(--scale));
 		}
 	}
 
