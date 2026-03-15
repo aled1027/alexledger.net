@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as THREE from 'three';
-	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 	import { onMount } from 'svelte';
 	import { portfolio, type PortfolioItem } from '$lib/portfolio';
 

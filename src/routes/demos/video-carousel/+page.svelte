@@ -8,28 +8,25 @@
 	// Make the right side more of a rolodex
 	//
 
-	const items = portfolio.filter((item): item is PortfolioItem & { videoUrl: string } =>
-		Boolean(item.videoUrl)
-	);
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
 	let stepProgress = $state(0);
 
 	// Current centered-ish item
-	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, items.length - 1));
+	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, portfolio.length - 1));
 
 	// Signed offset in "item steps"
 	// 0 = centered, -1 = one step below, 1 = one step above
-	let itemOffsets = $derived.by(() => items.map((_, i) => stepProgress - i));
+	let itemOffsets = $derived.by(() => portfolio.map((_, i) => stepProgress - i));
 
-	// Blend background colors between adjacent items using fractional scroll progress.
+	// Blend background colors between adjacent portfolio using fractional scroll progress.
 	// This keeps gradient transitions smooth instead of snapping at item boundaries.
 	let activeBg = $derived.by(() => {
-		const lowerIdx = clamp(Math.floor(stepProgress), 0, items.length - 1);
-		const upperIdx = clamp(Math.ceil(stepProgress), 0, items.length - 1);
+		const lowerIdx = clamp(Math.floor(stepProgress), 0, portfolio.length - 1);
+		const upperIdx = clamp(Math.ceil(stepProgress), 0, portfolio.length - 1);
 		const t = stepProgress - lowerIdx;
-		const lower = items[lowerIdx];
-		const upper = items[upperIdx];
+		const lower = portfolio[lowerIdx];
+		const upper = portfolio[upperIdx];
 
 		return {
 			from: mixColor(lower.bgFrom, upper.bgFrom, t),
@@ -51,7 +48,7 @@
 		}
 
 		const normalized = clamp(-rect.top / totalScrollable, 0, 1);
-		stepProgress = normalized * (items.length - 1);
+		stepProgress = normalized * (portfolio.length - 1);
 	}
 
 	onMount(() => {
@@ -75,14 +72,14 @@
 <div
 	bind:this={carouselEl}
 	class="carousel"
-	style="--header-height: {headerHeight}px; --items: {items.length};
+	style="--header-height: {headerHeight}px; --items: {portfolio.length};
 	--bg-from: {activeBg.from};
 	--bg-to: {activeBg.to};
 	--bg-glow: {activeBg.glow};"
 >
 	<div class="carousel__inner">
 		<div class="carousel__asset">
-			{#each items as item, idx (idx)}
+			{#each portfolio as item, idx (idx)}
 				<video
 					autoplay
 					muted
@@ -100,7 +97,7 @@
 
 		<div class="carousel__labels">
 			<p class="carousel__title">Portfolio</p>
-			{#each items as item, idx (idx)}
+			{#each portfolio as item, idx (idx)}
 				<p class="carousel__label" data-cur-item={idx === curItemIdx}>
 					{item.label}
 				</p>

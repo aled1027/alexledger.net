@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * From https://github.com/mrdoob/three.js/blob/dev/examples/jsm/effects/AsciiEffect.js#L1
  *

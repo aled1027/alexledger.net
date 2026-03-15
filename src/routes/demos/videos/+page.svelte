@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as THREE from 'three';
 	// @ts-ignore
-	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 	import { onMount } from 'svelte';
 	import { portfolio, type PortfolioItem } from '$lib/portfolio';
 
@@ -567,18 +567,4 @@
 		pointer-events: none;
 	}
 
-	.video-list {
-		margin-top: 1rem;
-		padding-left: 1.25rem;
-		max-width: 55rem;
-		font-size: 0.95rem;
-		list-style: none;
-
-		li {
-			padding: 0.2rem 0;
-			&.current {
-				font-weight: 600;
-			}
-		}
-	}
 </style>

@@ -1,9 +1,9 @@
 <!-- FloatingEyes.svelte -->
 <script lang="ts">
 	import * as THREE from 'three';
-	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-	import Stats from 'three/examples/jsm/libs/stats.module';
+	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+	import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+	import Stats from 'three/examples/jsm/libs/stats.module.js';
 	import { onMount } from 'svelte';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
@@ -17,13 +17,13 @@
 	// https://sketchfab.com/3d-models/blue-eye-922ad6f1f6034ba3beded5b709fd3703
 
 	let container: HTMLDivElement;
-	let renderer: THREE.WebGLRenderer;
-	let scene: THREE.Scene;
-	let camera: THREE.PerspectiveCamera;
-	let controls: OrbitControls;
-	let earth: THREE.Mesh;
-	let eyeModel: THREE.Group;
-	let stats: Stats;
+	let renderer: THREE.WebGLRenderer | null = null;
+	let scene: THREE.Scene | null = null;
+	let camera: THREE.PerspectiveCamera | null = null;
+	let controls: OrbitControls | null = null;
+	let earth: THREE.Mesh | null = null;
+	let eyeModel: THREE.Group | null = null;
+	let stats: Stats | null = null;
 	let eyeGroup: THREE.Group = new THREE.Group();
 	let frustum = new THREE.Frustum();
 	let frustumMatrix = new THREE.Matrix4();
@@ -89,11 +89,23 @@
 	const earthTextureUrl: string = '/textures/earthmap.jpg';
 	const eyeModelUrl: string = '/textures/blue_eye.glb';
 
+	function disposeMaterial(material: THREE.Material | THREE.Material[]): void {
+		if (Array.isArray(material)) {
+			material.forEach(disposeMaterial);
+			return;
+		}
+
+		if ('map' in material && material.map instanceof THREE.Texture) {
+			material.map.dispose();
+		}
+		material.dispose();
+	}
+
 	// Load the eye model once and reuse it
 	const loadEyeModel = (): Promise<void> => {
 		return new Promise((resolve) => {
 			const loader: GLTFLoader = new GLTFLoader();
-			loader.load(eyeModelUrl, (gltf) => {
+			loader.load(eyeModelUrl, (gltf: GLTF) => {
 				eyeModel = gltf.scene;
 
 				// Optimize the geometry
@@ -201,8 +213,10 @@
 		// Earth - optimize geometry
 		const earthGeometry = new THREE.SphereGeometry(earthRadius, 32, 32); // Reduced segments
 		const textureLoader = new THREE.TextureLoader();
+		const activeRenderer = renderer;
+		const activeScene = scene;
 		textureLoader.load(earthTextureUrl, (texture) => {
-			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+			texture.anisotropy = activeRenderer.capabilities.getMaxAnisotropy();
 			const earthMaterial = new THREE.MeshStandardMaterial({
 				map: texture,
 				side: THREE.FrontSide,
@@ -213,7 +227,7 @@
 			earth = new THREE.Mesh(earthGeometry, earthMaterial);
 			earth.geometry.computeBoundingSphere();
 			earth.frustumCulled = true;
-			scene.add(earth);
+			activeScene.add(earth);
 
 			// Add eyes after Earth is loaded
 			addEyes();
@@ -223,6 +237,8 @@
 	}
 
 	function addEyes(): void {
+		if (!earth || !eyeModel) return;
+
 		for (let lat = 0; lat < latitudeBands; lat++) {
 			// Convert lat index to angle in radians (-π/2 to π/2)
 			const phi = (lat / (latitudeBands - 1)) * Math.PI - Math.PI / 2;
@@ -256,12 +272,15 @@
 	}
 
 	function updateLOD(): void {
+		if (!camera) return;
+		const activeCamera = camera;
+
 		eyeGroup.children
 			.filter((eye) => blinkingEyes.has(eyeGroup.children.indexOf(eye)))
 			.forEach((eye) => {
 				// Check if the eye is blinking
 
-				const distance = camera.position.distanceTo(eye.getWorldPosition(new THREE.Vector3()));
+				const distance = activeCamera.position.distanceTo(eye.getWorldPosition(new THREE.Vector3()));
 
 				// Calculate a smooth scale factor based on distance
 				let scaleFactor: number;
@@ -298,10 +317,7 @@
 		// Dispose of Earth resources
 		if (earth) {
 			if (earth.geometry) earth.geometry.dispose();
-			if (earth.material instanceof THREE.Material) {
-				if (earth.material.map) earth.material.map.dispose();
-				earth.material.dispose();
-			}
+			disposeMaterial(earth.material);
 		}
 
 		// Clean up eye models
@@ -309,10 +325,7 @@
 			eyeGroup.traverse((child) => {
 				if (child instanceof THREE.Mesh) {
 					if (child.geometry) child.geometry.dispose();
-					if (child.material instanceof THREE.Material) {
-						if (child.material.map) child.material.map.dispose();
-						child.material.dispose();
-					}
+					disposeMaterial(child.material);
 				}
 			});
 		}
@@ -344,6 +357,7 @@
 
 	function animate(): void {
 		requestAnimationFrame(animate);
+		if (!stats || !camera || !renderer || !scene) return;
 		stats.begin();
 
 		// Update frustum for culling
@@ -472,7 +486,7 @@
 	}
 
 	function resizeRenderer(): void {
-		if (container && renderer) {
+		if (container && renderer && camera) {
 			const width: number = container.clientWidth;
 			const height: number = container.clientHeight;
 			camera.aspect = width / height;
