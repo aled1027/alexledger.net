@@ -3,11 +3,7 @@
 	import { portfolio } from '$lib/portfolio';
 	import { mixColor, clamp } from '$lib/utils';
 
-	console.log(portfolio[0]);
-
 	// Make these gradients or bgs more alive. Perhaps with a shader.
-	// Add a 3-d curve the movements
-	// Make the right side more of a rolodex
 
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
@@ -50,6 +46,10 @@
 		stepProgress = normalized * (portfolio.length - 1);
 	}
 
+	function focusItem(idx: number) {
+		console.log('focus on ', idx);
+	}
+
 	onMount(() => {
 		const main = document.querySelector('main');
 		if (main) {
@@ -89,6 +89,9 @@
 					></video> -->
 
 					<img src={item.imageUrl} alt={item.imageAlt} />
+					<button onclick={() => focusItem(idx)} class="carousel__asset__button"
+						>Read case study</button
+					>
 				</div>
 			{/each}
 		</div>
@@ -121,7 +124,7 @@
 
 		/* Tune these */
 		--item-asset-height: 50vh;
-		--item-asset-gap: 3vh;
+		--item-asset-gap: 8vh;
 		--item-asset-step: calc(var(--item-asset-height) + var(--item-asset-gap));
 
 		/* One viewport to show the sticky stage + one step per transition */
@@ -212,7 +215,6 @@
 
 		transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--item-asset-step))))
 			scale(var(--scale));
-		pointer-events: none;
 
 		img {
 			position: absolute;
@@ -258,6 +260,28 @@
 		&[data-cur-item='true'] {
 			font-weight: 700;
 			opacity: 1;
+		}
+	}
+
+	.carousel__asset__button {
+		position: absolute;
+		bottom: -3.5rem;
+		left: 50%;
+		transform: translateX(-50%);
+		width: fit-content;
+		height: 4rem;
+		padding: 0.5rem;
+		background-color: var(--color-color-300);
+		font-size: var(--size-step--1);
+		font-weight: 400;
+		background: transparent;
+		color: white;
+		mix-blend-mode: difference;
+		border: none;
+
+		&:hover {
+			text-decoration: underline;
+			cursor: pointer;
 		}
 	}
 </style>
