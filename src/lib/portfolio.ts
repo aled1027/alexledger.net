@@ -19,36 +19,11 @@ export interface PortfolioItem {
 	bgGlow: string;
 }
 
-// @ts-expect-error -- Image imports with query parameters
-import AnnaNeshyba from '$lib/assets/anna-neshyba.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import Metrion from '$lib/assets/metrion.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import Seastar from '$lib/assets/seastar.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import GiveMaxLife from '$lib/assets/give-max-life.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import Incontext from '$lib/assets/incontext.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import LittleCompass from '$lib/assets/little-compass.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import CatAndAlex from '$lib/assets/catandalex.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import LlmToolsAnki from '$lib/assets/llm-tools-anki.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import CatNeshyba from '$lib/assets/catneshyba.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import Vyx from '$lib/assets/vyx.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import MedicalNoteGenerator from '$lib/assets/medical-note-generator.png?enhanced&format=webp';
-// @ts-expect-error -- Image imports with query parameters
-import Ethyca from '$lib/assets/ethyca.png?enhanced&format=webp';
-
 export const portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.webm',
 		label: 'Anna Neshyba',
-		imageUrl: AnnaNeshyba,
+		imageUrl: '/portfolio/anna-neshyba.webp',
 		imageAlt: 'Screenshot of the Anna Neshyba website',
 		link: 'https://annaneshyba.com/',
 		cardColor: '#D3DCD9',
@@ -58,7 +33,7 @@ export const portfolio: PortfolioItem[] = [
 	},
 	{
 		label: 'Metrion',
-		imageUrl: Metrion,
+		imageUrl: '/portfolio/metrion.webp',
 		imageAlt: 'Screenshot of the Metrion website',
 		link: 'https://metrion.space',
 		cardColor: '#8992cb',
@@ -70,7 +45,7 @@ export const portfolio: PortfolioItem[] = [
 		videoUrl:
 			'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/ethyca-animation-demo-video.webm',
 		label: 'Ethyca Product Animation',
-		imageUrl: Ethyca,
+		imageUrl: '/portfolio/ethyca.webp',
 		imageAlt: 'Screenshot of the Ethyca Product Animation',
 		link: '/ethyca.mp4',
 		cardColor: '#E8E8E8',
@@ -81,7 +56,7 @@ export const portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/maxlifefoundation.webm',
 		label: 'Give Max Life',
-		imageUrl: GiveMaxLife,
+		imageUrl: '/portfolio/give-max-life.webp',
 		imageAlt: 'Screenshot of the Give Max Life website',
 		link: 'https://givemaxlife.com/',
 		cardColor: '#9335D1',
@@ -91,7 +66,7 @@ export const portfolio: PortfolioItem[] = [
 	},
 	{
 		label: 'Medical Note Generator',
-		imageUrl: MedicalNoteGenerator,
+		imageUrl: '/portfolio/medical-note-generator.webp',
 		imageAlt: 'Screenshot of the Medical Note Generator website',
 		link: 'https://github.com/johnyquest7/rust_med',
 		cardColor: '#E6E6E6',
@@ -102,7 +77,7 @@ export const portfolio: PortfolioItem[] = [
 	{
 		label: 'Seastar',
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.webm',
-		imageUrl: Seastar,
+		imageUrl: '/portfolio/seastar.webp',
 		imageAlt: 'Screenshot of the Seastar website',
 		link: 'https://seastar-coaching.com',
 		cardColor: '#464D36',
@@ -113,7 +88,7 @@ export const portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/incontextlearning.webm',
 		label: 'inContext Learning',
-		imageUrl: Incontext,
+		imageUrl: '/portfolio/incontext.webp',
 		imageAlt: 'Screenshot of the incontext website',
 		link: 'https://incontextlearning.com',
 		cardColor: '#EDEFF2',
@@ -123,7 +98,7 @@ export const portfolio: PortfolioItem[] = [
 	},
 	{
 		label: 'The Little Compass',
-		imageUrl: LittleCompass,
+		imageUrl: '/portfolio/little-compass.webp',
 		imageAlt: 'Screenshot of the Seastar website',
 		link: 'https://thelittlecompass.com',
 		cardColor: '#DDD4FD',
@@ -134,7 +109,7 @@ export const portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catandalex.webm',
 		label: "Cat & Alex's Wedding",
-		imageUrl: CatAndAlex,
+		imageUrl: '/portfolio/catandalex.webp',
 		imageAlt: 'Screenshot of the Cat and Alex website',
 		link: 'https://catandalex.net',
 		cardColor: '#9080D0',
@@ -144,7 +119,7 @@ export const portfolio: PortfolioItem[] = [
 	},
 	{
 		label: 'llm-tools-anki',
-		imageUrl: LlmToolsAnki,
+		imageUrl: '/portfolio/llm-tools-anki.webp',
 		imageAlt: 'Screenshot of the llm-tools-anki website',
 		link: 'https://github.com/aled1027/llm-tools-anki',
 		cardColor: '#1B883E',
@@ -155,7 +130,7 @@ export const portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/catnesh.webm',
 		label: 'Cat Neshyba',
-		imageUrl: CatNeshyba,
+		imageUrl: '/portfolio/catneshyba.webp',
 		imageAlt: 'Screenshot of the Cat Neshyba website',
 		link: 'https://catneshyba.com',
 		cardColor: '#CED2D5',
@@ -166,7 +141,7 @@ export const portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/vyx.webm',
 		label: 'Vyx',
-		imageUrl: Vyx,
+		imageUrl: '/portfolio/vyx.webp',
 		imageAlt: 'Screenshot of the Vyx website',
 		link: 'https://vyx.gg',
 		cardColor: '#8B8B8B',
