@@ -59,9 +59,9 @@
 		},
 
 		{
-			title: 'Video Scroll Carousel',
+			title: 'Experimental Portfolio',
 			date: 'March 12, 2026',
-			link: '/demos/video-carousel'
+			link: '/demos/experimental-portfolio'
 		}
 	];
 
