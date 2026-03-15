@@ -110,12 +110,12 @@
 		--carousel-font-weight: 400;
 
 		/* Tune these */
-		--video-height: 50vh;
-		--video-gap: 3vh;
-		--video-step: calc(var(--video-height) + var(--video-gap));
+		--item-asset-height: 50vh;
+		--item-asset-gap: 3vh;
+		--item-asset-step: calc(var(--item-asset-height) + var(--item-asset-gap));
 
 		/* One viewport to show the sticky stage + one step per transition */
-		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--video-step)));
+		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--item-asset-step)));
 		position: relative;
 
 		font-family: 'Manrope', sans-serif;
@@ -189,7 +189,7 @@
 		top: 50%;
 		left: 0;
 		width: 100%;
-		height: var(--video-height);
+		height: var(--item-asset-height);
 		transform-origin: left center;
 		border: 1px solid var(--color-color-300);
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -197,11 +197,10 @@
 		/* Full width at center, narrower away from center */
 		--scale: calc(1 - var(--item-dist) * 0.3);
 
-		transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--video-step))))
+		transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--item-asset-step))))
 			scale(var(--scale));
 		pointer-events: none;
 
-		video,
 		img {
 			position: absolute;
 			inset: 0;
