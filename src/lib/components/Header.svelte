@@ -13,6 +13,11 @@
 			isCurrent: currentPage === '/'
 		},
 		{
+			label: 'Portfolio',
+			href: '/#portfolio',
+			isCurrent: false
+		},
+		{
 			label: 'Demos',
 			href: '/demos',
 			isCurrent: currentPage === '/demos'
@@ -53,17 +58,10 @@
 		isMenuExpanded = !isMenuExpanded;
 	}
 
-	onMount(() => {
+	function closeMenu() {
 		updateVariables();
-		// Don't set for this 1 second after load to prevent some flashing
-		setTimeout(() => {
-			menuMinRadius = 120;
-		}, 1000);
-	});
-
-	onNavigate(() => {
 		isMenuExpanded = false;
-	});
+	}
 
 	$effect(() => {
 		// Lock background scrolling while the fullscreen menu is open.
@@ -71,6 +69,14 @@
 		return () => {
 			document.body.style.overflow = '';
 		};
+	});
+
+	onMount(() => {
+		updateVariables();
+		// Don't set for this 1 second after load to prevent some flashing
+		setTimeout(() => {
+			menuMinRadius = 120;
+		}, 1000);
 	});
 </script>
 
@@ -106,7 +112,7 @@
 	<ul role="list">
 		{#each navItems as item (item.href)}
 			<li>
-				<a href={item.href} data-current={item.isCurrent}>
+				<a onclick={closeMenu} href={item.href} data-current={item.isCurrent}>
 					{item.label}
 				</a>
 			</li>

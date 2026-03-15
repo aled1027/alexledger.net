@@ -44,7 +44,7 @@
 	</div>
 </section>
 <section>
-	<h2 class="small-heading">MY WORK</h2>
+	<h2 id="portfolio" class="small-heading">MY WORK</h2>
 	<div class="project-grid mt-l">
 		{#each projects as project (project.projectName)}
 			<ProjectCard {project} cardColor={project.cardColor} />

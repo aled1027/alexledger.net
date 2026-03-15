@@ -28,6 +28,7 @@
 :root {
 	view-transition-name: root;
 	interpolate-size: allow-keywords;
+	scroll-behavior: smooth;
 }
 
 body {
