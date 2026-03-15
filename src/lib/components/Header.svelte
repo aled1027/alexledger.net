@@ -41,16 +41,20 @@
 	let menuRadius = $state(0);
 	let menuMinRadius = $state(0);
 
-	function toggleMenu() {
-		isMenuExpanded = !isMenuExpanded;
-	}
-
-	onMount(() => {
+	function updateVariables() {
 		menuCenterX = window.innerWidth;
 		menuCenterY = 0;
 		// Radius must be large enough to reach the furthest viewport corner.
 		menuRadius = Math.hypot(window.innerWidth, window.innerHeight);
+	}
 
+	function toggleMenu() {
+		updateVariables();
+		isMenuExpanded = !isMenuExpanded;
+	}
+
+	onMount(() => {
+		updateVariables();
 		// Don't set for this 1 second after load to prevent some flashing
 		setTimeout(() => {
 			menuMinRadius = 120;
