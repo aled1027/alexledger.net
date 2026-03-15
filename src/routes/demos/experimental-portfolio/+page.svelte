@@ -96,7 +96,17 @@
 		<div class="carousel__labels">
 			<p class="carousel__title">Portfolio</p>
 			{#each portfolio as item, idx (idx)}
-				<p class="carousel__label" data-cur-item={idx === curItemIdx}>
+				{@const distFromCur = idx - curItemIdx}
+				{@const opacity = clamp(1 - Math.abs(distFromCur) / 5, 0, 1)}
+				{@const scale = clamp(1 - Math.abs(distFromCur) * 0.08, 0.7, 1)}
+				<p
+					class="carousel__label"
+					data-cur-item={idx === curItemIdx}
+					style="
+						--opacity: {opacity};
+						--scale: {scale};
+					"
+				>
 					{item.label}
 				</p>
 			{/each}
@@ -115,9 +125,12 @@
 		--item-asset-step: calc(var(--item-asset-height) + var(--item-asset-gap));
 
 		/* One viewport to show the sticky stage + one step per transition */
-		height: calc((100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--item-asset-step)));
+		height: calc(
+			(100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--item-asset-step))
+		);
 		position: relative;
 
+		// TODO: maybe change font-family everywhere
 		font-family: 'Manrope', sans-serif;
 	}
 
@@ -235,7 +248,12 @@
 
 	.carousel__label {
 		margin: 0;
-		opacity: 0.55;
+		opacity: var(--opacity);
+		scale: var(--scale);
+		transform-origin: right;
+		transition:
+			scale 250ms linear,
+			opacity 250ms linear;
 
 		&[data-cur-item='true'] {
 			font-weight: 700;
