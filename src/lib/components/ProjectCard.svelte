@@ -10,7 +10,7 @@
 		<a href={project.link} target="_blank" rel="noopener noreferrer">
 			<div class="project-card__middle-entry project-card__scale-animation padding-4">
 				<div class="project-card__asset-wrapper">
-					<enhanced:img
+					<img
 						class="project-card__cover-asset"
 						src={project.imageUrl}
 						alt={project.imageAlt}
@@ -26,7 +26,7 @@
 		<div>
 			<div class="project-card__middle-entry project-card__scale-animation padding-4">
 				<div class="project-card__asset-wrapper">
-					<enhanced:img
+					<img
 						class="project-card__cover-asset"
 						src={project.imageUrl}
 						alt={project.imageAlt}

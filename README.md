@@ -27,8 +27,9 @@ To view posts from before I updated alexledger.net: https://github.com/aled1027/
 4. If you want anything like a grid or flex, and it's weird at all, just go ahead and make it specific and in the file.
 5. Videos & images
 
-- Put images and videos in src/lib/assets. Vite should handle them from there.
-- Then use enhanced:img and basic video
+- Put images and videos in src/lib/assets or static
+- Do not use enhanced:img
+- Try to convert all images to webp and videos to webm using magick
 
 6. Icons: Use @lucide/svelte. See below.
 7. Components are built out in src/lib/components

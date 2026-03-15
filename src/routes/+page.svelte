@@ -5,7 +5,7 @@
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 
 	const projects: Project[] = portfolio
-		.filter((item): item is PortfolioItem & { imageUrl: any; imageAlt: string; link: string } =>
+		.filter((item): item is PortfolioItem & { imageUrl: string; imageAlt: string; link: string } =>
 			Boolean(item.imageUrl && item.imageAlt && item.link)
 		)
 		.map((item) => ({
@@ -46,7 +46,7 @@
 <section>
 	<h2 class="small-heading">MY WORK</h2>
 	<div class="project-grid mt-l">
-		{#each projects as project}
+		{#each projects as project (project.projectName)}
 			<ProjectCard {project} cardColor={project.cardColor} />
 		{/each}
 	</div>
