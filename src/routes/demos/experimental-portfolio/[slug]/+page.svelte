@@ -3,7 +3,6 @@
 	let item = data.item;
 	import { CornerDownLeft } from '@lucide/svelte';
 	import DOMPurify from 'dompurify';
-
 	import { marked } from 'marked';
 
 	const descriptionHtml = $derived.by(() => {
@@ -17,7 +16,7 @@
 </script>
 
 <div
-	class="custom-gradient-bg full-absolute"
+	class="custom-gradient-bg full-fixed"
 	style="--bg-from: {item.bgFrom};
          --bg-to: {item.bgTo};
          --bg-glow: {item.bgGlow};"
@@ -25,14 +24,16 @@
 
 <section class="item">
 	<div class="item__header">
-		<a href="/demos/experimental-portfolio" class="item__back"><CornerDownLeft /></a>
-		<h1 class="item__title" style="view-transition-name: portfolio-title-{item.slug}">
-			{item.label}
-		</h1>
+		<a href="/demos/experimental-portfolio"><CornerDownLeft /></a>
+		<a class="no-underline" href={item.link} target="_blank">
+			<h1 class="item__title" style="view-transition-name: portfolio-title-{item.slug}">
+				{item.label}
+			</h1>
+		</a>
 	</div>
 
 	{#if item.description}
-		<div class="item__description my-l">{@html descriptionHtml}</div>
+		<div class="item__description my-m">{@html descriptionHtml}</div>
 	{/if}
 
 	<div class="grid my-l" data-layout="50-50">
@@ -59,13 +60,16 @@
 		gap: 1rem;
 	}
 
-	.item__back {
-	}
-
 	.item__title {
 		font-size: var(--size-step-3);
+		text-decoration: none;
+
 		// TODO: remove
 		font-family: 'Manrope', sans-serif;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 
 	.item__image {
