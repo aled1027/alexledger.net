@@ -30,9 +30,11 @@
 			{item.label}
 		</h1>
 	</div>
+
 	{#if item.description}
 		<div class="item__description my-l">{@html descriptionHtml}</div>
 	{/if}
+
 	<div class="grid my-l" data-layout="50-50">
 		<img
 			class="item__image"
