@@ -9,6 +9,8 @@ export interface PortfolioItem {
 	imageAlt?: string;
 	// External or internal project URL.
 	link?: string;
+	// Slug
+	slug: string;
 	// Card background color for project grid cards.
 	cardColor?: string;
 	// Gradient start color (top-left / leading edge of the base linear gradient).
@@ -26,6 +28,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/anna-neshyba.webp',
 		imageAlt: 'Screenshot of the Anna Neshyba website',
 		link: 'https://annaneshyba.com/',
+		slug: 'anna-neshyba',
 		cardColor: '#D3DCD9',
 		bgFrom: '#31453f',
 		bgTo: '#161c1f',
@@ -36,6 +39,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/metrion.webp',
 		imageAlt: 'Screenshot of the Metrion website',
 		link: 'https://metrion.space',
+		slug: 'metrion',
 		cardColor: '#8992cb',
 		bgFrom: '#323656',
 		bgTo: '#171a2b',
@@ -48,6 +52,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/ethyca.webp',
 		imageAlt: 'Screenshot of the Ethyca Product Animation',
 		link: '/ethyca.mp4',
+		slug: 'ethyca-product-animation',
 		cardColor: '#E8E8E8',
 		bgFrom: '#364052',
 		bgTo: '#171b24',
@@ -59,6 +64,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/give-max-life.webp',
 		imageAlt: 'Screenshot of the Give Max Life website',
 		link: 'https://givemaxlife.com/',
+		slug: 'give-max-life',
 		cardColor: '#9335D1',
 		bgFrom: '#57367b',
 		bgTo: '#1e1731',
@@ -69,6 +75,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/medical-note-generator.webp',
 		imageAlt: 'Screenshot of the Medical Note Generator website',
 		link: 'https://github.com/johnyquest7/rust_med',
+		slug: 'medical-note-generator',
 		cardColor: '#E6E6E6',
 		bgFrom: '#767676',
 		bgTo: '#2a2a2a',
@@ -80,6 +87,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/seastar.webp',
 		imageAlt: 'Screenshot of the Seastar website',
 		link: 'https://seastar-coaching.com',
+		slug: 'seastar',
 		cardColor: '#464D36',
 		bgFrom: '#46533a',
 		bgTo: '#1a1f16',
@@ -91,6 +99,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/incontext.webp',
 		imageAlt: 'Screenshot of the incontext website',
 		link: 'https://incontextlearning.com',
+		slug: 'incontext-learning',
 		cardColor: '#EDEFF2',
 		bgFrom: '#7a6e63',
 		bgTo: '#27211d',
@@ -101,6 +110,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/little-compass.webp',
 		imageAlt: 'Screenshot of the Seastar website',
 		link: 'https://thelittlecompass.com',
+		slug: 'the-little-compass',
 		cardColor: '#DDD4FD',
 		bgFrom: '#5b4e8a',
 		bgTo: '#211a34',
@@ -112,6 +122,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/catandalex.webp',
 		imageAlt: 'Screenshot of the Cat and Alex website',
 		link: 'https://catandalex.net',
+		slug: 'cat-and-alex-wedding',
 		cardColor: '#9080D0',
 		bgFrom: '#644183',
 		bgTo: '#221632',
@@ -122,6 +133,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/llm-tools-anki.webp',
 		imageAlt: 'Screenshot of the llm-tools-anki website',
 		link: 'https://github.com/aled1027/llm-tools-anki',
+		slug: 'llm-tools-anki',
 		cardColor: '#1B883E',
 		bgFrom: '#235f36',
 		bgTo: '#0e2415',
@@ -133,6 +145,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/catneshyba.webp',
 		imageAlt: 'Screenshot of the Cat Neshyba website',
 		link: 'https://catneshyba.com',
+		slug: 'cat-neshyba',
 		cardColor: '#CED2D5',
 		bgFrom: '#4f5b3e',
 		bgTo: '#1b2115',
@@ -144,6 +157,7 @@ export const portfolio: PortfolioItem[] = [
 		imageUrl: '/portfolio/vyx.webp',
 		imageAlt: 'Screenshot of the Vyx website',
 		link: 'https://vyx.gg',
+		slug: 'vyx',
 		cardColor: '#8B8B8B',
 		bgFrom: '#535a62',
 		bgTo: '#1a1d21',

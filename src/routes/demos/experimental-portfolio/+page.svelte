@@ -102,9 +102,10 @@
 				--item-offset: {itemOffsets[idx]};
 				--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};"
 				>
-					<img src={item.imageUrl} alt={item.imageAlt} />
-					<button onclick={() => focusItem(idx)} class="carousel__asset__button"
-						>Read case study</button
+					<img src={item.imageUrl} alt={item.imageAlt} style="view-transition-name: {item.label}" />
+
+					<a href="/demos/experimental-portfolio/{item.slug}" class="carousel__asset__button"
+						>Read case study</a
 					>
 				</div>
 			{/each}
