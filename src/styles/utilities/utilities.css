@@ -73,3 +73,26 @@
 	justify-content: center;
 	align-items: center;
 }
+
+.custom-gradient-bg {
+	/* Gradient bg that uses custom variables for colors */
+	background:
+		radial-gradient(
+			70% 55% at 15% 20%,
+			color-mix(in srgb, var(--bg-glow) 42%, transparent),
+			transparent 70%
+		),
+		radial-gradient(
+			55% 45% at 85% 75%,
+			color-mix(in srgb, var(--bg-glow) 28%, transparent),
+			transparent 75%
+		),
+		linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
+	filter: saturate(1.05) contrast(1.03);
+}
+
+.full-absolute {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+}

@@ -10,5 +10,5 @@ export function load({ params }: { params: { slug: string } }) {
 	if (!item) {
 		error(404, 'Portfolio item not found');
 	}
-  return { item };
+	return { item };
 }

@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="gradient-bg"
+	class="custom-gradient-bg full-absolute"
 	style="--bg-from: {item.bgFrom};
          --bg-to: {item.bgTo};
          --bg-glow: {item.bgGlow};"
@@ -29,6 +29,7 @@
 			<video class="item__video" src={item.videoUrl} controls autoplay muted loop> </video>
 		{/if}
 	</div>
+	<p>{item.description}</p>
 
 	<!-- <p>{item.description}</p> -->
 </section>
@@ -66,24 +67,5 @@
 		max-height: 60vh;
 		border-radius: 2px;
 		box-shadow: var(--box-shadow);
-	}
-
-	.gradient-bg {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-		background:
-			radial-gradient(
-				70% 55% at 15% 20%,
-				color-mix(in srgb, var(--bg-glow) 42%, transparent),
-				transparent 70%
-			),
-			radial-gradient(
-				55% 45% at 85% 75%,
-				color-mix(in srgb, var(--bg-glow) 28%, transparent),
-				transparent 75%
-			),
-			linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
-		filter: saturate(1.05) contrast(1.03);
 	}
 </style>
