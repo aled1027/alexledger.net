@@ -23,7 +23,7 @@ export interface PortfolioItem {
 	bgGlow: string;
 }
 
-export const portfolio: PortfolioItem[] = [
+export let portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.webm',
 		label: 'Anna Neshyba',
@@ -96,7 +96,7 @@ The data processing is entirely local and uses a specialized LLM tailored to thi
 	},
 	{
 		label: 'Seastar',
-		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/cosmicfronter-v0.webm',
+		videoUrl: '',
 		imageUrl: '/portfolio/seastar.webp',
 		imageAlt: 'Screenshot of the Seastar website',
 		link: 'https://seastar-coaching.com',

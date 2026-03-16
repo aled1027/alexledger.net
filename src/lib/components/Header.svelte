@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 
@@ -14,7 +13,7 @@
 		},
 		{
 			label: 'Portfolio',
-			href: '/#portfolio',
+			href: '/portfolio',
 			isCurrent: false
 		},
 		{

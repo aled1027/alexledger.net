@@ -3,7 +3,7 @@
 	import { portfolio } from '$lib/portfolio';
 	import { mixColor, clamp } from '$lib/utils';
 
-	// Make these gradients or bgs more alive. Perhaps with a shader.
+	// TODO: z-index collision with header clip as it moves. Check that and organize z-indices
 
 	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
@@ -16,6 +16,7 @@
 
 	// Blend background colors between adjacent portfolio using fractional scroll progress.
 	// This keeps gradient transitions smooth instead of snapping at item boundaries.
+	// TODO: Perhaps shaderify the backgrounds so the move with time or mouse
 	let activeBg = $derived.by(() => {
 		const lowerIdx = clamp(Math.floor(stepProgress), 0, portfolio.length - 1);
 		const upperIdx = clamp(Math.ceil(stepProgress), 0, portfolio.length - 1);
@@ -87,9 +88,7 @@
 						style="view-transition-name: portfolio-image-{item.slug}"
 					/>
 
-					<a href="/demos/experimental-portfolio/{item.slug}" class="carousel__asset__button"
-						>Read case study</a
-					>
+					<a href="/portfolio/{item.slug}" class="carousel__asset__button">Explore Project</a>
 				</div>
 			{/each}
 		</div>

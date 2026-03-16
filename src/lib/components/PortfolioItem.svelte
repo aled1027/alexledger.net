@@ -24,7 +24,7 @@
 
 <section class="item">
 	<div class="item__header">
-		<a href="/demos/experimental-portfolio"><CornerDownLeft /></a>
+		<a href="/portfolio"><CornerDownLeft /></a>
 		<a class="no-underline" href={item.link} target="_blank">
 			<h1 class="item__title" style="view-transition-name: portfolio-title-{item.slug}">
 				{item.label}
