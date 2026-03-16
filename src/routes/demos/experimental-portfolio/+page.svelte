@@ -130,15 +130,26 @@
 		</div>
 	</div>
 
+	<!-- TODO: fix this up because activeBg might not match focused item. Make a derived for it. -->
 	<dialog
 		bind:this={modalEl}
 		class="carousel__modal"
 		onclose={handleModalClose}
 		onclick={handleModalClick}
+		style="
+		--bg-from: {activeBg.from};
+		--bg-to: {activeBg.to};
+		--bg-glow: {activeBg.glow};
+		"
 	>
 		{#if focusedItem}
-			<h2>{focusedItem.label}</h2>
-			<img src={focusedItem.imageUrl} alt={focusedItem.imageAlt} />
+			<div>
+				<h4>{focusedItem.label}</h4>
+				<img class="my-m" src={focusedItem.imageUrl} alt={focusedItem.imageAlt} />
+			</div>
+			<div>
+				<p>Description goes here.</p>
+			</div>
 		{/if}
 	</dialog>
 </div>
@@ -334,6 +345,29 @@
 		border-radius: 2px;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 		max-width: 80ch;
+		min-height: 80vh;
+
+		background:
+			radial-gradient(
+				70% 55% at 15% 20%,
+				color-mix(in srgb, var(--bg-glow) 42%, transparent),
+				transparent 70%
+			),
+			radial-gradient(
+				55% 45% at 85% 75%,
+				color-mix(in srgb, var(--bg-glow) 28%, transparent),
+				transparent 75%
+			),
+			linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
+		filter: saturate(1.05) contrast(1.03);
+
+		display: grid;
+		grid-template-columns: 7fr 5fr;
+
+		h4,
+		p {
+			color: white;
+		}
 
 		&[open] {
 			animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
