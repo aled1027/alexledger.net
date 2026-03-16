@@ -28,7 +28,10 @@
 :root {
 	view-transition-name: root;
 	interpolate-size: allow-keywords;
-	scroll-behavior: smooth;
+
+	/* I haven't been liking smooth here */
+	/* It makes the transitions in and out of the portfolio more jarring */
+	/*scroll-behavior: smooth;*/
 }
 
 body {
