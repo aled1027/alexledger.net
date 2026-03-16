@@ -9,15 +9,10 @@
 	let carouselEl: HTMLElement;
 	let stepProgress = $state(0);
 	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, portfolio.length - 1));
-	let modalEl: HTMLDialogElement;
 
 	// Signed offset in "item steps"
 	// 0 = centered, -1 = one step below, 1 = one step above
 	let itemOffsets = $derived.by(() => portfolio.map((_, i) => stepProgress - i));
-	let focusedItemIdx: number | null = $state(null);
-	let focusedItem: PortfolioItem | null = $derived(
-		focusedItemIdx !== null ? portfolio[focusedItemIdx] : null
-	);
 
 	// Blend background colors between adjacent portfolio using fractional scroll progress.
 	// This keeps gradient transitions smooth instead of snapping at item boundaries.
@@ -49,22 +44,6 @@
 
 		const normalized = clamp(-rect.top / totalScrollable, 0, 1);
 		stepProgress = normalized * (portfolio.length - 1);
-	}
-
-	function focusItem(idx: number) {
-		console.log('focus on ', idx);
-		focusedItemIdx = idx;
-		modalEl.showModal();
-	}
-
-	function handleModalClose() {
-		focusedItemIdx = null;
-	}
-
-	function handleModalClick(event: MouseEvent) {
-		if (event.target === modalEl) {
-			modalEl.close();
-		}
 	}
 
 	onMount(() => {
@@ -102,7 +81,11 @@
 				--item-offset: {itemOffsets[idx]};
 				--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};"
 				>
-					<img src={item.imageUrl} alt={item.imageAlt} style="view-transition-name: {item.label}" />
+					<img
+						src={item.imageUrl}
+						alt={item.imageAlt}
+						style="view-transition-name: portfolio-image-{item.slug}"
+					/>
 
 					<a href="/demos/experimental-portfolio/{item.slug}" class="carousel__asset__button"
 						>Read case study</a
@@ -123,6 +106,7 @@
 					style="
 						--opacity: {opacity};
 						--scale: {scale};
+						view-transition-name: portfolio-title-{item.slug};
 					"
 				>
 					{item.label}
@@ -130,29 +114,6 @@
 			{/each}
 		</div>
 	</div>
-
-	<!-- TODO: fix this up because activeBg might not match focused item. Make a derived for it. -->
-	<dialog
-		bind:this={modalEl}
-		class="carousel__modal"
-		onclose={handleModalClose}
-		onclick={handleModalClick}
-		style="
-		--bg-from: {activeBg.from};
-		--bg-to: {activeBg.to};
-		--bg-glow: {activeBg.glow};
-		"
-	>
-		{#if focusedItem}
-			<div>
-				<h4>{focusedItem.label}</h4>
-				<img class="my-m" src={focusedItem.imageUrl} alt={focusedItem.imageAlt} />
-			</div>
-			<div>
-				<p>Description goes here.</p>
-			</div>
-		{/if}
-	</dialog>
 </div>
 
 <style lang="scss">
@@ -303,7 +264,7 @@
 
 	.carousel__asset__button {
 		position: absolute;
-		bottom: -3.5rem;
+		bottom: -4.5rem;
 		left: 50%;
 		transform: translateX(-50%);
 		width: fit-content;
@@ -338,44 +299,6 @@
 		}
 		to {
 			opacity: 1;
-		}
-	}
-
-	.carousel__modal {
-		border: none;
-		border-radius: 2px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-		max-width: 80ch;
-		min-height: 80vh;
-
-		background:
-			radial-gradient(
-				70% 55% at 15% 20%,
-				color-mix(in srgb, var(--bg-glow) 42%, transparent),
-				transparent 70%
-			),
-			radial-gradient(
-				55% 45% at 85% 75%,
-				color-mix(in srgb, var(--bg-glow) 28%, transparent),
-				transparent 75%
-			),
-			linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
-		filter: saturate(1.05) contrast(1.03);
-
-		display: grid;
-		grid-template-columns: 7fr 5fr;
-
-		h4,
-		p {
-			color: white;
-		}
-
-		&[open] {
-			animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-		}
-
-		&[open]::backdrop {
-			animation: fade 0.2s ease-out;
 		}
 	}
 </style>
