@@ -9,10 +9,15 @@
 	let carouselEl: HTMLElement;
 	let stepProgress = $state(0);
 	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, portfolio.length - 1));
+	let modalEl: HTMLDialogElement;
 
 	// Signed offset in "item steps"
 	// 0 = centered, -1 = one step below, 1 = one step above
 	let itemOffsets = $derived.by(() => portfolio.map((_, i) => stepProgress - i));
+	let focusedItemIdx: number | null = $state(null);
+	let focusedItem: PortfolioItem | null = $derived(
+		focusedItemIdx !== null ? portfolio[focusedItemIdx] : null
+	);
 
 	// Blend background colors between adjacent portfolio using fractional scroll progress.
 	// This keeps gradient transitions smooth instead of snapping at item boundaries.
@@ -48,6 +53,18 @@
 
 	function focusItem(idx: number) {
 		console.log('focus on ', idx);
+		focusedItemIdx = idx;
+		modalEl.showModal();
+	}
+
+	function handleModalClose() {
+		focusedItemIdx = null;
+	}
+
+	function handleModalClick(event: MouseEvent) {
+		if (event.target === modalEl) {
+			modalEl.close();
+		}
 	}
 
 	onMount(() => {
@@ -85,9 +102,6 @@
 				--item-offset: {itemOffsets[idx]};
 				--item-dist: {Math.min(Math.abs(itemOffsets[idx]), 1)};"
 				>
-					<!-- <video autoplay muted loop playsinline crossorigin="anonymous" src={item.videoUrl}
-					></video> -->
-
 					<img src={item.imageUrl} alt={item.imageAlt} />
 					<button onclick={() => focusItem(idx)} class="carousel__asset__button"
 						>Read case study</button
@@ -115,6 +129,18 @@
 			{/each}
 		</div>
 	</div>
+
+	<dialog
+		bind:this={modalEl}
+		class="carousel__modal"
+		onclose={handleModalClose}
+		onclick={handleModalClick}
+	>
+		{#if focusedItem}
+			<h2>{focusedItem.label}</h2>
+			<img src={focusedItem.imageUrl} alt={focusedItem.imageAlt} />
+		{/if}
+	</dialog>
 </div>
 
 <style lang="scss">
@@ -282,6 +308,39 @@
 		&:hover {
 			text-decoration: underline;
 			cursor: pointer;
+		}
+	}
+
+	@keyframes zoom {
+		from {
+			transform: scale(0.95);
+		}
+		to {
+			transform: scale(1);
+		}
+	}
+
+	@keyframes fade {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.carousel__modal {
+		border: none;
+		border-radius: 2px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+		max-width: 80ch;
+
+		&[open] {
+			animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+		}
+
+		&[open]::backdrop {
+			animation: fade 0.2s ease-out;
 		}
 	}
 </style>
