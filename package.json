@@ -36,7 +36,9 @@
 	"dependencies": {
 		"@lucide/svelte": "^0.479.0",
 		"@types/three": "^0.177.0",
+		"dompurify": "^3.3.3",
 		"gsap": "^3.13.0",
+		"marked": "^15.0.12",
 		"sass-embedded": "^1.85.1",
 		"three": "^0.177.0",
 		"troika-three-text": "^0.52.4"
