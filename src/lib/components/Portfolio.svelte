@@ -59,11 +59,6 @@
 	}
 
 	onMount(() => {
-		const main = document.querySelector('main');
-		if (main) {
-			main.style.marginTop = `${0}px`;
-		}
-
 		updateProgress();
 
 		window.addEventListener('scroll', updateProgress, { passive: true });
@@ -78,6 +73,7 @@
 
 <div
 	bind:this={carouselEl}
+	data-no-margin-block-start-main
 	class="carousel"
 	style="--items: {portfolio.length};
 	--bg-from: {activeBg.from};
@@ -112,7 +108,7 @@
 						{@const distFromCur = idx - stepProgress}
 						{@const opacity = clamp(1 - Math.abs(distFromCur) / 5, 0, 1)}
 						{@const scale = clamp(1 - Math.abs(distFromCur) * 0.08, 0.7, 1)}
-						{@const fontWeight = (1 - Math.abs(distFromCur)) * 900}
+						{@const fontWeight = clamp((1 - Math.abs(distFromCur)) * 900, 300, 900)}
 
 						<p
 							class="carousel__label"
