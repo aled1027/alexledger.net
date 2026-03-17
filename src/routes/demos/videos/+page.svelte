@@ -566,5 +566,4 @@
 		border-radius: 4px;
 		pointer-events: none;
 	}
-
 </style>

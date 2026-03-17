@@ -280,7 +280,9 @@
 			.forEach((eye) => {
 				// Check if the eye is blinking
 
-				const distance = activeCamera.position.distanceTo(eye.getWorldPosition(new THREE.Vector3()));
+				const distance = activeCamera.position.distanceTo(
+					eye.getWorldPosition(new THREE.Vector3())
+				);
 
 				// Calculate a smooth scale factor based on distance
 				let scaleFactor: number;

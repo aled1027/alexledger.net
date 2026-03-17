@@ -1,15 +1,12 @@
 <script lang="ts">
-	let { item } = $props();
-
-	import { CornerDownLeft } from '@lucide/svelte';
 	import DOMPurify from 'dompurify';
+	import { CornerDownLeft } from '@lucide/svelte';
 	import { marked } from 'marked';
 
-	const descriptionHtml = $derived.by(() => {
-		if (!item.description) {
-			return '';
-		}
+	let { item } = $props();
 
+	const descriptionHtml = $derived.by(() => {
+		if (!item.description) return '';
 		const parsed = marked.parse(item.description, { async: false });
 		return DOMPurify.sanitize(parsed);
 	});
