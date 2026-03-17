@@ -9,7 +9,7 @@
 
 <div class="portfolio" data-portfolio>
 	<div class="feature">
-		<img class="fake-image" src={curItem.imageUrl} alt={curItem.imageAlt} />
+		<img class="feature__image" src={curItem.imageUrl} alt={curItem.imageAlt} />
 	</div>
 	<div class="images">
 		{#each portfolio as item, idx (idx)}
@@ -19,12 +19,14 @@
 		{/each}
 	</div>
 	<div class="info">
-		<div class="description">{@html curDescription}</div>
-		<a class="info__link mt-m" href={curItem.link}
-			>Visit
-			<MoveUpRight size={16} />
-		</a>
-		<h3 class="mt-m">{curItem.label}</h3>
+		<div class="info__inner">
+			<div class="description">{@html curDescription}</div>
+			<a class="info__link mt-m" href={curItem.link}
+				>Visit
+				<MoveUpRight size={16} />
+			</a>
+			<h3 class="mt-m">{curItem.label}</h3>
+		</div>
 	</div>
 </div>
 
@@ -34,6 +36,7 @@
 		grid-template-columns: repeat(12, 1fr);
 		// 5 feature, 3 images, 4 info for a 12 column grid
 		grid-template-areas: 'feature feature feature feature feature images images images info info info info';
+		gap: 1rem;
 		height: 100%;
 		min-height: 100vh;
 
@@ -42,8 +45,14 @@
 
 	.info {
 		grid-area: info;
-		align-self: flex-end;
-		padding-block-end: 2rem;
+		position: sticky;
+		top: 0;
+		max-height: calc(100svh - 2rem);
+	}
+
+	.info__inner {
+		position: absolute;
+		bottom: 0;
 	}
 
 	.info__link {
@@ -66,13 +75,11 @@
 
 	.feature {
 		grid-area: feature;
-		padding-block-end: 2rem;
-
 		position: sticky;
 		top: 0;
 		max-height: calc(100svh - 2rem);
 
-		.fake-image {
+		.feature__image {
 			position: absolute;
 			bottom: 0;
 			aspect-ratio: 16 / 9;
