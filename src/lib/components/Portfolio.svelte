@@ -10,6 +10,7 @@
 	// we're halfway between showing the 3rd and 4th items in the stack.
 	// The right side of the column shows the label of the carousel item.
 
+	// The carousel html element. Used for detecting scroll position.
 	let carouselEl: HTMLElement;
 
 	// A number (float) between 0 and portfolio.length - 1 (inclusive)
@@ -40,6 +41,8 @@
 	});
 
 	function updateProgress() {
+		// updateProgress runs when we scroll or resize the window to update `stepProgress`, the rune
+		// that captures which portfolio item is currently in view.
 		if (!carouselEl) return;
 
 		const rect = carouselEl.getBoundingClientRect();
@@ -205,6 +208,9 @@
 	}
 
 	.carousel__asset__item {
+		/* Full width at center, narrower away from center */
+		--scale: calc(1 - var(--item-dist) * 0.3);
+
 		position: absolute;
 		top: 50%;
 		left: 0;
@@ -213,9 +219,6 @@
 		transform-origin: left center;
 		border: 1px solid var(--color-color-300);
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-
-		/* Full width at center, narrower away from center */
-		--scale: calc(1 - var(--item-dist) * 0.3);
 
 		transform: translateY(calc(-50% + (var(--item-offset) * -1 * var(--item-asset-step))))
 			scale(var(--scale));
@@ -234,7 +237,7 @@
 		align-self: center;
 		text-align: right;
 
-		color: white;
+		color: var(--color-gray-100);
 		mix-blend-mode: difference;
 		transition: color 0.5s ease-in;
 
@@ -279,7 +282,7 @@
 		font-size: var(--size-step--1);
 		font-weight: 400;
 		background: transparent;
-		color: white;
+		color: var(--color-gray-100);
 		mix-blend-mode: difference;
 		border: none;
 

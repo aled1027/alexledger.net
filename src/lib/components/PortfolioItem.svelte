@@ -103,6 +103,6 @@
 	.item__description :global(blockquote) {
 		margin: 1rem 0;
 		padding-left: 1rem;
-		border-left: 2px solid color-mix(in srgb, white 40%, transparent);
+		border-left: 2px solid color-mix(in srgb, var(--color-gray-100) 40%, transparent);
 	}
 </style>
