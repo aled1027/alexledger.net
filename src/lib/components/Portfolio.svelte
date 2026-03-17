@@ -104,24 +104,31 @@
 			{/each}
 		</div>
 
-		<div class="carousel__labels">
+		<div class="carousel__labels" style="--step-progress: {stepProgress}">
 			<p class="carousel__title">Portfolio</p>
-			{#each portfolio as item, idx (idx)}
-				{@const distFromCur = idx - curItemIdx}
-				{@const opacity = clamp(1 - Math.abs(distFromCur) / 5, 0, 1)}
-				{@const scale = clamp(1 - Math.abs(distFromCur) * 0.08, 0.7, 1)}
-				<p
-					class="carousel__label"
-					data-cur-item={idx === curItemIdx}
-					style="
+			<div class="carousel__labels__inner">
+				<div class="carousel__labels__inner-inner">
+					{#each portfolio as item, idx (idx)}
+						{@const distFromCur = idx - stepProgress}
+						{@const opacity = clamp(1 - Math.abs(distFromCur) / 5, 0, 1)}
+						{@const scale = clamp(1 - Math.abs(distFromCur) * 0.08, 0.7, 1)}
+						{@const fontWeight = (1 - Math.abs(distFromCur)) * 700}
+
+						<p
+							class="carousel__label"
+							data-cur-item={idx === curItemIdx}
+							style="
 						--opacity: {opacity};
 						--scale: {scale};
+						--font-weight: {fontWeight};
 						view-transition-name: portfolio-title-{item.slug};
 					"
-				>
-					{item.label}
-				</p>
-			{/each}
+						>
+							{item.label}
+						</p>
+					{/each}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -233,6 +240,8 @@
 	}
 
 	.carousel__labels {
+		--item-gap: 0.5rem;
+		--item-displacement: calc(-1lh - var(--item-gap));
 		grid-area: label;
 		align-self: center;
 		text-align: right;
@@ -246,28 +255,43 @@
 
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: var(--item-gap);
 	}
 
 	.carousel__title {
 		margin: 0;
+		padding: 0;
 		font-size: var(--carousel-font-size);
 		font-weight: var(--carousel-font-weight);
 	}
 
+	.carousel__labels__inner {
+		/* height: calc(5 * var(--item-displacement)); */
+		// For some reason the height isn't working with the vars
+		height: calc(5lh + 2.5rem);
+		width: 100%;
+		overflow: hidden;
+		// TODO: linear gradient fade
+	}
+
+	.carousel__labels__inner-inner {
+		display: flex;
+		flex-direction: column;
+		gap: var(--item-gap);
+		transform: translateY(calc((var(--step-progress)) * var(--item-displacement)));
+	}
+
 	.carousel__label {
 		margin: 0;
+		padding: 0;
+
 		opacity: var(--opacity);
 		scale: var(--scale);
 		transform-origin: right;
 		transition:
 			scale 250ms linear,
 			opacity 250ms linear;
-
-		&[data-cur-item='true'] {
-			font-weight: 700;
-			opacity: 1;
-		}
+		font-weight: var(--font-weight);
 	}
 
 	.carousel__asset__button {
