@@ -3,11 +3,19 @@
 	import { portfolio } from '$lib/portfolio';
 	import { mixColor, clamp } from '$lib/utils';
 
-	// TODO: z-index collision with header clip as it moves. Check that and organize z-indices
+	// This is a carousel-like component that displays my portfolio.
+	// It's a two column grid.
+	// The left side has a stack layout. Where we are in that stack is computed by
+	// `updateProgress` which updates the stepProgress rune. When stepProgress is 3.5 that means
+	// we're halfway between showing the 3rd and 4th items in the stack.
+	// The right side of the column shows the label of the carousel item.
 
-	let headerHeight = $state(0);
 	let carouselEl: HTMLElement;
+
+	// A number (float) between 0 and portfolio.length - 1 (inclusive)
 	let stepProgress = $state(0);
+
+	// The index of the current item in the portfolio (rounded from stepProgress)
 	let curItemIdx = $derived(clamp(Math.round(stepProgress), 0, portfolio.length - 1));
 
 	// Signed offset in "item steps"
@@ -35,7 +43,7 @@
 		if (!carouselEl) return;
 
 		const rect = carouselEl.getBoundingClientRect();
-		const viewportHeight = window.innerHeight - headerHeight;
+		const viewportHeight = window.innerHeight; // assumes no header height
 		const totalScrollable = rect.height - viewportHeight;
 
 		if (totalScrollable <= 0) {
@@ -68,7 +76,7 @@
 <div
 	bind:this={carouselEl}
 	class="carousel"
-	style="--header-height: {headerHeight}px; --items: {portfolio.length};
+	style="--items: {portfolio.length};
 	--bg-from: {activeBg.from};
 	--bg-to: {activeBg.to};
 	--bg-glow: {activeBg.glow};"
@@ -126,9 +134,7 @@
 		--item-asset-step: calc(var(--item-asset-height) + var(--item-asset-gap));
 
 		/* One viewport to show the sticky stage + one step per transition */
-		height: calc(
-			(100vh - var(--header-height, 0px)) + ((var(--items) - 1) * var(--item-asset-step))
-		);
+		height: calc(100vh + ((var(--items) - 1) * var(--item-asset-step)));
 		position: relative;
 
 		// TODO: maybe change font-family everywhere
@@ -137,8 +143,8 @@
 
 	.carousel__inner {
 		position: sticky;
-		top: var(--header-height, 0px);
-		height: calc(100vh - var(--header-height));
+		top: 0;
+		height: 100vh;
 		isolation: isolate;
 
 		display: grid;
