@@ -3,6 +3,8 @@
 	import { markdownToHtml } from '$lib/utils';
 	import { MoveUpRight } from '@lucide/svelte';
 
+	// Inspired by: https://joffreyspitzer.com/works/aerleum/
+
 	let curItem = portfolio[0];
 	let curDescription = markdownToHtml(curItem.description ?? '');
 </script>
