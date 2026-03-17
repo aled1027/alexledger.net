@@ -112,7 +112,7 @@
 						{@const distFromCur = idx - stepProgress}
 						{@const opacity = clamp(1 - Math.abs(distFromCur) / 5, 0, 1)}
 						{@const scale = clamp(1 - Math.abs(distFromCur) * 0.08, 0.7, 1)}
-						{@const fontWeight = (1 - Math.abs(distFromCur)) * 700}
+						{@const fontWeight = (1 - Math.abs(distFromCur)) * 900}
 
 						<p
 							class="carousel__label"
@@ -272,9 +272,14 @@
 		width: 100%;
 		overflow: hidden;
 		// TODO: linear gradient fade
+
+		/* Fade top and bottom */
+		-webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+		mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
 	}
 
 	.carousel__labels__inner-inner {
+		margin-top: 0.25em;
 		display: flex;
 		flex-direction: column;
 		gap: var(--item-gap);
@@ -285,7 +290,7 @@
 		margin: 0;
 		padding: 0;
 
-		opacity: var(--opacity);
+		/* opacity: var(--opacity); */
 		scale: var(--scale);
 		transform-origin: right;
 		transition:
