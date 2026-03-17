@@ -422,6 +422,11 @@ main:has([data-no-margin-block-start-main]) {
 	margin-block-start: 0;
 }
 
+main:has([data-portfolio]) {
+	margin-block-start: 0;
+	width: calc(100% - 2rem);
+}
+
 @media (prefers-reduced-motion: reduce) {
 	/* https://www.a11yproject.com/posts/understanding-vestibular-disorders/ */
 	*,

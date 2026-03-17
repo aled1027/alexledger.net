@@ -23,7 +23,7 @@ export interface PortfolioItem {
 	bgGlow: string;
 }
 
-export let portfolio: PortfolioItem[] = [
+export const portfolio: PortfolioItem[] = [
 	{
 		videoUrl: 'https://pub-57309283dfae43be93171f41b37f356c.r2.dev/anna-neshyba-edited.webm',
 		label: 'Anna Neshyba',

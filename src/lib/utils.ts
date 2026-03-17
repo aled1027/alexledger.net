@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+import { marked } from 'marked';
 type RGB = { r: number; g: number; b: number };
 
 // Parses #rgb, #rrggbb, and rgb(...) strings into numeric channels.
@@ -47,4 +49,10 @@ export function mixColor(from: string, to: string, amount: number): string {
 
 export function clamp(value: number, min: number, max: number): number {
 	return Math.min(Math.max(value, min), max);
+}
+
+export function markdownToHtml(markdown: string): string {
+	if (!markdown) return '';
+	const parsed = marked.parse(markdown, { async: false });
+	return DOMPurify.sanitize(parsed);
 }

@@ -1,15 +1,9 @@
 <script lang="ts">
-	import DOMPurify from 'dompurify';
 	import { CornerDownLeft } from '@lucide/svelte';
-	import { marked } from 'marked';
+	import { markdownToHtml } from '$lib/utils';
 
 	let { item } = $props();
-
-	const descriptionHtml = $derived.by(() => {
-		if (!item.description) return '';
-		const parsed = marked.parse(item.description, { async: false });
-		return DOMPurify.sanitize(parsed);
-	});
+	const descriptionHtml = $derived(markdownToHtml(item.description ?? ''));
 </script>
 
 <div

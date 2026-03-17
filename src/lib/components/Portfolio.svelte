@@ -267,8 +267,6 @@
 		height: calc(5lh + 2.5rem);
 		width: 100%;
 		overflow: hidden;
-		// TODO: linear gradient fade
-
 		/* Fade top and bottom */
 		-webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
 		mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
@@ -314,24 +312,6 @@
 		&:hover {
 			text-decoration: underline;
 			cursor: pointer;
-		}
-	}
-
-	@keyframes zoom {
-		from {
-			transform: scale(0.95);
-		}
-		to {
-			transform: scale(1);
-		}
-	}
-
-	@keyframes fade {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
 		}
 	}
 </style>
