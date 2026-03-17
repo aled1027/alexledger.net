@@ -13,9 +13,7 @@
 	</div>
 	<div class="images">
 		{#each portfolio as item, idx (idx)}
-			<div class="images_image-wrapper">
-				<img src={item.imageUrl} alt={item.imageAlt} />
-			</div>
+			<img src={item.imageUrl} alt={item.imageAlt} />
 		{/each}
 	</div>
 	<div class="info">
@@ -42,35 +40,20 @@
 
 		position: relative;
 	}
-
-	.info {
-		grid-area: info;
-		position: sticky;
-		top: 0;
-		max-height: calc(100svh - 2rem);
-	}
-
-	.info__inner {
-		position: absolute;
-		bottom: 0;
-	}
-
-	.info__link {
-		font-size: var(--size-step--1);
-		text-decoration: none;
-		border-bottom: 1px solid currentColor;
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-		transition: font-weight 150ms ease;
-
-		&:hover {
-			font-weight: 500;
-		}
-	}
-
 	.images {
 		grid-area: images;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 5svh;
+		margin-top: 66svh;
+
+		img {
+			max-width: 100%;
+			height: auto;
+			scale: 0.8;
+			transform-origin: left center;
+		}
 	}
 
 	.feature {
@@ -92,25 +75,50 @@
 		}
 	}
 
-	.description {
-		padding-inline-end: 1rem;
-		text-wrap: balance;
-		max-width: 60ch;
-		font-size: var(--size-step--1);
-	}
+	.info {
+		grid-area: info;
+		position: sticky;
+		top: 0;
+		max-height: calc(100svh - 2rem);
 
-	.description :global(p) {
-		margin: 0 0 1em;
-	}
+		.info__inner {
+			position: absolute;
+			bottom: 0;
+		}
 
-	.description :global(a) {
-		color: inherit;
-		text-decoration: underline;
-	}
+		.info__link {
+			font-size: var(--size-step--1);
+			text-decoration: none;
+			border-bottom: 1px solid currentColor;
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			transition: font-weight 150ms ease;
 
-	.description :global(blockquote) {
-		margin: 1em 0;
-		padding-left: 1em;
-		border-left: 2px solid color-mix(in srgb, var(--color-gray-100) 40%, transparent);
+			&:hover {
+				font-weight: 500;
+			}
+		}
+		.description {
+			padding-inline-end: 1rem;
+			text-wrap: balance;
+			max-width: 60ch;
+			font-size: var(--size-step--1);
+		}
+
+		.description :global(p) {
+			margin: 0 0 1em;
+		}
+
+		.description :global(a) {
+			color: inherit;
+			text-decoration: underline;
+		}
+
+		.description :global(blockquote) {
+			margin: 1em 0;
+			padding-left: 1em;
+			border-left: 2px solid color-mix(in srgb, var(--color-gray-100) 40%, transparent);
+		}
 	}
 </style>
