@@ -6,17 +6,18 @@
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 	import { onMount } from 'svelte';
+	import { ViewDebug } from '$lib/three/view-debug';
 
 	let container: HTMLDivElement;
 	let mosaic: number = $state(10);
 	let progress: number = $state(0.0);
 
 	class Sketch {
-		private scene: THREE.Scene;
-		private camera: THREE.PerspectiveCamera;
+		public readonly scene: THREE.Scene;
+		public readonly camera: THREE.PerspectiveCamera;
 		private renderer: THREE.WebGLRenderer;
 		private animationId: number | null = null;
-		private controls: OrbitControls;
+		public readonly controls: OrbitControls;
 		private suzanneMaterial: THREE.ShaderMaterial;
 		private startTimeMs: number;
 
@@ -83,6 +84,7 @@
 			container.appendChild(this.renderer.domElement);
 
 			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+			this.controls.target.set(0, 0, 0);
 
 			this.startTimeMs = Date.now();
 			this.animate();
@@ -114,16 +116,18 @@
 	}
 
 	let sketch: Sketch;
+	let viewDebug: ViewDebug;
 
 	onMount(() => {
-		// We'll do something
 		sketch = new Sketch(container);
+		viewDebug = new ViewDebug(sketch);
 		sketch.resize();
 
 		window.addEventListener('resize', () => {
 			sketch.resize();
 		});
 		return () => {
+			viewDebug.dispose();
 			sketch.dispose();
 			window.removeEventListener('resize', () => {
 				sketch.resize();
