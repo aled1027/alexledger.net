@@ -5,6 +5,7 @@
 	import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 	import Stats from 'three/examples/jsm/libs/stats.module.js';
 	import { onMount } from 'svelte';
+	import { ViewDebug } from '$lib/three/view-debug';
 
 	// https://github.com/bobbyroe/threejs-earth/blob/main/textures/00_earthmap1k.jpg
 	// https://www.youtube.com/watch?v=FntV9iEJ0tU&ab_channel=RobotBobby
@@ -30,6 +31,7 @@
 	let lastBlinkTime = 0; // Track when we last blinked
 	const cameraPositionZ: number = 20; // Initial camera position on Z axis
 	let isBlinking = false;
+	let viewDebug: ViewDebug | null = null;
 
 	// Blinking configuration
 	const BASE_BLINK_INTERVAL = 1750; // Base time between blink cycles
@@ -175,6 +177,8 @@
 		controls = new OrbitControls(camera, renderer.domElement);
 		controls.enableDamping = true;
 		controls.dampingFactor = 0.05;
+
+		viewDebug = new ViewDebug(scene, camera, controls);
 
 		// Lighting
 		const ambientLight = new THREE.AmbientLight(0xffffff, 3.0); // Even higher intensity
@@ -330,6 +334,11 @@
 					disposeMaterial(child.material);
 				}
 			});
+		}
+
+		if (viewDebug) {
+			viewDebug.dispose();
+			viewDebug = null;
 		}
 
 		// Clean up controls
