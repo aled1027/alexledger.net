@@ -57,11 +57,20 @@
 			date: 'March 12, 2026',
 			link: '/demos/carousel'
 		},
-
+		// {
+		// 	title: 'Experimental Portfolio',
+		// 	date: 'March 12, 2026',
+		// 	link: '/demos/experimental-portfolio'
+		// },
 		{
-			title: 'Experimental Portfolio',
-			date: 'March 12, 2026',
-			link: '/demos/experimental-portfolio'
+			title: 'Mosaic Suzanne',
+			date: 'March 17, 2026',
+			link: '/demos/suzanne'
+		},
+		{
+			title: 'Agent Loop',
+			date: 'March 18, 2026',
+			link: '/demos/agent-loop'
 		}
 	];
 

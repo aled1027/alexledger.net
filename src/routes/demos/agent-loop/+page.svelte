@@ -133,8 +133,11 @@
 </script>
 
 <div class="my-l">
-	<h2>Mosaic Suzanne</h2>
-	<p>Interactive Three.js demo of Blender’s Suzanne mesh with mosaic quantization controls.</p>
+	<h2>AI Agent Loop</h2>
+	<p>
+		This is a demo of how AI can check for feedback and update a page. Check out my substack post
+		for more information. It should be posted in the next couple of days.
+	</p>
 	<div class="my-l">
 		<label for="mosaic">Mosaic ({mosaic})</label>
 		<input id="mosaic" type="range" bind:value={mosaic} min={1} max={20} step={1} />
