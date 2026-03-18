@@ -50,12 +50,6 @@ export type OrbitLikeControls = {
 	update: () => void;
 };
 
-export type ViewDebugTarget = {
-	scene: THREE.Scene;
-	camera: THREE.PerspectiveCamera;
-	controls: OrbitLikeControls;
-};
-
 function parseVector3(input: string | null): THREE.Vector3 | undefined {
 	if (!input) return undefined;
 	const parts = input
@@ -152,8 +146,8 @@ export function getInitialViewOptions(search: string): InitialViewOptions {
 
 export function applyViewOptions(
 	camera: THREE.PerspectiveCamera,
-	controls: OrbitLikeControls,
-	options: InitialViewOptions
+	options: InitialViewOptions,
+	controls?: OrbitLikeControls
 ): void {
 	const target = options.lookAt?.clone() ?? new THREE.Vector3(0, 0, 0);
 	let position = camera.position.clone();
@@ -173,8 +167,13 @@ export function applyViewOptions(
 	}
 
 	camera.position.copy(position);
-	controls.target.copy(target);
-	controls.update();
+	if (controls) {
+		controls.target.copy(target);
+		controls.update();
+	} else {
+		camera.lookAt(target);
+		camera.updateMatrixWorld();
+	}
 }
 
 export function addDebugMarkers(group: THREE.Group, markers: DebugMarker[]): void {
@@ -189,15 +188,19 @@ export function addDebugMarkers(group: THREE.Group, markers: DebugMarker[]): voi
 
 export class ViewDebug {
 	private markerGroup = new THREE.Group();
+	private readonly scene: THREE.Scene;
 	readonly options: InitialViewOptions;
 
 	constructor(
-		private readonly target: ViewDebugTarget,
+		scene: THREE.Scene,
+		camera: THREE.PerspectiveCamera,
+		controls?: OrbitLikeControls,
 		search: string = window.location.search
 	) {
+		this.scene = scene;
 		this.options = getInitialViewOptions(search);
-		this.target.scene.add(this.markerGroup);
-		applyViewOptions(this.target.camera, this.target.controls, this.options);
+		this.scene.add(this.markerGroup);
+		applyViewOptions(camera, this.options, controls);
 		addDebugMarkers(this.markerGroup, this.options.markers ?? []);
 	}
 
@@ -213,6 +216,6 @@ export class ViewDebug {
 			}
 		}
 		this.markerGroup.clear();
-		this.target.scene.remove(this.markerGroup);
+		this.scene.remove(this.markerGroup);
 	}
 }

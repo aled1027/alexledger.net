@@ -120,7 +120,7 @@
 
 	onMount(() => {
 		sketch = new Sketch(container);
-		viewDebug = new ViewDebug(sketch);
+		viewDebug = new ViewDebug(sketch.scene, sketch.camera, sketch.controls);
 		sketch.resize();
 
 		window.addEventListener('resize', () => {
