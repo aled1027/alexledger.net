@@ -49,6 +49,19 @@ class CdpClient {
 				for (const handler of handlers) handler(payload);
 			}
 		};
+		this.ws.onerror = () => {
+			this.rejectAllPending(new Error('Chrome CDP websocket error'));
+		};
+		this.ws.onclose = () => {
+			this.rejectAllPending(new Error('Chrome CDP websocket closed'));
+		};
+	}
+
+	private rejectAllPending(error: Error) {
+		for (const [id, pending] of this.pending.entries()) {
+			this.pending.delete(id);
+			pending.reject(error);
+		}
 	}
 
 	static async connect(webSocketUrl: string, timeoutMs = 10000): Promise<CdpClient> {
@@ -87,13 +100,22 @@ class CdpClient {
 	}
 
 	async send(method: string, params: Record<string, unknown> = {}, sessionId?: string): Promise<unknown> {
+		if (this.ws.readyState !== WebSocket.OPEN) {
+			throw new Error('Chrome CDP websocket is not open');
+		}
+
 		const id = this.nextId++;
 		const payload: Record<string, unknown> = { id, method, params };
 		if (sessionId) payload.sessionId = sessionId;
 
 		return await new Promise((resolve, reject) => {
 			this.pending.set(id, { resolve, reject });
-			this.ws.send(JSON.stringify(payload));
+			try {
+				this.ws.send(JSON.stringify(payload));
+			} catch (error) {
+				this.pending.delete(id);
+				reject(error instanceof Error ? error : new Error(String(error)));
+			}
 		});
 	}
 
@@ -132,6 +154,9 @@ function parseMarker(input: string): CliMarker {
 	if (parts[3]) {
 		const maybeSize = Number.parseFloat(parts[3]);
 		if (Number.isFinite(maybeSize)) {
+			if (maybeSize <= 0) {
+				throw new Error(`Invalid --marker size in "${input}". Size must be > 0.`);
+			}
 			size = maybeSize;
 		} else {
 			color = parts[3];
@@ -149,6 +174,17 @@ function parseMarker(input: string): CliMarker {
 	return { pos, color, size };
 }
 
+function parseMarkersArg(input: string): CliMarker[] {
+	if (!input) {
+		throw new Error('Missing value for --marker. Expected: "x,y,z[,color][,size]"');
+	}
+	return input
+		.split(';')
+		.map((entry) => entry.trim())
+		.filter((entry) => entry.length > 0)
+		.map((entry) => parseMarker(entry));
+}
+
 function parseArgs() {
 	const args = process.argv.slice(2);
 	const result: {
@@ -161,7 +197,6 @@ function parseArgs() {
 		pos?: [number, number, number];
 		lookAt?: [number, number, number];
 		zoom?: number;
-		markersFile?: string;
 		inlineMarkers: CliMarker[];
 		cdpPort?: number;
 		headless?: boolean;
@@ -207,12 +242,8 @@ function parseArgs() {
 				result.zoom = Number.parseFloat(next);
 				i++;
 				break;
-			case '--markers':
-				result.markersFile = next;
-				i++;
-				break;
 			case '--marker':
-				result.inlineMarkers.push(parseMarker(next));
+				result.inlineMarkers.push(...parseMarkersArg(next));
 				i++;
 				break;
 			case '--cdp-port':
@@ -245,12 +276,13 @@ Camera options (forwarded as query params):
   --zoom <number>       Zoom multiplier (>1 zooms in)
 
 Debug marker options:
-  --markers <file>      JSON file of markers
   --marker "x,y,z,color,size"
-                        Add inline marker (repeatable). color/size optional.
+                        Add marker(s). Repeat flag or separate multiple markers with ';'.
+                        Example: --marker "0,0,0,#ff0,0.2;1,0,0,#0ff,0.15"
 
 Notes:
   Start Chrome with remote debugging enabled before running this script.
+  This assumes the target route reads optional query params: angle, pos, lookAt, zoom, markers.
   Example:
     /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222
 
@@ -265,35 +297,6 @@ Examples:
 	return result;
 }
 
-function loadMarkersFromFile(filePath: string): CliMarker[] {
-	const absolute = path.resolve(filePath);
-	const raw = fs.readFileSync(absolute, 'utf8');
-	const parsed = JSON.parse(raw);
-
-	const toMarker = (value: any): CliMarker | null => {
-		if (!value || !value.pos || !Array.isArray(value.pos) || value.pos.length !== 3) return null;
-		const [x, y, z] = value.pos.map((n: unknown) => Number.parseFloat(String(n)));
-		if (![x, y, z].every((n) => Number.isFinite(n))) return null;
-		const marker: CliMarker = { pos: [x, y, z] };
-		if (typeof value.color === 'string') marker.color = value.color;
-		if (typeof value.size === 'number' && Number.isFinite(value.size) && value.size > 0)
-			marker.size = value.size;
-		return marker;
-	};
-
-	if (Array.isArray(parsed)) {
-		return parsed.map(toMarker).filter((m): m is CliMarker => m !== null);
-	}
-
-	if (typeof parsed === 'object' && parsed !== null) {
-		return Object.values(parsed)
-			.map((value) => toMarker(value))
-			.filter((m): m is CliMarker => m !== null);
-	}
-
-	return [];
-}
-
 async function getBrowserWebSocketUrl(cdpPort: number): Promise<string> {
 	const endpoint = `http://127.0.0.1:${cdpPort}/json/version`;
 	const res = await fetch(endpoint);
@@ -306,6 +309,16 @@ async function getBrowserWebSocketUrl(cdpPort: number): Promise<string> {
 }
 
 async function waitForLoad(client: CdpClient, sessionId: string, timeoutMs = 30000) {
+	const stateResult = (await client.send(
+		'Runtime.evaluate',
+		{
+			expression: 'document.readyState',
+			returnByValue: true
+		},
+		sessionId
+	)) as { result?: { value?: unknown } };
+	if (stateResult?.result?.value === 'complete') return;
+
 	await new Promise<void>((resolve, reject) => {
 		const timeout = setTimeout(() => {
 			client.off('Page.loadEventFired', handler);
@@ -385,13 +398,8 @@ async function main() {
 		params.set('zoom', String(args.zoom));
 	}
 
-	let allMarkers: CliMarker[] = [];
-	if (args.markersFile) {
-		allMarkers = allMarkers.concat(loadMarkersFromFile(args.markersFile));
-	}
-	allMarkers = allMarkers.concat(args.inlineMarkers);
-	if (allMarkers.length > 0) {
-		const encoded = Buffer.from(JSON.stringify(allMarkers)).toString('base64');
+	if (args.inlineMarkers.length > 0) {
+		const encoded = Buffer.from(JSON.stringify(args.inlineMarkers)).toString('base64');
 		params.set('markers', encoded);
 	}
 
