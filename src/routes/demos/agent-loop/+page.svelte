@@ -111,6 +111,7 @@
 			if (this.animationId !== null) {
 				cancelAnimationFrame(this.animationId);
 			}
+			this.controls.dispose();
 			this.renderer.dispose();
 		}
 	}
@@ -123,15 +124,15 @@
 		viewDebug = new ViewDebug(sketch.scene, sketch.camera, sketch.controls);
 		sketch.resize();
 
-		window.addEventListener('resize', () => {
+		const onResize = () => {
 			sketch.resize();
-		});
+		};
+		window.addEventListener('resize', onResize);
+
 		return () => {
+			window.removeEventListener('resize', onResize);
 			viewDebug.dispose();
 			sketch.dispose();
-			window.removeEventListener('resize', () => {
-				sketch.resize();
-			});
 		};
 	});
 </script>

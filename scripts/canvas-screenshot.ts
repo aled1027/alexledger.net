@@ -75,25 +75,34 @@ function parseArgs() {
 		inlineMarkers: CliMarker[];
 	} = { inlineMarkers: [] };
 
+	const requireValue = (flag: string, value: string | undefined): string => {
+		if (value === undefined || value.startsWith('--')) {
+			throw new Error(`Missing value for ${flag}`);
+		}
+		return value;
+	};
+
 	for (let i = 0; i < args.length; i++) {
 		const arg = args[i];
 		const next = args[i + 1];
 
 		switch (arg) {
 			case '--out':
-				result.out = next;
+				result.out = requireValue('--out', next);
 				i++;
 				break;
-			case '--port':
-				result.port = Number.parseInt(next, 10);
+			case '--port': {
+				const value = requireValue('--port', next);
+				result.port = Number.parseInt(value, 10);
 				i++;
 				break;
+			}
 			case '--route':
-				result.route = next;
+				result.route = requireValue('--route', next);
 				i++;
 				break;
 			case '--selector':
-				result.selector = next;
+				result.selector = requireValue('--selector', next);
 				i++;
 				break;
 			case '--full-page':
@@ -103,29 +112,37 @@ function parseArgs() {
 				result.headless = true;
 				break;
 			case '--angle':
-				result.angle = next;
+				result.angle = requireValue('--angle', next);
 				i++;
 				break;
-			case '--pos':
-				result.pos = parseVector3(next, '--pos');
+			case '--pos': {
+				const value = requireValue('--pos', next);
+				result.pos = parseVector3(value, '--pos');
 				i++;
 				break;
-			case '--look-at':
-				result.lookAt = parseVector3(next, '--look-at');
+			}
+			case '--look-at': {
+				const value = requireValue('--look-at', next);
+				result.lookAt = parseVector3(value, '--look-at');
 				i++;
 				break;
-			case '--zoom':
-				result.zoom = Number.parseFloat(next);
+			}
+			case '--zoom': {
+				const value = requireValue('--zoom', next);
+				result.zoom = Number.parseFloat(value);
 				i++;
 				break;
+			}
 			case '--markers':
-				result.markersFile = next;
+				result.markersFile = requireValue('--markers', next);
 				i++;
 				break;
-			case '--marker':
-				result.inlineMarkers.push(parseMarker(next));
+			case '--marker': {
+				const value = requireValue('--marker', next);
+				result.inlineMarkers.push(parseMarker(value));
 				i++;
 				break;
+			}
 			case '--help':
 			case '-h':
 				console.log(`
