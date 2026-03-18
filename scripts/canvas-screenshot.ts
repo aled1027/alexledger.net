@@ -1,6 +1,8 @@
 #!/usr/bin/env npx tsx
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
+import { spawn, type ChildProcess } from 'child_process';
 
 type CliMarker = {
 	pos: [number, number, number];
@@ -200,6 +202,7 @@ function parseArgs() {
 		inlineMarkers: CliMarker[];
 		cdpPort?: number;
 		headless?: boolean;
+		chromePath?: string;
 	} = { inlineMarkers: [] };
 
 	for (let i = 0; i < args.length; i++) {
@@ -253,10 +256,14 @@ function parseArgs() {
 			case '--headless':
 				result.headless = true;
 				break;
+			case '--chrome-path':
+				result.chromePath = next;
+				i++;
+				break;
 			case '--help':
 			case '-h':
 				console.log(`
-Capture screenshot from a canvas route using a running Chrome instance over CDP.
+Capture screenshot from a canvas route using Chrome over CDP.
 
 Usage:
   npx tsx scripts/canvas-screenshot.ts [options]
@@ -268,6 +275,8 @@ Core options:
   --selector <css>      Canvas selector (default: .three-container canvas)
   --full-page           Capture full page instead of canvas
   --cdp-port <number>   Chrome remote-debugging port (default: 9222)
+  --chrome-path <path>  Chrome executable path for auto-launch (optional)
+  --headless            If auto-launch is needed, run Chrome in headless mode
 
 Camera options (forwarded as query params):
   --angle <preset>      front|back|left|right|top|bottom|iso|iso-back|iso-left|iso-right
@@ -281,7 +290,7 @@ Debug marker options:
                         Example: --marker "0,0,0,#ff0,0.2;1,0,0,#0ff,0.15"
 
 Notes:
-  Start Chrome with remote debugging enabled before running this script.
+  This script first tries an existing Chrome on the CDP port, then auto-launches one if needed.
   This assumes the target route reads optional query params: angle, pos, lookAt, zoom, markers.
   Example:
     /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222
@@ -306,6 +315,79 @@ async function getBrowserWebSocketUrl(cdpPort: number): Promise<string> {
 		throw new Error(`No webSocketDebuggerUrl returned from ${endpoint}`);
 	}
 	return json.webSocketDebuggerUrl;
+}
+
+function resolveChromeExecutable(chromePath?: string): string {
+	if (chromePath) return chromePath;
+
+	if (process.platform === 'darwin') {
+		const macCandidates = [
+			'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+			'/Applications/Chromium.app/Contents/MacOS/Chromium'
+		];
+		for (const candidate of macCandidates) {
+			if (fs.existsSync(candidate)) return candidate;
+		}
+	}
+
+	if (process.platform === 'win32') {
+		const pf = process.env.ProgramFiles ?? 'C:\\Program Files';
+		const pfx86 = process.env['ProgramFiles(x86)'] ?? 'C:\\Program Files (x86)';
+		const local = process.env.LocalAppData ?? '';
+		const winCandidates = [
+			`${pf}\\Google\\Chrome\\Application\\chrome.exe`,
+			`${pfx86}\\Google\\Chrome\\Application\\chrome.exe`,
+			`${local}\\Google\\Chrome\\Application\\chrome.exe`
+		];
+		for (const candidate of winCandidates) {
+			if (fs.existsSync(candidate)) return candidate;
+		}
+	}
+
+	return process.platform === 'win32' ? 'chrome.exe' : 'google-chrome';
+}
+
+function launchChrome(cdpPort: number, chromePath?: string, headless = false): {
+	process: ChildProcess;
+	userDataDir: string;
+} {
+	const executable = resolveChromeExecutable(chromePath);
+	const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'canvas-screenshot-chrome-'));
+	const launchArgs = [
+		`--remote-debugging-port=${cdpPort}`,
+		'--no-first-run',
+		'--no-default-browser-check',
+		`--user-data-dir=${userDataDir}`,
+		'about:blank'
+	];
+	if (headless) {
+		launchArgs.unshift('--headless=new', '--disable-gpu');
+	}
+
+	const chromeProcess = spawn(executable, launchArgs, { stdio: 'ignore' });
+	if (!chromeProcess.pid) {
+		throw new Error(`Failed to launch Chrome executable: ${executable}`);
+	}
+
+	return { process: chromeProcess, userDataDir };
+}
+
+async function waitForBrowserWebSocketUrl(cdpPort: number, timeoutMs = 15000): Promise<string> {
+	const started = Date.now();
+	let lastError: unknown;
+	while (Date.now() - started < timeoutMs) {
+		try {
+			return await getBrowserWebSocketUrl(cdpPort);
+		} catch (error) {
+			lastError = error;
+			await new Promise((resolve) => setTimeout(resolve, 250));
+		}
+	}
+	throw new Error(
+		`Timed out waiting for Chrome CDP endpoint on port ${cdpPort}${
+			lastError ? ` (${String(lastError)})` : ''
+		}`
+	);
 }
 
 async function waitForLoad(client: CdpClient, sessionId: string, timeoutMs = 30000) {
@@ -386,9 +468,6 @@ async function main() {
 	const outputPath = args.out ?? 'screenshots/agent-loop-canvas.png';
 	const cdpPort = args.cdpPort ?? 9222;
 
-	if (args.headless) {
-		console.warn('--headless is ignored. This script uses an existing Chrome instance via CDP.');
-	}
 
 	const params = new URLSearchParams();
 	if (args.angle) params.set('angle', args.angle);
@@ -410,9 +489,27 @@ async function main() {
 	let client: CdpClient | null = null;
 	let targetId: string | null = null;
 	let sessionId: string | null = null;
+	let launchedChrome: ChildProcess | null = null;
+	let launchedChromeUserDataDir: string | null = null;
 
 	try {
-		const webSocketUrl = await getBrowserWebSocketUrl(cdpPort);
+		let webSocketUrl: string;
+		let usedExistingChrome = false;
+		try {
+			webSocketUrl = await getBrowserWebSocketUrl(cdpPort);
+			usedExistingChrome = true;
+		} catch {
+			console.log(`No Chrome detected on CDP port ${cdpPort}. Launching Chrome...`);
+			const launched = launchChrome(cdpPort, args.chromePath, args.headless ?? false);
+			launchedChrome = launched.process;
+			launchedChromeUserDataDir = launched.userDataDir;
+			webSocketUrl = await waitForBrowserWebSocketUrl(cdpPort, 15000);
+		}
+
+		if (usedExistingChrome && args.headless) {
+			console.warn('--headless ignored because an existing Chrome instance is being used.');
+		}
+
 		client = await CdpClient.connect(webSocketUrl);
 
 		const targetResult = (await client.send('Target.createTarget', { url: 'about:blank' })) as {
@@ -491,7 +588,7 @@ async function main() {
 	} catch (e) {
 		console.error('Capture failed:', e);
 		console.error(
-			`Make sure Chrome is running with remote debugging enabled, e.g. --remote-debugging-port=${cdpPort}`
+			`Make sure Chrome can be launched or is running with remote debugging enabled, e.g. --remote-debugging-port=${cdpPort}`
 		);
 		process.exit(1);
 	} finally {
@@ -510,6 +607,20 @@ async function main() {
 			}
 		}
 		client?.close();
+		if (launchedChrome && !launchedChrome.killed) {
+			try {
+				launchedChrome.kill();
+			} catch {
+				// ignore cleanup errors
+			}
+		}
+		if (launchedChromeUserDataDir) {
+			try {
+				fs.rmSync(launchedChromeUserDataDir, { recursive: true, force: true });
+			} catch {
+				// ignore cleanup errors
+			}
+		}
 	}
 }
 
