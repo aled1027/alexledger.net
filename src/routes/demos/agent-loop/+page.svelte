@@ -132,7 +132,7 @@
 	});
 </script>
 
-<div class="my-l">
+<div class="mt-l">
 	<h2>AI Agent Loop</h2>
 	<p>
 		This is a demo of how AI can check for feedback and update a page. Check out my substack post
@@ -145,16 +145,15 @@
 		<input id="progress" type="range" bind:value={progress} min={0} max={1} step={0.01} />
 	</div>
 
-	<div class="mt-xl three-container" bind:this={container}></div>
+	<div class="mt-l three-container" bind:this={container}></div>
 </div>
 
 <style lang="scss">
 	.three-container {
 		position: relative;
 		width: 100%;
-		height: 60vh;
+		height: 50vh;
 		margin-inline: auto;
 		cursor: grab;
-		border: 1px solid black;
 	}
 </style>
